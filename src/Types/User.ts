@@ -1,0 +1,4 @@
+export type user = {
+    name: String
+    thumbnail: String
+}

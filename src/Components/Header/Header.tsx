@@ -173,7 +173,7 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" color='inherit' className="DrawDojo__icons">
                 <Toolbar>
-                    <img src="logo2.PNG" className='DrawDojo__logo' />
+                    <img src="logo2.PNG" alt="DrawDojo Logo" className='DrawDojo__logo' />
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />

@@ -1,0 +1,29 @@
+
+:root {
+    --theme-header: #ffccac;
+    --theme-icons: #42342c;
+}
+
+[data-theme = "default"] {
+    --theme-header: #ffccac;
+    --theme-icons: #42342c;
+}
+
+[data-theme = "dark"] {
+    --theme-header: #1c1c1c;
+    --theme-icons: #fff;
+}
+
+.DrawDojo__logo {
+    width:12%;
+    padding: 5px;
+}
+
+.DrawDojo__icons {
+    color: var(--theme-icons) !important;
+}
+
+
+.css-1cjrmu8-MuiPaper-root-MuiAppBar-root {
+    background-color: var(--theme-header) !important;
+}

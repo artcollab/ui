@@ -9,7 +9,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Header/>
     <Feed />
-    <Comment text={ "This is a comment!" } user={ {name : "Cade", thumbnail : "Thumbnail"} } />
+    <Comment text={ "This is a comment!" } user={ {name : "DrawDojo", thumbnail : "Thumbnail", color : "#fef3bd"} } />
   </React.StrictMode>,
   document.getElementById('root')
 );

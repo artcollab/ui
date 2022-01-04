@@ -19,3 +19,12 @@ code {
   margin-block-end: 1rem;
   min-height: 50rem;
 }
+
+/* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
+@media (max-width: 800px) {
+  .mainContainer {
+    width: 100%;
+    margin-left: 0rem;
+    margin-right: 5rem;
+  }
+}

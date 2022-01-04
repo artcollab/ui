@@ -18,7 +18,8 @@ import { Switch } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
 
-function toggleTheme() {
+// event function used to switch from light mode to dark mode
+function toggleTheme() { 
     var currentTheme = document.documentElement.getAttribute("data-theme");
     var targetTheme = "default";
 
@@ -26,9 +27,11 @@ function toggleTheme() {
         targetTheme = "dark";
     }
 
+    // sets an attribute in the HTML root element which can be found in Header.scss
     document.documentElement.setAttribute('data-theme', targetTheme)
 }
 
+////// Search Bar styles sourced from MUI component library///// 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -68,6 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+///////////////////////////////////////////////////////////////
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -95,6 +99,8 @@ export default function Header() {
     };
 
     const menuId = 'primary-search-account-menu';
+    
+    // menu appears upon clicking the profile icon
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -171,10 +177,10 @@ export default function Header() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color='inherit' className="DrawDojo__icons">
+            <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <img src="logo2.PNG" alt="DrawDojo Logo" className='DrawDojo__logo' />
-                    <Search>
+                    <img src="logo2.PNG" alt="DrawDojo Logo" className='DrawDojo__logo' style={{marginLeft: "25%"}}/>
+                    <Search style={{marginLeft: "15%"}}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -184,7 +190,7 @@ export default function Header() {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{paddingRight: "25%"}}>
                         <MessagesMenu/>
                         <NotificationsMenu />
                         <IconButton

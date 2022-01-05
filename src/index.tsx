@@ -6,6 +6,7 @@ import Feed from './Components/Feed/Feed';
 import Comment from './Components/Comment/Comment';
 import Post from './Components/Post/Post';
 
+
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
@@ -16,7 +17,6 @@ ReactDOM.render(
             thumbnail: "",
             color: ""
         }} image={undefined} caption={""} likes={[]} comments={[]} />
-
   </React.StrictMode>,
   document.getElementById('root')
 );

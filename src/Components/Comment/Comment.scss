@@ -1,21 +1,21 @@
 
 /* CSS Specifications for the comment box container */
 .commentBox {
-  margin-left: 77%;
   margin-block-end: 1rem;
   word-break: break-word;
   overflow: auto;
-  padding: 10px;
-  max-width: 250px;
-  height: 300px;
-  border: 2px solid lightgrey;
-  border-radius: 12px;
+  padding: 0.625rem;
+  min-width: 12rem;
+  max-width: 15.625rem;
+  height: 18.75rem;
+  border: 0.125rem solid lightgrey;
+  border-radius: 0.75rem;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 50rem) {
   .commentBox {
 
     margin-left: 25%;
-    max-width: 200px;
+    max-width: 12.5rem;
   }
 }

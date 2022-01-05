@@ -45,10 +45,10 @@ function Comment(props : comment | undefined) {
         <Box className={"commentBox"}>
 
             {/* obtains a user's comment object from the react hook containing the list of comments */}
-            {commentList.map((c) => {
+            {commentList.map((c, i) => {
                 return (
                     /* creates a paper card in which the users comment is displayed with their profile picture, username & comment text */
-                    <Paper sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
+                    <Paper key={i} sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
                         <Grid container wrap="nowrap" spacing={1.5}>
                             <Grid item>
                                 {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(props?.user.name)}}>
@@ -110,11 +110,15 @@ function Comment(props : comment | undefined) {
 }
 
 /* generates a random color background for the user if they don't have a profile picture */
-function ColorName(name: any) {
+function ColorName(name: string | String | undefined) {
 
     let hash = 0
     let idx = 0
     let color = '#'
+
+    if(name === undefined) {
+        return color + 'f8f8ff'
+    }
 
     while (idx < name.length) {
         hash = name.charCodeAt(idx) + ((hash << 5) - hash)

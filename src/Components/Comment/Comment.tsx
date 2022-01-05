@@ -1,5 +1,6 @@
 /* required components */
 import React, { useState } from "react";
+import './Comment.scss'
 import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -41,12 +42,7 @@ function Comment(props : comment | undefined) {
     return (
 
         /* creates a Box component which will contain Comments from users */
-        <Box sx={{
-            position: 'absolute', left:'25px', top: '150px',
-            wordBreak: 'break-word', overflow: 'auto', padding: '10px',
-            height: '300px', width: '250px',
-            border: '3px solid black', borderRadius: 2.5
-        }}>
+        <Box className={"commentBox"}>
 
             {/* obtains a user's comment object from the react hook containing the list of comments */}
             {commentList.map((c) => {
@@ -55,10 +51,13 @@ function Comment(props : comment | undefined) {
                     <Paper sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
                         <Grid container wrap="nowrap" spacing={1.5}>
                             <Grid item>
-                                {<Avatar src={"../favicon.ico"} sx={{bgcolor: ColorName(props?.user.name)}}>{props?.user.name.split(' ')[0][0]}</Avatar>}
+                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(props?.user.name)}}>
+                                    {props?.user.name.split(' ')[0][0]}
+                                </Avatar>}
                             </Grid>
                             <Grid item xs>
-                                {props?.user.name} {'- ' + c.text}
+                                {props?.user.name}
+                                {'- ' + c.text}
                             </Grid>
                         </Grid>
                     </Paper>
@@ -69,9 +68,12 @@ function Comment(props : comment | undefined) {
             <TextField
 
                 /* TextField CSS Specifications */
-                sx={{bottom: '0px'}} id="outlined-multiline-flexible"
-                multiline maxRows={3} fullWidth={true}
-                placeholder={'.....'} value={textValue}
+                sx={{bottom: '0px'}}
+                id="outlined-multiline-flexible"
+                multiline maxRows={3}
+                fullWidth={true}
+                placeholder={'.....'}
+                value={textValue}
 
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
@@ -83,22 +85,26 @@ function Comment(props : comment | undefined) {
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../favicon.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(props?.user.name)
-                            }}>{props?.user.name.split(' ')[0][0]}</Avatar>}
+                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(props?.user.name)}}>
+                                {props?.user.name.split(' ')[0][0]}
+                            </Avatar>}
                         </InputAdornment>
                     ),
 
                     /* at the end of the TextField an arrow is displayed which allows the user to post their comment */
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton color={"success"} onClick={() => { if(textValue.length > 0 && textValue.length < 100) { addComment() }
-                            else if(textValue.length === 0 ) {alert("No text inputted.")}
-                            else {alert("No more than 100 characters allowed.")} }}><ArrowForwardIcon/></IconButton>
+                            <IconButton color={"success"} onClick={() => {
+                                if(textValue.length > 0 && textValue.length < 100) { addComment() }
+                                else if(textValue.length === 0 ) {alert("No text inputted.")}
+                                else {alert("No more than 100 characters allowed.")}
+                            }}>
+                                <ArrowForwardIcon/>
+                            </IconButton>
                         </InputAdornment>
-                    ),
+                    )
                 }}
             />
-
         </Box>
     )
 }

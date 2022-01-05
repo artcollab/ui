@@ -11,12 +11,13 @@ ReactDOM.render(
   <React.StrictMode>
     <Header/>
     <Feed />
-    <Comment text={ "This is a comment!" } user={ {name : "DrawDojo", thumbnail : "Thumbnail", color : "#fef3bd"} } />
     <Post user={{
-            name: "",
-            thumbnail: "",
-            color: ""
-        }} image={undefined} caption={""} likes={[]} comments={[]} />
+                name: "",
+                thumbnail: "",
+                color: ""
+      }} image={undefined} caption={""} likes={[]} comments={[]}/>
+    <Comment text={ "This is a comment!" } user={ {name : "DrawDojo", thumbnail : "Thumbnail", color : "#fef3bd"} }/>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

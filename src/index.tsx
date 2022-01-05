@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import Header from './Components/Header/Header';
-import Feed from './Components/Feed/Feed';
 import Comment from './Components/Comment/Comment';
 import Post from './Components/Post/Post';
 
@@ -10,7 +9,6 @@ import Post from './Components/Post/Post';
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
-    <Feed />
     <Post user={{
                 name: "",
                 thumbnail: "",

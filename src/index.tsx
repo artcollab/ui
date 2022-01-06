@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import Header from './Components/Header/Header';
-import Post from './Components/Post/Post';
+import Register from './Components/Register/Register';
 
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
-    <Post/>
+    <Register />
 
   </React.StrictMode>,
   document.getElementById('root')

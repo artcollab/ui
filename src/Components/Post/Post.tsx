@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import './Post.scss';
-import { post } from "../../Types/Post";
 import Comment from '../Comment/Comment';
 import {Button, Container, Paper} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';

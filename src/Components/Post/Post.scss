@@ -1,0 +1,61 @@
+
+/* desktop CSS specifications */
+.mainContainer {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5rem;
+  margin-block-end: 1rem;
+  min-height: 40rem;
+  max-height: 40rem;
+  max-width: 55rem;
+  //   outline: dashed 1px black;
+}
+
+/* comment section for desktop CSS specs */
+.desktopComment {
+  display: flex;
+  margin-top: 20rem;
+  justify-content: flex-end;
+}
+
+/* hides mobile comment components when in desktop view */
+.mobileComment {
+  display: none;
+}
+
+/* hides the modal in desktop view if its been opened in mobile view before being resized */
+.commentModal {
+  display: none;
+}
+
+/* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
+@media (max-width: 800px) {
+  .mainContainer {
+    width: 100%;
+    margin-right: 5rem;
+  }
+
+  /* hides desktop comment section within mobile view */
+  .desktopComment {
+    display: none
+  }
+
+  /* mobile comment section components can now be shown e.g. comment icon button */
+  .mobileComment {
+    display: block;
+    margin-right: 5rem;
+  }
+
+  /* comment modal when selected will show up in the center of the current screen view */
+  .commentModal {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 13rem;
+    min-height: 20rem;
+    max-height: 20rem;
+    min-width: 16rem;
+    max-width: 16rem;
+    padding: 4px;
+  }
+}

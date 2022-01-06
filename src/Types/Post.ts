@@ -4,7 +4,7 @@ import { user } from "./User";
 export type post = {
     user: user,
     image: any,
-    caption: Text,
+    caption: string, /* Text */
     likes: Array<user>,
     comments: Array<comment>
 }

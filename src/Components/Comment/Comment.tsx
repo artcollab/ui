@@ -5,8 +5,21 @@ import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+type commentProps = {
+    commentList : Array<comment>
+}
+
+const exampleComment : comment = {
+    user: {
+        name: "DrawDojo",
+        thumbnail: "Thumbnail",
+        color: "#fef3bd"
+    },
+    text: "This is a comment!"
+}
+
 /* main Comment function, constructs the Comment component */
-function Comment(props : comment | undefined) {
+function Comment(props : commentProps) {
 
     /* character limit within the TextField */
     const charLimit = 100;
@@ -15,7 +28,7 @@ function Comment(props : comment | undefined) {
     const [textValue, setValue] = useState('')
 
     /* constant variables to be used for obtaining user comments */
-    const [commentList, setCommentList] = useState<Array<comment>>([]);
+    const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList);
 
     /* addComment function to handle the user comments */
     function addComment() {
@@ -65,15 +78,15 @@ function Comment(props : comment | undefined) {
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(props?.user.name)}}>
-                                    {props?.user.name.split(' ')[0][0]}
+                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(exampleComment.user.name)}}>
+                                    {exampleComment.user.name.split(' ')[0][0]}
                                 </Avatar>}
 
                             </Grid>
 
                             {/* comment text displayed next to username */}
                             <Grid item xs>
-                                {props?.user.name}
+                                {exampleComment.user.name}
                                 {' - ' + c.text}
                             </Grid>
                         </Grid>
@@ -112,8 +125,8 @@ function Comment(props : comment | undefined) {
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(props?.user.name)}}>
-                                {props?.user.name.split(' ')[0][0]}
+                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(exampleComment.user.name)}}>
+                                {exampleComment.user.name.split(' ')[0][0]}
                             </Avatar>}
                         </InputAdornment>
                     ),

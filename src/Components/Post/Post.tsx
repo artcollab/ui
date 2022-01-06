@@ -4,13 +4,15 @@ import Comment from '../Comment/Comment';
 import {Button, Container, Paper} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
-import { comment } from "../../Types/Comment";
-    
+
 function Post() {
 
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
-    
+
+    /* Testing purposes */
+    // const tempComment : comment = {user: {name: "DrawDojo", thumbnail: "", color: ""}, text: "Test"}
+
     /* comment component */
     const commentSection = <Comment commentList={[]}/>
 

@@ -5,17 +5,19 @@ import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+/* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
     commentList : Array<comment>
 }
 
-const exampleComment : comment = {
+/* tempComment constant, to be used for testing until DB is up */
+const tempComment : comment = {
     user: {
         name: "DrawDojo",
-        thumbnail: "Thumbnail",
-        color: "#fef3bd"
+        thumbnail: "",
+        color: ""
     },
-    text: "This is a comment!"
+    text: ""
 }
 
 /* main Comment function, constructs the Comment component */
@@ -24,10 +26,10 @@ function Comment(props : commentProps) {
     /* character limit within the TextField */
     const charLimit = 100;
 
-    /* constant variables to be used to obtain values from the comment text box */
+    /* react hook with constant variables to be used to obtain values from the comment text box */
     const [textValue, setValue] = useState('')
 
-    /* constant variables to be used for obtaining user comments */
+    /* react hook with constant variables to be used for obtaining user comments */
     const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList);
 
     /* addComment function to handle the user comments */
@@ -78,15 +80,15 @@ function Comment(props : commentProps) {
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(exampleComment.user.name)}}>
-                                    {exampleComment.user.name.split(' ')[0][0]}
+                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(tempComment.user.name)}}>
+                                    {tempComment.user.name.split(' ')[0][0]}
                                 </Avatar>}
 
                             </Grid>
 
                             {/* comment text displayed next to username */}
                             <Grid item xs>
-                                {exampleComment.user.name}
+                                {tempComment.user.name}
                                 {' - ' + c.text}
                             </Grid>
                         </Grid>
@@ -125,8 +127,8 @@ function Comment(props : commentProps) {
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(exampleComment.user.name)}}>
-                                {exampleComment.user.name.split(' ')[0][0]}
+                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(tempComment.user.name)}}>
+                                {tempComment.user.name.split(' ')[0][0]}
                             </Avatar>}
                         </InputAdornment>
                     ),
@@ -140,9 +142,7 @@ function Comment(props : commentProps) {
                                 if(textValue.length > 0 && textValue.length <= 100) { addComment() }
 
                                 /* alerts user of invalid comment (no text) */
-                                else if(textValue.length === 0 ) {alert("No text inputted.")}
-
-                                // TODO: fix space input else if(textValue.trim.length > 0) {alert("No text inputted.")}
+                                else if(textValue.trim.length === 0 ) {alert("No text inputted.")}
 
                                 /* alerts user of invalid comment (too many chars) */
                                 else {alert("No more than 100 characters allowed.")}
@@ -161,7 +161,7 @@ function Comment(props : commentProps) {
 /* generates a random color background for the user if they don't have a profile picture */
 function ColorName(name: string | String | undefined) {
 
-    /* initial varaibles */
+    /* initial variables */
     let hash = 0
     let idx = 0
     let color = '#'

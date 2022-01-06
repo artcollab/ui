@@ -6,16 +6,9 @@
   overflow: auto;
   padding: 0.625rem;
   min-width: 12rem;
-  max-width: 15.625rem;
+  max-width: 14rem;
   height: 18.75rem;
   border: 0.125rem solid lightgrey;
+  background-color: #FFF;
   border-radius: 0.75rem;
-}
-
-@media (max-width: 50rem) {
-  .commentBox {
-
-    margin-left: 25%;
-    max-width: 12.5rem;
-  }
 }

@@ -9,11 +9,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Header/>
     {/*<Feed />*/}
-      <Post user={{
-                name: "",
-                thumbnail: "",
-                color: ""
-      }} image={undefined} caption={""} likes={[]} comments={[]}/>
+    <Post/>
 
   </React.StrictMode>,
   document.getElementById('root')

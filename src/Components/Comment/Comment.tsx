@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import './Comment.scss'
 import {comment} from "../../Types/Comment";
-import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, Stack, TextField} from "@mui/material";
+import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /* main Comment function, constructs the Comment component */

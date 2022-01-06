@@ -2,11 +2,14 @@
 import React, { useState } from "react";
 import './Comment.scss'
 import {comment} from "../../Types/Comment";
-import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
+import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, Stack, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /* main Comment function, constructs the Comment component */
 function Comment(props : comment | undefined) {
+
+    /* character limit within the TextField */
+    const charLimit = 100;
 
     /* constant variables to be used to obtain values from the comment text box */
     const [textValue, setValue] = useState('')
@@ -37,6 +40,10 @@ function Comment(props : comment | undefined) {
 
         /* adds this array & all the values within it into setCommentList */
         setCommentList(commentArr)
+
+        /* clears TextField once comment has been made */
+        setValue("")
+
     }
 
     return (
@@ -46,18 +53,28 @@ function Comment(props : comment | undefined) {
 
             {/* obtains a user's comment object from the react hook containing the list of comments */}
             {commentList.map((c, i) => {
+
                 return (
                     /* creates a paper card in which the users comment is displayed with their profile picture, username & comment text */
                     <Paper key={i} sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
-                        <Grid container wrap="nowrap" spacing={1.5}>
+
+                        {/* aligns items in the center of the Paper container */}
+                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
+
+                            {/* user Avatar icon */}
                             <Grid item>
+
+                                {/* generates the users avatar icon for use within the TextField */}
                                 {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(props?.user.name)}}>
                                     {props?.user.name.split(' ')[0][0]}
                                 </Avatar>}
+
                             </Grid>
+
+                            {/* comment text displayed next to username */}
                             <Grid item xs>
                                 {props?.user.name}
-                                {'- ' + c.text}
+                                {' - ' + c.text}
                             </Grid>
                         </Grid>
                     </Paper>
@@ -67,13 +84,23 @@ function Comment(props : comment | undefined) {
             {/* TextField component, this will allow users to compose and post comments within the Comment component*/}
             <TextField
 
-                /* TextField CSS Specifications */
-                sx={{bottom: '0px'}}
-                id="outlined-multiline-flexible"
-                multiline maxRows={3}
-                fullWidth={true}
+                /* TextField can expand to multiple lines */
+                multiline
+
+                /* maximum rows before turning into scrollable box */
+                maxRows={3}
+
+                /* TextField fills the full width of the box */
+                fullWidth
+
+                /* placeholder text for when TextField is empty */
                 placeholder={'.....'}
+
+                /* value of TextField set to the value of whatever the user types */
                 value={textValue}
+
+                /* character count below TextField object*/
+                helperText={`${textValue.length}/${charLimit}`}
 
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
@@ -95,8 +122,16 @@ function Comment(props : comment | undefined) {
                     endAdornment: (
                         <InputAdornment position="end">
                             <IconButton color={"success"} onClick={() => {
-                                if(textValue.length > 0 && textValue.length < 100) { addComment() }
+
+                                /* comment can be posted if TextField isn't empty or has under 100 characters */
+                                if(textValue.length > 0 && textValue.length <= 100) { addComment() }
+
+                                /* alerts user of invalid comment (no text) */
                                 else if(textValue.length === 0 ) {alert("No text inputted.")}
+
+                                // TODO: fix space input else if(textValue.trim.length > 0) {alert("No text inputted.")}
+
+                                /* alerts user of invalid comment (too many chars) */
                                 else {alert("No more than 100 characters allowed.")}
                             }}>
                                 <ArrowForwardIcon/>
@@ -105,6 +140,7 @@ function Comment(props : comment | undefined) {
                     )
                 }}
             />
+
         </Box>
     )
 }
@@ -112,19 +148,23 @@ function Comment(props : comment | undefined) {
 /* generates a random color background for the user if they don't have a profile picture */
 function ColorName(name: string | String | undefined) {
 
+    /* initial varaibles */
     let hash = 0
     let idx = 0
     let color = '#'
 
+    /* default color in unexpected undefined name */
     if(name === undefined) {
         return color + 'f8f8ff'
     }
 
+    /* generates hash value dependent on username */
     while (idx < name.length) {
         hash = name.charCodeAt(idx) + ((hash << 5) - hash)
         idx++
     }
 
+    /* generates the color based on the hash value obtained previously */
     for (idx = 0; idx <= 2; idx++) {
         const randomColVal = (hash >> (idx * 8)) & 0xFF
         color += randomColVal.toString(16)

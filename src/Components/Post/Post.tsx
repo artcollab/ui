@@ -24,6 +24,14 @@ function Post() {
             {/* Paper component for the main post container */}
             <Paper style={{padding: 10}} className="mainContainer">
 
+                {/* divider for the post content (the displayed image) */}
+                <div>
+
+                    {/* Temporary image component */}
+                    {<img draggable={"false"} className={"postContent"} src={"../image.jpeg"} alt={"Error"}/>}
+
+                </div>
+
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
                 <div className={"desktopComment"}>
                     {commentSection}

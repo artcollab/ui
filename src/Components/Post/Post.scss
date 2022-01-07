@@ -5,16 +5,24 @@
   margin-right: auto;
   margin-top: 5rem;
   margin-block-end: 1rem;
-  min-height: 40rem;
-  max-height: 40rem;
+  min-height: 29em;
+  max-height: 29em;
   max-width: 55rem;
-  //   outline: dashed 1px black;
+  // outline: dashed 1px black;
+}
+
+.postContent {
+  display: flex;
+  min-height: 29em;
+  max-height: 29em;
+  //min-width: 71%;
+  min-width: 30em;
 }
 
 /* comment section for desktop CSS specs */
 .desktopComment {
   display: flex;
-  margin-top: 20rem;
+  margin-top: -20.25rem;
   justify-content: flex-end;
 }
 
@@ -32,7 +40,9 @@
 @media (max-width: 800px) {
   .mainContainer {
     width: 100%;
-    margin-right: 5rem;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 15%;
   }
 
   /* hides desktop comment section within mobile view */

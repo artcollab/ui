@@ -8,15 +8,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme } from '@mui/material/styles';
 import './Register.scss';
-
-const theme = createTheme();
 
 function Register() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
+
+        const url = "https://api.operce.net/users/"
+        const req = new XMLHttpRequest();
+        
+        req.open("POST", url, true); // open async http post request
+        req.setRequestHeader("Content-Type", "application/json");
+        req.onreadystatechange = () => {
+            if(req.readyState == 4 && req.status == 201) {
+                console.log(JSON.parse(req.status.toString()));
+            }
+        };
+        req.send(body);
     };
 
     return (

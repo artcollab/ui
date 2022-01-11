@@ -21,16 +21,16 @@ function Post() {
         /* container which holds all components relevant to this Post component */
         <Container>
 
-            {/* Paper component for the main post container */}
-            <Paper style={{padding: 10}} className="mainContainer">
+            {/* Paper component for the square post container */}
+            <Paper style={{padding: 10}} className="squareContainer">
 
-                {/* divider for the post content (the displayed image) */}
-                <div>
+                {/* Temporary image component, this will be pulled from backend when available  */}
+                <img draggable={"false"} className={"squarePostContent"} src={"../image.jpeg"} alt={"Error..."}/>
 
-                    {/* Temporary image component */}
-                    {<img draggable={"false"} className={"postContent"} src={"../image.jpeg"} alt={"Error"}/>}
-
-                </div>
+                {/* Modal popup menu for the comment section component */}
+                <Modal className={"commentModal"} open={open} onClose={() => setOpen(false)}>
+                    {commentSection}
+                </Modal>
 
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
                 <div className={"desktopComment"}>
@@ -46,14 +46,9 @@ function Post() {
                 <Button onClick={() => setOpen(true)} disableRipple sx={{'&:hover': {bgcolor: "transparent"}, marginLeft: "auto"}}>
 
                     {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
-                    <ChatBubbleIcon sx={{ color: "#f1b128",  fontSize: 50}}/>
+                    <ChatBubbleIcon sx={{ color: "#42342c",  fontSize: 50}}/>
 
                 </Button>
-
-                {/* Modal popup menu for the comment section component */}
-                <Modal className={"commentModal"} open={open} onClose={() => setOpen(false)}>
-                    {commentSection}
-                </Modal>
 
             </div>
 

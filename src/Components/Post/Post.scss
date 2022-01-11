@@ -1,22 +1,41 @@
 
 /* desktop CSS specifications */
-.mainContainer {
+
+/* Container for Square Sized posts (464 x 480) */
+.squareContainer {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5rem;
   margin-block-end: 1rem;
   min-height: 29em;
   max-height: 29em;
-  max-width: 55rem;
-  // outline: dashed 1px black;
+  max-width: 43rem;
+  border-radius: 0.75rem
 }
 
-.postContent {
+/* CSS for Square Sized post content within the Square container */
+.squarePostContent {
   display: flex;
   min-height: 29em;
   max-height: 29em;
-  //min-width: 71%;
-  min-width: 30em;
+  max-width: 29em;
+  border-radius: 0.75rem;
+}
+
+/* CSS for the Header of the post (avatar, username & caption) */
+.postHeader {
+  display: flex;
+  margin-left: 29.5em;
+  margin-top: -29.25rem;
+  word-break: break-word;
+  overflow: auto;
+}
+
+/* Post interaction CSS (like button, comment button & edit/mashup button) */
+.postInteraction {
+  display: flex;
+  margin-left: 29.5em;
+  margin-top: 0.5rem;
 }
 
 /* comment section for desktop CSS specs */
@@ -38,11 +57,20 @@
 
 /* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
 @media (max-width: 800px) {
-  .mainContainer {
-    width: 100%;
+
+  /* Resizing & tweaking square container for when in mobile view */
+  .squareContainer {
+    min-height: 29em;
+    max-height: 29em;
+    max-width: 29rem;
+    margin-top: 15%;
+    justify-content: center;
+  }
+
+  /* When in mobile view the post should be centered on the screen */
+  .postContent {
     margin-right: auto;
     margin-left: auto;
-    margin-top: 15%;
   }
 
   /* hides desktop comment section within mobile view */
@@ -52,20 +80,18 @@
 
   /* mobile comment section components can now be shown e.g. comment icon button */
   .mobileComment {
-    display: block;
-    margin-right: 5rem;
+    display: flex;
+    margin-right: 45%;
   }
 
   /* comment modal when selected will show up in the center of the current screen view */
   .commentModal {
-    display: block;
-    margin-left: auto;
+    display: flex;
+    justify-content: center;
     margin-right: auto;
-    margin-top: 13rem;
-    min-height: 20rem;
-    max-height: 20rem;
-    min-width: 16rem;
-    max-width: 16rem;
-    padding: 4px;
+    margin-left: auto;
+    margin-top: 12rem;
+    min-width: 38rem;
+    max-width: 45rem;
   }
 }

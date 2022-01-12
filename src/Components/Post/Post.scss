@@ -31,11 +31,21 @@
   overflow: auto;
 }
 
+/* displays the desktop caption version within the desktop view */
+.postCaptionDesktop {
+  display: block
+}
+
+/* hides the mobile caption version within the desktop view */
+.postCaptionMobile {
+  display: none;
+}
+
 /* Post interaction CSS (like button, comment button & edit/mashup button) */
-.postInteraction {
+.desktopPostInteraction {
   display: flex;
-  margin-left: 29.5em;
-  margin-top: 0.5rem;
+  margin-left: 29.8em;
+  margin-top: 1rem;
 }
 
 /* comment section for desktop CSS specs */
@@ -73,6 +83,30 @@
     margin-left: auto;
   }
 
+  /* hides desktop interaction buttons */
+  .desktopPostInteraction {
+    display: none;
+  }
+
+  /* CSS for the Header of the post (avatar, username & caption) */
+  .postHeader {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 1.5rem;
+    word-break: break-word;
+    overflow: auto;
+  }
+
+  /* hides the desktop caption version in mobile view */
+  .postCaptionDesktop {
+    display: none
+  }
+
+  /* mobile version of the caption can now be shown */
+  .postCaptionMobile {
+    display: block;
+  }
+
   /* hides desktop comment section within mobile view */
   .desktopComment {
     display: none
@@ -82,6 +116,7 @@
   .mobileComment {
     display: flex;
     margin-right: 45%;
+    margin-top: 5rem;
   }
 
   /* comment modal when selected will show up in the center of the current screen view */

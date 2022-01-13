@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -17,6 +17,17 @@ function Login() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
     };
+
+    const [emailValid, setEmailValid] = useState(true);
+
+    const validateEmail = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+        if(regex.test(value) || value == "") setEmailValid(true);
+        else setEmailValid(false);
+        
+    }
 
     return (
         <Container className="loginContainer" component="main" maxWidth="xs">
@@ -39,6 +50,9 @@ function Login() {
                         margin="normal"
                         required
                         fullWidth
+                        error={!emailValid}
+                        helperText={emailValid ? "" : "Invalid email"}
+                        onChange={validateEmail}
                         id="email"
                         label="Email Address"
                         name="email"

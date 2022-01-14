@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment';
-import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
+import {Avatar, Container, Grid, IconButton, Paper, TextField, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -142,9 +142,8 @@ function Post() {
                             {/* handles the post caption in the mobile view */}
                             <div className={'postCaptionMobile'}>
 
-                                {/* as of now text can be displayed as normal in full underneath the mobile post container, there
-                                may be a word limit imposed later */}
-                                {"the quick round frog jumps over the lazy hog"}
+                                {/* more text can be displayed in mobile view but it has a character limit of 50 */}
+                                <PostCaption captionText = "the quick round frog jumps over the lazy hog" characterLimit = {50}/>
 
                             </div>
 
@@ -170,8 +169,8 @@ function Post() {
                             {/* <IconButton><EmojiEmotionsIcon className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}} sx={{fontSize:'30px'}}/></IconButton> */}
                             </Tooltip>
 
-                            {/* button for the comment component, should focus on commentTextField when clicked (needs to change with theme) */}
-                            <IconButton sx={{marginLeft: '2.1875rem'}}><ChatBubbleIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
+                            {/* button for the comment component, should focus on CommentField when clicked (needs to change with theme) */}
+                            <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}><ChatBubbleIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
 
                             {/* button for the edit component, not implemented yet (needs to change with theme) */}
                             <IconButton sx={{marginLeft: '2.1875rem'}}><CreateIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>

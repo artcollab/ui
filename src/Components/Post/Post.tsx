@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment';
-import {Avatar, Button, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
+import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -17,7 +17,7 @@ interface CaptionInterface {
     characterLimit : number;
 }
 
-function Post(this: any) {
+function Post() {
 
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<CaptionInterface> = ({captionText, characterLimit}) => {
@@ -46,16 +46,33 @@ function Post(this: any) {
     const [liked, setLiked] = useState(false)
 
     /* event handling for liking the post (clicking like button) */
-    const onLike = () => {
+    function onLike() {
 
-            /* sets the value of the likes depending on status of the like button, if the post
-            * has already been liked then the number is reduced to stop from posts being liked
-            * multiple times, otherwise then the like amount is incremented */
-            setLikes(likes + (liked ? -1 : 1));
+        /* sets the value of the likes depending on status of the like button, if the post
+        * has already been liked then the number is reduced to stop from posts being liked
+        * multiple times, otherwise then the like amount is incremented */
+        setLikes(likes + (liked ? -1 : 1))
 
-            /* sets the status of liked to true (initially false) as the post has now been liked by the user */
-            setLiked(!liked);
-    };
+        /* sets the status of liked to true (initially false) as the post has now been liked by the user */
+        setLiked(!liked)
+    }
+
+    /* React hook for handling the style of the like button, currently set to the style of noLike within the CSS file */
+    const [likeStyle, setStyle] = useState("noLike");
+
+    /* function to change the like button CSS when clicked */
+    function changeLikeStyle() {
+
+        /* if the button has been liked then the like CSS can be applied to the button */
+        if(!liked) {
+            setStyle("like");
+        }
+
+        /* if the button hasn't been liked then the noLike CSS can be applied to the button */
+        else {
+            setStyle("noLike");
+        }
+    }
 
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
@@ -79,12 +96,12 @@ function Post(this: any) {
 
                 {/* Modal popup menu for the comment section component */}
                 <Modal className={"commentModal"} open={open} onClose={() => setOpen(false)}>
-                    {commentSection}
+                     <>{commentSection}</>
                 </Modal>
 
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
                 <div className={"desktopComment"}>
-                    {commentSection}
+                    <>{commentSection}</>
                 </div>
 
                 {/* postHeader divider, holds all components related to the header of a post */}
@@ -143,19 +160,21 @@ function Post(this: any) {
 
                         <Grid item>
 
+                            {/* ERROR: follow cursor & transition component work but throwing some warnings */}
                             {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
                             <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
                                 {/* button for the like component, currently a dark grey smiley emoji (needs to change with theme) */}
-                                <IconButton onClick={onLike} sx={{}}><EmojiEmotionsIcon sx={{fontSize: '30px', color: "#42342c"}}/></IconButton>
+                                <IconButton onClick={() => {onLike(); changeLikeStyle()}} className={likeStyle}><EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/></IconButton>
 
+                            {/* <IconButton><EmojiEmotionsIcon className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}} sx={{fontSize:'30px'}}/></IconButton> */}
                             </Tooltip>
 
                             {/* button for the comment component, should focus on commentTextField when clicked (needs to change with theme) */}
-                            <IconButton sx={{marginLeft: '35px'}}><ChatBubbleIcon sx={{fontSize: '30px', color: "#42342c"}}/></IconButton>
+                            <IconButton sx={{marginLeft: '2.1875rem'}}><ChatBubbleIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
 
                             {/* button for the edit component, not implemented yet (needs to change with theme) */}
-                            <IconButton sx={{marginLeft: '35px'}}><CreateIcon sx={{fontSize: '30px', color: "#42342c"}}/></IconButton>
+                            <IconButton sx={{marginLeft: '2.1875rem'}}><CreateIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
 
                         </Grid>
                     </Grid>
@@ -163,20 +182,40 @@ function Post(this: any) {
 
             </Paper>
 
-            {/* divider for handling the comment section component for mobile users */}
-            <div className={"mobileComment"}>
+            {/* divider for handling desktop post interaction e.g. likes */}
+            <div className={"mobilePostInteraction"}>
 
-                {/* Button component which can be pressed to display the comment section in a Modal */}
-                <Button onClick={() => setOpen(true)} disableRipple sx={{'&:hover': {bgcolor: "transparent"}, marginLeft: "auto"}}>
+                {/* Grid container used here to easily align these components horizontally */}
+                <Grid direction="row" alignItems="center" container wrap="nowrap">
 
-                    {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
-                    <ChatBubbleIcon sx={{ color: "#42342c",  fontSize: 50}}/>
+                    <Grid marginLeft="auto" marginRight="auto" item>
 
-                </Button>
+                        {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
+                        <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
+                            {/* button for the like component, currently a dark grey smiley emoji (needs to change with theme) */}
+                            <IconButton className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}}><EmojiEmotionsIcon sx={{fontSize:'3rem'}}/></IconButton>
+
+                        </Tooltip>
+
+                        {/* Button component which can be pressed to display the comment section in a Modal */}
+                        <IconButton sx={{marginLeft: '5.5em'}} onClick={() => setOpen(true)}>
+
+                            {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
+                            <ChatBubbleIcon sx={{ color: "#42342c",  fontSize: 50}}/>
+
+                        </IconButton>
+
+                        {/* button for the edit component, not implemented yet (needs to change with theme) */}
+                        <IconButton sx={{marginLeft: '5.5em'}}><CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/></IconButton>
+
+                    </Grid>
+                </Grid>
             </div>
+
         </Container>
     )
 }
 
 export default Post;
+

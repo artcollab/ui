@@ -65,6 +65,21 @@
   display: none;
 }
 
+/* CSS color for the like button having not been clicked */
+.noLike * {
+  color: #858585;
+}
+
+/* CSS color for the like button after being clicked */
+.like * {
+  color: #42342c;
+}
+
+/* hides mobile post interaction elements in desktop view */
+.mobilePostInteraction {
+  display: none;
+}
+
 /* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
 @media (max-width: 800px) {
 
@@ -76,6 +91,7 @@
     margin-top: 15%;
     justify-content: center;
   }
+
 
   /* When in mobile view the post should be centered on the screen */
   .postContent {
@@ -116,6 +132,14 @@
   .mobileComment {
     display: flex;
     margin-right: 45%;
+    margin-top: 5rem;
+  }
+
+  /* Post interaction CSS (like button, comment button & edit/mashup button) */
+  .mobilePostInteraction {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
     margin-top: 5rem;
   }
 

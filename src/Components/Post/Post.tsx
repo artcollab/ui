@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment';
-import {Avatar, Container, Grid, IconButton, Paper, TextField, Tooltip, Zoom} from "@mui/material";
+import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';

@@ -99,6 +99,8 @@ function Comment(props : commentProps) {
             {/* TextField component, this will allow users to compose and post comments within the Comment component*/}
             <TextField
 
+                id={'CommentField'}
+
                 /* TextField can expand to multiple lines */
                 multiline
 

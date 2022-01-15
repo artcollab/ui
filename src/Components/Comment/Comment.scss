@@ -26,3 +26,11 @@
   border-radius: 0.75rem;
 }
 
+/* CSS Specifications for the comment box container within mobile view */
+@media (max-width: 800px) {
+  .commentBox {
+    max-width: 13rem;;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

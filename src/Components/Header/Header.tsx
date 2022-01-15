@@ -176,7 +176,7 @@ export default function Header() {
     );
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{marginBottom: "8.5%",  flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
                     <img src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo'/>

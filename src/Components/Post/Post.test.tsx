@@ -27,7 +27,4 @@ it("appears on the screen", () => {
     const authorName = screen.getByText(/dogs72/i);
     expect(authorName).toBeInTheDocument;
 
-    /* checks if the title of '777' is in the document, this is the initial like count */
-    expect(screen.getByTitle("777")).toBeInTheDocument;
-
 });

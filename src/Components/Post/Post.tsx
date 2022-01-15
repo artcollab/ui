@@ -35,7 +35,7 @@ function Post() {
         const show = captionText.substring(0, characterLimit) + " ..."
 
         /* clicking anywhere on the text will show the full string if its been hidden */
-        return <a onClick={showText}>{show}</a>
+        return <span onClick={showText}>{show}</span>
 
     }
 

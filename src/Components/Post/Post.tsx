@@ -69,7 +69,7 @@ function Post(props : postProps) {
         setLiked(!liked)
 
         /* applies a style to the like button depending on its status */
-        setStyle(likeStyle == "like" ? "noLike" : "like")
+        setStyle(likeStyle === "like" ? "noLike" : "like")
     }
 
 

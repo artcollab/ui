@@ -23,12 +23,12 @@
 .squareContainer {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 5rem;
   margin-block-end: 1rem;
   min-height: 29em;
   max-height: 29em;
   max-width: 43rem;
   border-radius: 0.75rem;
+  padding: 0.625rem;
   background-color: var(--post-background) !important;
 }
 
@@ -77,13 +77,7 @@
 }
 
 /* chatBubble CSS to change its color and size (desktop) */
-.chatBubble {
-  font-size: 1.875rem !important;
-  color: var(--icon-col) !important;
-}
-
-/* pencilButton CSS to change its color and size (desktop) */
-.pencilButton {
+.staticButtons {
   font-size: 1.875rem !important;
   color: var(--icon-col) !important;
 }
@@ -120,22 +114,25 @@
   display: none;
 }
 
-/* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
+/* mobile styles for the main component at 800px width */
 @media (max-width: 800px) {
 
   /* Resizing & tweaking square container for when in mobile view */
   .squareContainer {
-    min-height: 29em;
-    max-height: 29em;
-    max-width: 29rem;
-    margin-top: 15%;
     justify-content: center;
+    min-height: 6em;
+    max-width: 29em;
+    margin-top: 6.5rem;
   }
 
   /* When in mobile view the post should be centered on the screen */
-  .postContent {
+  .squarePostContent {
+    display:block;
     margin-right: auto;
     margin-left: auto;
+    width: 100%;
+    min-height: 50%;
+    height: 100%;
   }
 
   /* hides desktop interaction buttons */
@@ -177,13 +174,6 @@
     display: none
   }
 
-  /* mobile comment section components can now be shown e.g. comment icon button */
-  .mobileComment {
-    display: flex;
-    margin-right: 45%;
-    margin-top: 5rem;
-  }
-
   /* Post interaction CSS (like button, comment button & edit/mashup button) */
   .mobilePostInteraction {
     display: flex;
@@ -195,11 +185,34 @@
   /* comment modal when selected will show up in the center of the current screen view */
   .commentModal {
     display: flex;
-    justify-content: center;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 12rem;
-    min-width: 38rem;
-    max-width: 45rem;
+    margin-top: 10rem;
+  }
+}
+
+/* mobile styles for the main component at 600px width */
+@media (max-width: 600px) {
+
+  /* changes square containers margin from the top to 5rem */
+  .squareContainer {
+    margin-top: 5rem;
+  }
+
+  /* changes post interaction margin from the top to 5rem */
+  .mobilePostInteraction {
+    margin-top: 5rem;
+  }
+}
+
+/* mobile styles for the main component at 450px width */
+@media (max-width: 450px) {
+
+  /* changes square containers margin from the top to 4.5rem */
+  .squareContainer {
+    margin-top: 4.5rem;
+  }
+
+  /* changes post interaction margin from the top to 0.5rem */
+  .mobilePostInteraction {
+    margin-top: 0.5rem;
   }
 }

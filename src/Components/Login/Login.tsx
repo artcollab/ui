@@ -24,7 +24,7 @@ function Login() {
         req.open("POST", url, true); // open async http post request
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = () => {
-            if(req.readyState == 4 && req.status == 201) {
+            if(req.readyState === 4 && req.status === 201) {
                 console.log(JSON.parse(req.status.toString()));
             }
         };
@@ -37,7 +37,7 @@ function Login() {
         const value = e.target.value;
         const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     
-        if(regex.test(value) || value == "") setEmailValid(true);
+        if(regex.test(value) || value === "") setEmailValid(true);
         else setEmailValid(false);
         
     }

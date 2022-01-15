@@ -1,3 +1,21 @@
+/* Theme CSS declarations for the Post component */
+:root {
+  --post-background: #f7f7f7;
+  --header-text-col: #000;
+  --icon-col: #42342c;
+}
+
+[data-theme = "default"] {
+  --post-background: #f7f7f7;
+  --header-text-col: #000;
+  --icon-col: #42342c;
+}
+
+[data-theme = "dark"] {
+  --post-background: #1c1c1c;
+  --header-text-col: #fff;
+  --icon-col: #fff;
+}
 
 /* desktop CSS specifications */
 
@@ -10,7 +28,8 @@
   min-height: 29em;
   max-height: 29em;
   max-width: 43rem;
-  border-radius: 0.75rem
+  border-radius: 0.75rem;
+  background-color: var(--post-background) !important;
 }
 
 /* CSS for Square Sized post content within the Square container */
@@ -31,9 +50,18 @@
   overflow: auto;
 }
 
+/* displays the author of the post (desktop) */
+.postAuthor {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  color: var(--header-text-col) !important;
+}
+
 /* displays the desktop caption version within the desktop view */
 .postCaptionDesktop {
-  display: block
+  display: block;
+  color: var(--header-text-col) !important;
 }
 
 /* hides the mobile caption version within the desktop view */
@@ -46,6 +74,18 @@
   display: flex;
   margin-left: 29.8em;
   margin-top: 1rem;
+}
+
+/* chatBubble CSS to change its color and size (desktop) */
+.chatBubble {
+  font-size: 1.875rem !important;
+  color: var(--icon-col) !important;
+}
+
+/* pencilButton CSS to change its color and size (desktop) */
+.pencilButton {
+  font-size: 1.875rem !important;
+  color: var(--icon-col) !important;
 }
 
 /* comment section for desktop CSS specs */
@@ -72,7 +112,7 @@
 
 /* CSS color for the like button after being clicked */
 .like * {
-  color: #42342c;
+  color: var(--icon-col) !important;
 }
 
 /* hides mobile post interaction elements in desktop view */
@@ -92,7 +132,6 @@
     justify-content: center;
   }
 
-
   /* When in mobile view the post should be centered on the screen */
   .postContent {
     margin-right: auto;
@@ -111,6 +150,16 @@
     margin-top: 1.5rem;
     word-break: break-word;
     overflow: auto;
+  }
+
+  /* postAuthor will now have black text within mobile view */
+  .postAuthor {
+    color: #000 !important;
+  }
+
+  /* liked button color changed within mobile view due to different backdrop */
+  .like * {
+    color: #42342c !important;
   }
 
   /* hides the desktop caption version in mobile view */

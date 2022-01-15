@@ -16,7 +16,7 @@ function Register() {
         const data = new FormData(event.currentTarget);
         const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
 
-        const url = "https://api.operce.net/users/"
+        const url = "https://api.operce.net/auth/register"
         const req = new XMLHttpRequest();
         
         req.open("POST", url, true); // open async http post request
@@ -61,7 +61,7 @@ function Register() {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="given-name"
-                                name="firstName"
+                                name="name"
                                 required
                                 fullWidth
                                 id="firstName"
@@ -75,7 +75,7 @@ function Register() {
                                 fullWidth
                                 id="lastName"
                                 label="Last Name"
-                                name="lastName"
+                                name="surname"
                                 autoComplete="family-name"
                             />
                         </Grid>
@@ -90,6 +90,15 @@ function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="username"
+                                label="User Name"
+                                name="username"
                             />
                         </Grid>
                         <Grid item xs={12}>

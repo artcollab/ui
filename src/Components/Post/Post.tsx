@@ -1,14 +1,23 @@
 import React, {useState} from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment';
+import {post} from "../../Types/Post";
 import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
 
+/* postProps type defined */
+type postProps = {
+
+    /* Post element for when DB is available */
+    Post : post
+
+}
+
 /* type definitions for caption variables, need to avoid errors */
-interface CaptionInterface {
+type caption = {
 
     /* caption text string */
     captionText : string;
@@ -17,10 +26,10 @@ interface CaptionInterface {
     characterLimit : number;
 }
 
-function Post() {
+function Post(props : postProps) {
 
     /* PostCaption constant definition, this will be used for handling the caption text */
-    const PostCaption : React.FC<CaptionInterface> = ({captionText, characterLimit}) => {
+    const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
 
         /* if this is called then an alert will be displayed showing the full caption */
         const showText = () => alert(captionText);
@@ -45,8 +54,11 @@ function Post() {
     /* React hook for handling the state of the like on the post (whether user has liked or not) */
     const [liked, setLiked] = useState(false)
 
+    /* React hook for handling the style of the like button, currently set to the style of noLike within the CSS file */
+    const [likeStyle, setStyle] = useState("noLike");
+
     /* event handling for liking the post (clicking like button) */
-    function onLike() {
+    function toggleLike() {
 
         /* sets the value of the likes depending on status of the like button, if the post
         * has already been liked then the number is reduced to stop from posts being liked
@@ -55,24 +67,11 @@ function Post() {
 
         /* sets the status of liked to true (initially false) as the post has now been liked by the user */
         setLiked(!liked)
+
+        /* applies a style to the like button depending on its status */
+        setStyle(likeStyle == "like" ? "noLike" : "like")
     }
 
-    /* React hook for handling the style of the like button, currently set to the style of noLike within the CSS file */
-    const [likeStyle, setStyle] = useState("noLike");
-
-    /* function to change the like button CSS when clicked */
-    function changeLikeStyle() {
-
-        /* if the button has been liked then the like CSS can be applied to the button */
-        if(!liked) {
-            setStyle("like");
-        }
-
-        /* if the button hasn't been liked then the noLike CSS can be applied to the button */
-        else {
-            setStyle("noLike");
-        }
-    }
 
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
@@ -89,14 +88,15 @@ function Post() {
         <Container>
 
             {/* Paper component for the square post container */}
-            <Paper style={{padding: 10}} className="squareContainer" data-testid="container-test">
+            <Paper className="squareContainer" data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
                 <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
+
                 <Modal className={"commentModal"} open={open} onClose={() => setOpen(false)}>
-                     <>{commentSection}</>
+                    <>{commentSection}</>
                 </Modal>
 
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
@@ -164,21 +164,20 @@ function Post() {
                             <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
                                 {/* button for the like component */}
-                                <IconButton onClick={() => {onLike(); changeLikeStyle()}} className={likeStyle}>
+                                <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
 
                                     {/* uses a smiley face showing where desktop users can like the post */}
                                     <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
 
                                 </IconButton>
 
-                            {/* <IconButton><EmojiEmotionsIcon className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}} sx={{fontSize:'30px'}}/></IconButton> */}
                             </Tooltip>
 
                             {/* button for the comment component, should focus on CommentField when clicked  */}
                             <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>
 
                                 {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
-                                <ChatBubbleIcon className={'chatBubble'}/>
+                                <ChatBubbleIcon className={'staticButtons'}/>
 
                             </IconButton>
 
@@ -186,7 +185,7 @@ function Post() {
                             <IconButton sx={{marginLeft: '2.1875rem'}}>
 
                                 {/* uses a pencil icon depicting where desktop users can access the edit feature */}
-                                <CreateIcon className={'pencilButton'}/>
+                                <CreateIcon className={'staticButtons'}/>
 
                             </IconButton>
 
@@ -208,7 +207,7 @@ function Post() {
                         <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
                             {/* button for the like component */}
-                            <IconButton className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}}>
+                            <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
 
                                 {/* uses a smiley face showing where mobile users can like the post */}
                                 <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
@@ -218,7 +217,7 @@ function Post() {
                         </Tooltip>
 
                         {/* button component which can be pressed to display the comment section in a Modal */}
-                        <IconButton sx={{marginLeft: '5.5em'}} onClick={() => setOpen(true)}>
+                        <IconButton sx={{marginLeft: '2em'}} onClick={() => setOpen(true)}>
 
                             {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
                             <ChatBubbleIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
@@ -226,7 +225,7 @@ function Post() {
                         </IconButton>
 
                         {/* button for the edit component */}
-                        <IconButton sx={{marginLeft: '5.5em'}}>
+                        <IconButton sx={{marginLeft: '2em'}} >
 
                             {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
                             <CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/>

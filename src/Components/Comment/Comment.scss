@@ -1,4 +1,17 @@
 
+/* Theme declarations for the Comment component */
+:root {
+  --comment-background: #fff;
+}
+
+[data-theme = "default"] {
+  --comment-background: #fff;
+}
+
+[data-theme = "dark"] {
+  --comment-background: #d4d4d4;
+}
+
 /* CSS Specifications for the comment box container */
 .commentBox {
   margin-block-end: 1rem;
@@ -9,6 +22,7 @@
   max-width: 27.5%;
   height: 18.75rem;
   border: 0.125rem solid lightgrey;
-  background-color: #FFF;
+  background-color: var(--comment-background) !important;
   border-radius: 0.75rem;
 }
+

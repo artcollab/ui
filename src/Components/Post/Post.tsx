@@ -89,7 +89,7 @@ function Post() {
         <Container>
 
             {/* Paper component for the square post container */}
-            <Paper style={{padding: 10}} className="squareContainer">
+            <Paper style={{padding: 10}} className="squareContainer" data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
                 <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
@@ -105,7 +105,7 @@ function Post() {
                 </div>
 
                 {/* postHeader divider, holds all components related to the header of a post */}
-                <div className="postHeader">
+                <div className="postHeader" data-testid="post-header-test">
 
                     {/* Grid container created to hold the components of this header, they will be aligned with each-other  */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
@@ -125,7 +125,7 @@ function Post() {
                         <Grid item xs>
 
                             {/* authors username, displayed in bold text to emphasise */}
-                            <p style={{fontWeight: "bold", margin: 0, padding: 0}}>dogs72</p>
+                            <p className={"postAuthor"}>dogs72</p>
 
                             {/* line underneath the authors username to separate it from caption text */}
                             <hr/>
@@ -163,17 +163,32 @@ function Post() {
                             {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
                             <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
-                                {/* button for the like component, currently a dark grey smiley emoji (needs to change with theme) */}
-                                <IconButton onClick={() => {onLike(); changeLikeStyle()}} className={likeStyle}><EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/></IconButton>
+                                {/* button for the like component */}
+                                <IconButton onClick={() => {onLike(); changeLikeStyle()}} className={likeStyle}>
+
+                                    {/* uses a smiley face showing where desktop users can like the post */}
+                                    <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
+
+                                </IconButton>
 
                             {/* <IconButton><EmojiEmotionsIcon className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}} sx={{fontSize:'30px'}}/></IconButton> */}
                             </Tooltip>
 
-                            {/* button for the comment component, should focus on CommentField when clicked (needs to change with theme) */}
-                            <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}><ChatBubbleIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
+                            {/* button for the comment component, should focus on CommentField when clicked  */}
+                            <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>
 
-                            {/* button for the edit component, not implemented yet (needs to change with theme) */}
-                            <IconButton sx={{marginLeft: '2.1875rem'}}><CreateIcon sx={{fontSize: '1.875rem', color: "#42342c"}}/></IconButton>
+                                {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
+                                <ChatBubbleIcon className={'chatBubble'}/>
+
+                            </IconButton>
+
+                            {/* button for the edit component, not implemented yet */}
+                            <IconButton sx={{marginLeft: '2.1875rem'}}>
+
+                                {/* uses a pencil icon depicting where desktop users can access the edit feature */}
+                                <CreateIcon className={'pencilButton'}/>
+
+                            </IconButton>
 
                         </Grid>
                     </Grid>
@@ -192,21 +207,31 @@ function Post() {
                         {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
                         <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
-                            {/* button for the like component, currently a dark grey smiley emoji (needs to change with theme) */}
-                            <IconButton className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}}><EmojiEmotionsIcon sx={{fontSize:'3rem'}}/></IconButton>
+                            {/* button for the like component */}
+                            <IconButton className={likeStyle} onClick={() => {onLike(); changeLikeStyle()}}>
+
+                                {/* uses a smiley face showing where mobile users can like the post */}
+                                <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
+
+                            </IconButton>
 
                         </Tooltip>
 
-                        {/* Button component which can be pressed to display the comment section in a Modal */}
+                        {/* button component which can be pressed to display the comment section in a Modal */}
                         <IconButton sx={{marginLeft: '5.5em'}} onClick={() => setOpen(true)}>
 
                             {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
-                            <ChatBubbleIcon sx={{ color: "#42342c",  fontSize: 50}}/>
+                            <ChatBubbleIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
 
                         </IconButton>
 
-                        {/* button for the edit component, not implemented yet (needs to change with theme) */}
-                        <IconButton sx={{marginLeft: '5.5em'}}><CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/></IconButton>
+                        {/* button for the edit component */}
+                        <IconButton sx={{marginLeft: '5.5em'}}>
+
+                            {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
+                            <CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
+
+                        </IconButton>
 
                     </Grid>
                 </Grid>

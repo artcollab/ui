@@ -16,6 +16,19 @@ function Login() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
+
+        const url = "https://api.operce.net/auth/login"
+        const req = new XMLHttpRequest();
+        
+        req.open("POST", url, true); // open async http post request
+        req.setRequestHeader("Content-Type", "application/json");
+        req.onreadystatechange = () => {
+            if(req.readyState == 4 && req.status == 201) {
+                console.log(JSON.parse(req.status.toString()));
+            }
+        };
+        req.send(body);
     };
 
     const [emailValid, setEmailValid] = useState(true);

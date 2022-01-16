@@ -1,4 +1,4 @@
-## Draw Dojo ![public/logo2.png]
+## Draw Dojo ![](public/logo2.png)
 
 This repository was created for the purpose of collaborating on and creating the 'Draw Dojo' art platform as part of Team 13's 3rd Year Heriot-Watt F29SO/F29PD
 Group Project. The system is intended to be used by the general population, particularly those interested in the production of artwork in a full collaborative environment.

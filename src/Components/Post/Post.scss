@@ -145,14 +145,14 @@
   .postHeader {
     margin-right: auto;
     margin-left: auto;
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
     word-break: break-word;
     overflow: auto;
   }
 
   /* postAuthor will now have white text within mobile view */
   .postAuthor {
-    color: #FFF !important;
+    color: var(--header-text-col) !important;
   }
 
   /* liked button color changed within mobile view due to different backdrop */

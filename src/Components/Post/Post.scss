@@ -30,6 +30,7 @@
   border-radius: 0.75rem;
   padding: 0.625rem;
   background-color: var(--post-background) !important;
+  margin-top: 5rem;
 }
 
 /* CSS for Square Sized post content within the Square container */
@@ -122,12 +123,12 @@
     justify-content: center;
     min-height: 6em;
     max-width: 29em;
-    margin-top: 6.5rem;
+    margin-top: 7rem;
+    max-height: fit-content
   }
 
   /* When in mobile view the post should be centered on the screen */
   .squarePostContent {
-    display:block;
     margin-right: auto;
     margin-left: auto;
     width: 100%;
@@ -179,7 +180,7 @@
     display: flex;
     margin-right: auto;
     margin-left: auto;
-    margin-top: 5rem;
+
   }
 
   /* comment modal when selected will show up in the center of the current screen view */
@@ -194,12 +195,12 @@
 
   /* changes square containers margin from the top to 5rem */
   .squareContainer {
-    margin-top: 5rem;
+    margin-top: 6rem;
   }
 
   /* changes post interaction margin from the top to 5rem */
   .mobilePostInteraction {
-    margin-top: 5rem;
+
   }
 }
 

@@ -75,6 +75,7 @@ function Register() {
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
+                                placeholder="First Name"
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -89,6 +90,7 @@ function Register() {
                                 onChange={(e) => setSurname(e.target.value)}
                                 error={!nameRegex.test(surname)}
                                 helperText={nameRegex.test(surname) ? "" : "Invalid Name"}
+                                placeholder="Last Name"
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -102,6 +104,7 @@ function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                placeholder='Email Address'
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -112,6 +115,7 @@ function Register() {
                                 label="User Name"
                                 name="username"
                                 autoComplete="username"
+                                placeholder="User Name"
                             />
                         </Grid>
                         <Grid item xs={12}>

@@ -150,9 +150,9 @@
     overflow: auto;
   }
 
-  /* postAuthor will now have black text within mobile view */
+  /* postAuthor will now have white text within mobile view */
   .postAuthor {
-    color: #000 !important;
+    color: #FFF !important;
   }
 
   /* liked button color changed within mobile view due to different backdrop */
@@ -168,6 +168,7 @@
   /* mobile version of the caption can now be shown */
   .postCaptionMobile {
     display: block;
+    color: var(--header-text-col) !important;
   }
 
   /* hides desktop comment section within mobile view */
@@ -197,10 +198,6 @@
     margin-top: 6rem;
   }
 
-  /* changes post interaction margin from the top to 5rem */
-  .mobilePostInteraction {
-    margin-top: 5rem;
-  }
 }
 
 /* mobile styles for the main component at 450px width */

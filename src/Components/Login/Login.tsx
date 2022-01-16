@@ -71,6 +71,7 @@ function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        placeholder="Email Address"
                     />
                     <TextField
                         margin="normal"

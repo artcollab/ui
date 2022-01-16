@@ -32,13 +32,17 @@ function Register() {
     const [emailValid, setEmailValid] = useState(true);
 
     const validateEmail = (e : React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const value = e.target.value;   // value inside email textField
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;  // regex pattern which matches the format of email addresses
     
-        if(regex.test(value) || value === "") setEmailValid(true);
+        if(regex.test(value) || value === "") setEmailValid(true); // if the textField value matches the email regular expression, it is valid
         else setEmailValid(false);
         
     }
+
+    const nameRegex = /^[A-Za-z-]*$/;   // regex pattern matches only alphabetical characters or hyphens (for hyphenated names) without spaces
+    const [firstName, setFirstName] = useState("");
+    const [surname, setSurname] = useState("");
 
     return (
         <Container className="registerContainer" component="main" maxWidth="xs">
@@ -64,6 +68,10 @@ function Register() {
                                 name="name"
                                 required
                                 fullWidth
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                error={!nameRegex.test(firstName)}
+                                helperText={nameRegex.test(firstName) ? "" : "Invalid Name"}
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
@@ -77,6 +85,10 @@ function Register() {
                                 label="Last Name"
                                 name="surname"
                                 autoComplete="family-name"
+                                value={surname}
+                                onChange={(e) => setSurname(e.target.value)}
+                                error={!nameRegex.test(surname)}
+                                helperText={nameRegex.test(surname) ? "" : "Invalid Name"}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -99,6 +111,7 @@ function Register() {
                                 id="username"
                                 label="User Name"
                                 name="username"
+                                autoComplete="username"
                             />
                         </Grid>
                         <Grid item xs={12}>

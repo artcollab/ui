@@ -31,6 +31,12 @@
   padding: 0.625rem;
   background-color: var(--post-background) !important;
   margin-top: 5rem;
+  
+  /* Changes the TextField background to pure white */
+  .MuiInputBase-root {
+    background-color: #FFF;
+  }
+  
 }
 
 /* CSS for Square Sized post content within the Square container */

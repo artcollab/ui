@@ -99,6 +99,9 @@ function Comment(props : commentProps) {
             {/* TextField component, this will allow users to compose and post comments within the Comment component*/}
             <TextField
 
+                /* sets TextField background color to white */
+                sx={{color: '#FFF'}}
+
                 id={'CommentField'}
 
                 /* TextField can expand to multiple lines */
@@ -122,6 +125,9 @@ function Comment(props : commentProps) {
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
 
+                /* testing purposes, don't use this */
+                /*inputProps={{ "data-testid": "textfield-test" }}*/
+
                 /* Props to be used with the Comment text box such as showing user profile picture */
                 InputProps={{
 
@@ -138,7 +144,7 @@ function Comment(props : commentProps) {
                     /* at the end of the TextField an arrow is displayed which allows the user to post their comment */
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton color={"success"} onClick={() => {
+                            <IconButton data-testid="comment-button-test" color={"success"} onClick={() => {
 
                                 /* comment can be posted if TextField isn't empty or has under 100 characters */
                                 if(textValue.trim().length > 0 && textValue.trim().length <= 100) { addComment() }

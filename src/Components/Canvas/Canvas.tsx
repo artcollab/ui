@@ -8,11 +8,13 @@ import BrushIcon from '@mui/icons-material/Brush';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import CircleIcon from '@mui/icons-material/Circle';
+import { hexToRgb } from '../../Util/HexToRGB';
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const [colour, setColour] = useState("#000000");
     const [brushSize, setBrushSize] = useState(1);
+    const [opacity, setOpacity] = useState(100);
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
     const ToggleTool = (e: React.MouseEvent<HTMLElement>, newTool: string) => {
         if (canvas) {
@@ -34,11 +36,13 @@ function Canvas() {
 
     useEffect(() => {
         if (canvas) {
-            canvas.freeDrawingBrush.color = colour;
+            const rgb = hexToRgb(colour)!;
+
+            canvas.freeDrawingBrush.color = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + opacity/100 + ")";
             canvas.freeDrawingBrush.width = brushSize;
         }
 
-    }, [colour, brushSize]);
+    }, [colour, brushSize, opacity]);
 
     useEffect(() => {
         setCanvas(initCanvas());
@@ -91,41 +95,54 @@ function Canvas() {
     return (
         <>
             <Paper className="toolBarContainer">
-                    <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool}>
-                        <ToggleButton value="move"><MouseIcon /></ToggleButton>
-                        <ToggleButton value="paint"><BrushIcon /></ToggleButton>
-                        <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
-                        <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
-                        <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
-                    </ToggleButtonGroup>
-                    <Divider flexItem orientation="vertical" />
-                    <ButtonGroup>
-                        <Button type='button' name='clear' onClick={() => canvas?.clear()}>Clear</Button>
-                        <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
-                        <Button >
-                            <Input
-                                value={brushSize}
-                                onChange={(e: any) => { setBrushSize(e.target.value) }}
-                                size="small"
-                                disableUnderline
-                                inputProps={{
-                                    step: 1,
-                                    min: 1,
-                                    max: 100,
-                                    type: "number"
-                                }}
-                                sx={{ width: "3rem", marginRight: "0.5rem" }}
-                            />
-                            Brush Size
-                        </Button>
-                    </ButtonGroup>
+                <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool}>
+                    <ToggleButton value="move"><MouseIcon /></ToggleButton>
+                    <ToggleButton value="paint"><BrushIcon /></ToggleButton>
+                    <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
+                    <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
+                    <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
+                </ToggleButtonGroup>
+                <Divider flexItem orientation="vertical" />
+                <ButtonGroup>
+                    <Button type='button' name='clear' onClick={() => canvas?.clear()}>Clear</Button>
+                    <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
+                    <Button >
+                        <Input
+                            value={brushSize}
+                            onChange={(e: any) => { setBrushSize(parseInt(e.target.value, 10) || 1) }}
+                            size="small"
+                            disableUnderline
+                            inputProps={{
+                                step: 1,
+                                min: 1,
+                                max: 100,
+                                type: "number"
+                            }}
+                            sx={{ width: "3rem", marginRight: "0.5rem" }}
+                        />
+                        Brush Size
+                    </Button>
+                    <Button >
+                        <Input
+                            value={opacity}
+                            onChange={(e: any) => { setOpacity(parseInt(e.target.value, 10) || 1) }}
+                            size="small"
+                            disableUnderline
+                            inputProps={{
+                                step: 1,
+                                min: 0,
+                                max: 100,
+                                type: "number"
+                            }}
+                            sx={{ width: "3rem", marginRight: "0.5rem" }}
+                        />
+                        Opacity
+                    </Button>
+                </ButtonGroup>
             </Paper>
             <Paper className='squareContainer'>
-                <div>
-                    <div onClick={currentTool !== "paint" ? addObject : () => { }} >
-                        <canvas id="canvas" />
-                    </div>
-
+                <div onClick={currentTool !== "paint" ? addObject : () => { }} >
+                    <canvas id="canvas" />
                 </div>
             </Paper>
         </>

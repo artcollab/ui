@@ -141,7 +141,7 @@ function Canvas() {
                 </ButtonGroup>
             </Paper>
             <Paper className='squareContainer'>
-                <div onClick={currentTool !== "paint" ? addObject : () => { }} >
+                <div onClick={currentTool !== "paint" && currentTool ? addObject : () => { }} >
                     <canvas id="canvas" />
                 </div>
             </Paper>

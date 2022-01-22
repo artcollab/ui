@@ -11,14 +11,23 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { connect, io, Socket } from 'socket.io-client';
 
-const socket = io('http://localhost:8080');
+const socket = io('http://localhost:8080');     // connect to socket io server
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
+
+    // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
     const [brushSize, setBrushSize] = useState(1);
     const [opacity, setOpacity] = useState(100);
+
+    // Currently equipped drawing tool, types can be found in types/ToolBarItems.ts
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
+
+    // To help prevent feedback loops, we store the last received object received through socket io
+    let receivedObj: fabric.Object;
+
+    // Event function to switch between toolbar items, paint tool functionality must be declared seperately using canvas.isDrawingMode
     const ToggleTool = (e: React.MouseEvent<HTMLElement>, newTool: string) => {
         if (canvas) {
             if (currentTool === "paint") canvas.isDrawingMode = false;
@@ -27,6 +36,7 @@ function Canvas() {
         }
     }
 
+    // canvas initial state
     function initCanvas(): fabric.Canvas {
         return (
             new fabric.Canvas("canvas", {
@@ -37,31 +47,43 @@ function Canvas() {
         );
     }
 
+    // When brush colour, size or opacity is changed, this hook block applies new attribute(s)
     useEffect(() => {
         if (canvas) {
             const rgb = hexToRgb(colour)!;
 
+            // in order to access the opacity attribute, the colour must be converted from hex to rgb
             canvas.freeDrawingBrush.color = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + opacity / 100 + ")";
             canvas.freeDrawingBrush.width = brushSize;
         }
 
     }, [colour, brushSize, opacity]);
 
+    // Using an empty dependency list, this block only runs on page load. Therefore this is quite useful for initializing the canvas
     useEffect(() => {
         if (!canvas) {
             setCanvas(initCanvas());
         }
     }, []);
 
+    // For each change in the canvas, new changes are emitted to the socket server
     useEffect(() => {
+
+        // Canvas event listener detects whenever an object is added to the page, if the object isn't a duplicate, we emit it.
         canvas?.on("object:added", (object) => {
-            if (socket) socket.emit('newObject', object);
+            // This comparison allows us to know whether or not this object was created by this client or received by socket io
+            let dupe = object.target == receivedObj;
+
+            if (socket && !dupe && object.target) socket.emit('newObject', object);
         })
 
+        // Restarting this listener helps prevent duplicate events being fired
+        socket.off('addObject');
         socket.on('addObject', (object) => {
             let obj: fabric.Object = object.target;
             let newObj: fabric.Object;
 
+            // When adding the object raw, the browser exhibits strange breaking behaviour, instead we add the data to a new object using the spread operator
             if (obj.type === "rect") {
                 newObj = new fabric.Rect({
                     ...obj
@@ -81,9 +103,12 @@ function Canvas() {
             }
 
             if (obj.type === "path") {
-                newObj = new fabric.Path((obj as fabric.Path).path, {...obj});
+                newObj = new fabric.Path((obj as fabric.Path).path, { ...obj });
             }
 
+            receivedObj = newObj!;
+
+            // Adding new object to canvas and rendering
             canvas?.add(newObj!);
             canvas?.renderAll();
         })
@@ -91,6 +116,7 @@ function Canvas() {
 
     const addObject = (e: any) => {
         let object: fabric.Object;
+        // Extracting mouse location to allow us to choose the position of the object
         let pointer = canvas?.getPointer(e);
         let mouseX = pointer!.x;
         let mouseY = pointer!.y;
@@ -102,7 +128,7 @@ function Canvas() {
                 height: defaultSize,
                 width: defaultSize,
                 fill: colour,
-                left: mouseX - (defaultSize / 2),
+                left: mouseX - (defaultSize / 2), // default origin point is in the top left corner of the object, this line resets it to center
                 top: mouseY - (defaultSize / 2)
             });
         }
@@ -125,11 +151,11 @@ function Canvas() {
             })
         }
 
-        if (currentTool !== "move") {
-            canvas?.add(object!)
-            canvas?.renderAll()
-        }
+        // Adding new object to canvas and rendering
+        canvas?.add(object!)
+        canvas?.renderAll()
 
+        // After addingfan object, tool is swapped back to the move tool, this prevents some ugly behaviour
         setCurrentTool("move");
     };
 
@@ -182,7 +208,7 @@ function Canvas() {
                 </ButtonGroup>
             </Paper>
             <Paper className='squareContainer'>
-                <div onClick={currentTool !== "paint" && currentTool ? addObject : () => { }} >
+                <div onClick={currentTool !== "paint" && "move" && currentTool ? addObject : () => { }} >
                     <canvas id="canvas" />
                 </div>
             </Paper>

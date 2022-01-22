@@ -9,6 +9,9 @@ import CropSquareIcon from '@mui/icons-material/CropSquare';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import CircleIcon from '@mui/icons-material/Circle';
 import { hexToRgb } from '../../Util/HexToRGB';
+import { connect, io, Socket } from 'socket.io-client';
+
+const socket = io('http://localhost:8080');
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
@@ -38,15 +41,53 @@ function Canvas() {
         if (canvas) {
             const rgb = hexToRgb(colour)!;
 
-            canvas.freeDrawingBrush.color = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + opacity/100 + ")";
+            canvas.freeDrawingBrush.color = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + opacity / 100 + ")";
             canvas.freeDrawingBrush.width = brushSize;
         }
 
     }, [colour, brushSize, opacity]);
 
     useEffect(() => {
-        setCanvas(initCanvas());
+        if (!canvas) {
+            setCanvas(initCanvas());
+        }
     }, []);
+
+    useEffect(() => {
+        canvas?.on("object:added", (object) => {
+            if (socket) socket.emit('newObject', object);
+        })
+
+        socket.on('addObject', (object) => {
+            let obj: fabric.Object = object.target;
+            let newObj: fabric.Object;
+
+            if (obj.type === "rect") {
+                newObj = new fabric.Rect({
+                    ...obj
+                });
+            }
+
+            if (obj.type === "circle") {
+                newObj = new fabric.Circle({
+                    ...obj
+                });
+            }
+
+            if (obj.type === "triangle") {
+                newObj = new fabric.Triangle({
+                    ...obj
+                });
+            }
+
+            if (obj.type === "path") {
+                newObj = new fabric.Path((obj as fabric.Path).path, {...obj});
+            }
+
+            canvas?.add(newObj!);
+            canvas?.renderAll();
+        })
+    }, [canvas]);
 
     const addObject = (e: any) => {
         let object: fabric.Object;

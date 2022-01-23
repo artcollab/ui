@@ -17,6 +17,10 @@ io.on('connection', (socket) => {
     socket.on('newObject', (object) => {
         socket.broadcast.emit('addObject', object);
     });
+
+    socket.on('newModification', (object) => {
+        socket.broadcast.emit('modifyObject', object);
+    });
 });
 server.listen(8080, () => {
     console.log('listening on *:8080');

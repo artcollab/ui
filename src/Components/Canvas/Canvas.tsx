@@ -9,8 +9,10 @@ import CropSquareIcon from '@mui/icons-material/CropSquare';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import CircleIcon from '@mui/icons-material/Circle';
 import { hexToRgb } from '../../Util/HexToRGB';
-import { connect, io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
+import { v1 } from 'uuid';
 
+let objects: Array<{ id: string, obj: fabric.Object }> = [];
 const socket = io('http://localhost:8080');     // connect to socket io server
 
 function Canvas() {
@@ -74,44 +76,73 @@ function Canvas() {
             // This comparison allows us to know whether or not this object was created by this client or received by socket io
             let dupe = object.target == receivedObj;
 
-            if (socket && !dupe && object.target) socket.emit('newObject', object);
+            if (socket && !dupe && object.target) {
+                let newObj = { id: v1(), obj: object.target };
+                objects.push(newObj);
+                socket.emit('newObject', newObj);
+            }
+        })
+
+        canvas?.on("object:modified", (object) => {
+            // finding the same object in the object list in order to preserve the ID
+            let newObject = objects.find((e) => e.obj === object.target);
+            let index = objects.indexOf(newObject!);
+            if (newObject) socket.emit('newModification', newObject);
+            objects.splice(index, 1, {id:newObject!.id, obj: object.target!})
         })
 
         // Restarting this listener helps prevent duplicate events being fired
         socket.off('addObject');
-        socket.on('addObject', (object) => {
-            let obj: fabric.Object = object.target;
-            let newObj: fabric.Object;
+        socket.on('addObject', (obj) => {
+            let newObj: any;
+            objects.push(obj);
 
             // When adding the object raw, the browser exhibits strange breaking behaviour, instead we add the data to a new object using the spread operator
-            if (obj.type === "rect") {
+            if (obj.obj.type === "rect") {
                 newObj = new fabric.Rect({
-                    ...obj
+                    ...obj.obj
                 });
             }
 
-            if (obj.type === "circle") {
+            if (obj.obj.type === "circle") {
                 newObj = new fabric.Circle({
-                    ...obj
+                    ...obj.obj
                 });
             }
 
-            if (obj.type === "triangle") {
+            if (obj.obj.type === "triangle") {
                 newObj = new fabric.Triangle({
-                    ...obj
+                    ...obj.obj
                 });
             }
 
-            if (obj.type === "path") {
-                newObj = new fabric.Path((obj as fabric.Path).path, { ...obj });
+            if (obj.obj.type === "path") {
+                newObj = new fabric.Path((obj.obj as fabric.Path).path, { ...obj.obj });
             }
 
             receivedObj = newObj!;
-
             // Adding new object to canvas and rendering
             canvas?.add(newObj!);
             canvas?.renderAll();
-        })
+        });
+
+        socket.on('modifyObject', (object) => {
+            // finding the object on the next client using ID
+            let storedObj = objects.find((e) => e.id === object.id);
+            let index = objects.indexOf(storedObj!);
+
+            canvas?.getObjects().forEach((element) => {
+                // due to some differences in objects stored in an array and objects present on the canvas, this dirty solution to matching objects is used instead
+                if ((storedObj?.obj.top == element.top) && (storedObj?.obj.left == element.left)) {
+                    element.set({ ...object.obj })
+                    element.setCoords();
+                    canvas?.renderAll();
+                    // updating the array of objects
+                    objects.splice(index, 1, {id:storedObj!.id, obj: object.obj})
+                }
+            })
+
+        });
     }, [canvas]);
 
     const addObject = (e: any) => {
@@ -129,7 +160,7 @@ function Canvas() {
                 width: defaultSize,
                 fill: colour,
                 left: mouseX - (defaultSize / 2), // default origin point is in the top left corner of the object, this line resets it to center
-                top: mouseY - (defaultSize / 2)
+                top: mouseY - (defaultSize / 2),
             });
         }
 
@@ -208,7 +239,7 @@ function Canvas() {
                 </ButtonGroup>
             </Paper>
             <Paper className='squareContainer'>
-                <div onClick={currentTool !== "paint" && "move" && currentTool ? addObject : () => { }} >
+                <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >
                     <canvas id="canvas" />
                 </div>
             </Paper>

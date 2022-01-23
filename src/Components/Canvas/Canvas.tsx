@@ -12,7 +12,6 @@ import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
 
-let objects: Array<{ id: string, obj: fabric.Object }> = [];
 const socket = io('http://localhost:8080');     // connect to socket io server
 
 function Canvas() {
@@ -59,7 +58,7 @@ function Canvas() {
             canvas.freeDrawingBrush.width = brushSize;
         }
 
-    }, [colour, brushSize, opacity]);
+    }, [colour, brushSize, opacity, canvas]);
 
     // Using an empty dependency list, this block only runs on page load. Therefore this is quite useful for initializing the canvas
     useEffect(() => {
@@ -74,52 +73,60 @@ function Canvas() {
         // Canvas event listener detects whenever an object is added to the page, if the object isn't a duplicate, we emit it.
         canvas?.on("object:added", (object) => {
             // This comparison allows us to know whether or not this object was created by this client or received by socket io
-            let dupe = object.target == receivedObj;
+            let dupe = object.target === receivedObj;
+            let id = v1();
 
             if (socket && !dupe && object.target) {
-                let newObj = { id: v1(), obj: object.target };
-                objects.push(newObj);
+                let newObj = { id: id, obj: object.target };
+                newObj.obj.set({name : id});
                 socket.emit('newObject', newObj);
             }
         })
 
         canvas?.on("object:modified", (object) => {
             // finding the same object in the object list in order to preserve the ID
-            let newObject = objects.find((e) => e.obj === object.target);
-            let index = objects.indexOf(newObject!);
-            if (newObject) socket.emit('newModification', newObject);
-            objects.splice(index, 1, {id:newObject!.id, obj: object.target!})
-        })
+            let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
+            newObject?.set({name : object.target!.name});
+            if (newObject) socket.emit('newModification', {id: object.target!.name, obj : newObject});
+        });
+
+        canvas?.on("object:moving", (object) => {
+            // finding the same object in the object list in order to preserve the ID
+            let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
+            newObject?.set({name : object.target!.name});
+            if (newObject) socket.emit('newModification', {id: object.target!.name, obj : newObject});
+        });
 
         // Restarting this listener helps prevent duplicate events being fired
         socket.off('addObject');
-        socket.on('addObject', (obj) => {
+        socket.on('addObject', (object : { id: string, obj: fabric.Object }) => {
+            const {id, obj} = object; 
             let newObj: any;
-            objects.push(obj);
 
             // When adding the object raw, the browser exhibits strange breaking behaviour, instead we add the data to a new object using the spread operator
-            if (obj.obj.type === "rect") {
+            if (obj.type === "rect") {
                 newObj = new fabric.Rect({
-                    ...obj.obj
+                    ...obj
                 });
             }
 
-            if (obj.obj.type === "circle") {
+            if (obj.type === "circle") {
                 newObj = new fabric.Circle({
-                    ...obj.obj
+                    ...obj
                 });
             }
 
-            if (obj.obj.type === "triangle") {
+            if (obj.type === "triangle") {
                 newObj = new fabric.Triangle({
-                    ...obj.obj
+                    ...obj
                 });
             }
 
-            if (obj.obj.type === "path") {
-                newObj = new fabric.Path((obj.obj as fabric.Path).path, { ...obj.obj });
+            if (obj.type === "path") {
+                newObj = new fabric.Path((obj as fabric.Path).path, { ...obj });
             }
 
+            newObj.set({name : id});
             receivedObj = newObj!;
             // Adding new object to canvas and rendering
             canvas?.add(newObj!);
@@ -127,18 +134,13 @@ function Canvas() {
         });
 
         socket.on('modifyObject', (object) => {
-            // finding the object on the next client using ID
-            let storedObj = objects.find((e) => e.id === object.id);
-            let index = objects.indexOf(storedObj!);
-
             canvas?.getObjects().forEach((element) => {
-                // due to some differences in objects stored in an array and objects present on the canvas, this dirty solution to matching objects is used instead
-                if ((storedObj?.obj.top == element.top) && (storedObj?.obj.left == element.left)) {
+                if (object.id === element.name) {
                     element.set({ ...object.obj })
                     element.setCoords();
                     canvas?.renderAll();
-                    // updating the array of objects
-                    objects.splice(index, 1, {id:storedObj!.id, obj: object.obj})
+                    element.set({name : object.id});
+                    console.log(element);
                 }
             })
 

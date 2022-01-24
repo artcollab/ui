@@ -30,12 +30,12 @@
   padding: 0.625em;
   background-color: var(--post-background) !important;
   margin-top: 5em;
-  
+
   /* Changes the TextField background to pure white */
   .MuiInputBase-root {
     background-color: #FFF;
   }
-  
+
 }
 
 /* CSS for Square Sized post content within the Square container */
@@ -153,6 +153,11 @@
   .commentModal {
     display: flex;
     margin-top: 10em;
+    
+    /* Changes the TextField background to pure white */
+    .MuiInputBase-root {
+      background-color: #FFF;
+    }
   }
 
   /* hides some desktop components while in mobile view */

@@ -91,7 +91,7 @@ function Post(props : postProps) {
             <Paper className="squareContainer" data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
+                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error displaying image..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 
@@ -203,18 +203,13 @@ function Post(props : postProps) {
 
                     <Grid marginLeft="auto" marginRight="auto" item>
 
-                        {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
-                        <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
+                        {/* button for the like component */}
+                        <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
 
-                            {/* button for the like component */}
-                            <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
+                            {/* uses a smiley face showing where mobile users can like the post */}
+                            <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
 
-                                {/* uses a smiley face showing where mobile users can like the post */}
-                                <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
-
-                            </IconButton>
-
-                        </Tooltip>
+                        </IconButton>
 
                         {/* button component which can be pressed to display the comment section in a Modal */}
                         <IconButton sx={{marginLeft: '2em'}} onClick={() => setOpen(true)}>
@@ -225,17 +220,19 @@ function Post(props : postProps) {
                         </IconButton>
 
                         {/* button for the edit component */}
-                        <IconButton sx={{marginLeft: '2em'}} >
+                        <IconButton sx={{marginLeft: '2em'}}>
 
                             {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
                             <CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
 
                         </IconButton>
 
+                        {/* like counter for when in mobile view, tooltip wont work since no cursor on mobile */}
+                        <div style={{marginLeft: '1.15em'}}>{likes}</div>
+
                     </Grid>
                 </Grid>
             </div>
-
         </Container>
     )
 }

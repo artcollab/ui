@@ -14,23 +14,24 @@
 
 /* CSS Specifications for the comment box container */
 .commentBox {
-  margin-block-end: 1rem;
+  margin-block-end: 1em;
   word-break: break-word;
   overflow: auto;
-  padding: 0.625rem;
-  min-width: 15%;
+  padding: 0.625em;
   max-width: 27.5%;
-  height: 18.75rem;
-  border: 0.125rem solid lightgrey;
+  height: 18.75em;
+  border: 0.125em solid lightgrey;
   background-color: var(--comment-background) !important;
-  border-radius: 0.75rem;
+  border-radius: 0.75em;
 }
 
 /* CSS Specifications for the comment box container within mobile view */
 @media (max-width: 800px) {
+
   .commentBox {
-    max-width: 13rem;;
+    max-width: 13em;
     margin-left: auto;
     margin-right: auto;
   }
+
 }

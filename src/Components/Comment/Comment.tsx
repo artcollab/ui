@@ -4,6 +4,7 @@ import './Comment.scss'
 import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ColorName } from "../../Util/NameColourGenerator";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
@@ -13,6 +14,7 @@ type commentProps = {
 /* tempComment constant, to be used for testing until DB is up */
 const tempComment : comment = {
     user: {
+        id: "",
         name: "DrawDojo",
         thumbnail: "",
         color: ""
@@ -38,11 +40,7 @@ function Comment(props : commentProps) {
         /* userComment structure (temp values currently) */
         const userComment: comment = {
 
-            user: {
-                name: "",
-                thumbnail: "",
-                color: ""
-            },
+            user: tempComment.user,
             text: textValue
 
         };
@@ -156,35 +154,6 @@ function Comment(props : commentProps) {
 
         </Box>
     )
-}
-
-/* generates a random color background for the user if they don't have a profile picture */
-function ColorName(name: string | String | undefined) {
-
-    /* initial variables */
-    let hash = 0
-    let idx = 0
-    let color = '#'
-
-    /* default color in unexpected undefined name */
-    if(name === undefined) {
-        return color + 'f8f8ff'
-    }
-
-    /* generates hash value dependent on username */
-    while (idx < name.length) {
-        hash = name.charCodeAt(idx) + ((hash << 5) - hash)
-        idx++
-    }
-
-    /* generates the color based on the hash value obtained previously */
-    for (idx = 0; idx <= 2; idx++) {
-        const randomColVal = (hash >> (idx * 8)) & 0xFF
-        color += randomColVal.toString(16)
-    }
-
-    return color
-
 }
 
 export default Comment;

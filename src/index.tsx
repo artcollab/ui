@@ -7,7 +7,7 @@ import Canvas from './Components/Canvas/Canvas';
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
-    <Canvas/>
+    <Canvas room={'exampleRoom'}/>
 
   </React.StrictMode>,
   document.getElementById('root')

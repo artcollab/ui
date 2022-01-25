@@ -7,19 +7,45 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+const {
+    userJoin,
+    getCurrentUser,
+    userLeave
+  } = require('./SocketUsers');
+
 io.on('connection', (socket) => {
-    console.log("A user has joined the room");
+
+    socket.on("joinRoom", ({username, room}) => {
+        const user = userJoin(socket.id, username, room);
+        socket.join(user.room);
+        console.log(user.username + " joined " + user.room);
+    })
     
     socket.on('disconnect', () => {
-        console.log("A user has left the room");
+        const user = userLeave(socket.id);
+        if(user){
+            console.log(user.username + " has left " + user.room);
+        }
     });
 
+    socket.on('newMessage', (msg)=>{
+        const user = getCurrentUser(socket.id);
+        if(user) socket.broadcast.to(user.room).emit('addMessage', msg);
+    });
+
+    socket.on('requestCanvasClear', () => {
+        const user = getCurrentUser(socket.id);
+        io.to(user.room).emit('clearCanvas');
+    })
+
     socket.on('newObject', (object) => {
-        socket.broadcast.emit('addObject', object);
+        const user = getCurrentUser(socket.id);
+        socket.broadcast.to(user.room).emit('addObject', object);
     });
 
     socket.on('newModification', (object) => {
-        socket.broadcast.emit('modifyObject', object);
+        const user = getCurrentUser(socket.id);
+        socket.broadcast.to(user.room).emit('modifyObject', object);
     });
 });
 server.listen(8080, () => {

@@ -1,5 +1,6 @@
 export type user = {
-    name: String
-    thumbnail: String
-    color: String
+    id: string,
+    name: string
+    thumbnail: string
+    color: string
 }

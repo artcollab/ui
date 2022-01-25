@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import "./Canvas.scss";
-import { Button, ButtonGroup, Divider, Input, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Avatar, Box, Button, ButtonGroup, Divider, Grid, IconButton, Input, InputAdornment, InputBase, Paper, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
 import MouseIcon from '@mui/icons-material/Mouse';
 import BrushIcon from '@mui/icons-material/Brush';
@@ -11,11 +11,36 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
+import { comment } from '../../Types/Comment';
+import { user } from '../../Types/User';
+import SendIcon from '@mui/icons-material/Send';
+
+type canvasProps = {
+    room: string
+}
+
+
+
+//////////////////////TEMP STUFF/////////////////////////////
+const username = "Default";
+const tempUser: user = {
+    id: v1(),
+    name: username,
+    thumbnail: '../avatarTest.ico',
+    color: ""
+}
+/////////////////////////////////////////////////////////////
+
+
+
+
 
 const socket = io('http://localhost:8080');     // connect to socket io server
 
-function Canvas() {
+function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
+    let room = props.room;
+
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -24,6 +49,10 @@ function Canvas() {
 
     // Currently equipped drawing tool, types can be found in types/ToolBarItems.ts
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
+
+    const [messageValue, setMessageValue] = useState("");
+    const [messageList, setMessageList] = useState<Array<comment>>([]);
+
 
     // To help prevent feedback loops, we store the last received object received through socket io
     let receivedObj: fabric.Object;
@@ -35,6 +64,17 @@ function Canvas() {
             if (newTool === "paint" && !canvas.isDrawingMode) canvas.isDrawingMode = true;
             setCurrentTool(newTool as ToolBarItem);
         }
+    }
+
+    const postMessage = (message: string) => {
+        let newMessage: comment = {
+            user: tempUser,
+            text: message
+        }
+        setMessageList([...messageList, newMessage]);
+        socket.emit("newMessage", newMessage);
+
+        setMessageValue("");
     }
 
     // canvas initial state
@@ -64,8 +104,14 @@ function Canvas() {
     useEffect(() => {
         if (!canvas) {
             setCanvas(initCanvas());
+            socket.emit("joinRoom", { username, room });
         }
     }, []);
+
+    socket.on("addMessage", (message: comment) => {
+        message.user.color = "message-partner";
+        setMessageList([...messageList, message]);
+    });
 
     // For each change in the canvas, new changes are emitted to the socket server
     useEffect(() => {
@@ -78,7 +124,7 @@ function Canvas() {
 
             if (socket && !dupe && object.target) {
                 let newObj = { id: id, obj: object.target };
-                newObj.obj.set({name : id});
+                newObj.obj.set({ name: id });
                 socket.emit('newObject', newObj);
             }
         })
@@ -86,21 +132,25 @@ function Canvas() {
         canvas?.on("object:modified", (object) => {
             // finding the same object in the object list in order to preserve the ID
             let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
-            newObject?.set({name : object.target!.name});
-            if (newObject) socket.emit('newModification', {id: object.target!.name, obj : newObject});
+            newObject?.set({ name: object.target!.name });
+            if (newObject) socket.emit('newModification', { id: object.target!.name, obj: newObject });
         });
 
         canvas?.on("object:moving", (object) => {
             // finding the same object in the object list in order to preserve the ID
             let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
-            newObject?.set({name : object.target!.name});
-            if (newObject) socket.emit('newModification', {id: object.target!.name, obj : newObject});
+            newObject?.set({ name: object.target!.name });
+            if (newObject) socket.emit('newModification', { id: object.target!.name, obj: newObject });
         });
+
+        socket.on("clearCanvas", () => {
+            canvas?.clear();
+        })
 
         // Restarting this listener helps prevent duplicate events being fired
         socket.off('addObject');
-        socket.on('addObject', (object : { id: string, obj: fabric.Object }) => {
-            const {id, obj} = object; 
+        socket.on('addObject', (object: { id: string, obj: fabric.Object }) => {
+            const { id, obj } = object;
             let newObj: any;
 
             // When adding the object raw, the browser exhibits strange breaking behaviour, instead we add the data to a new object using the spread operator
@@ -126,7 +176,7 @@ function Canvas() {
                 newObj = new fabric.Path((obj as fabric.Path).path, { ...obj });
             }
 
-            newObj.set({name : id});
+            newObj.set({ name: id });
             receivedObj = newObj!;
             // Adding new object to canvas and rendering
             canvas?.add(newObj!);
@@ -139,8 +189,7 @@ function Canvas() {
                     element.set({ ...object.obj })
                     element.setCoords();
                     canvas?.renderAll();
-                    element.set({name : object.id});
-                    console.log(element);
+                    element.set({ name: object.id });
                 }
             })
 
@@ -149,6 +198,7 @@ function Canvas() {
 
     const addObject = (e: any) => {
         let object: fabric.Object;
+
         // Extracting mouse location to allow us to choose the position of the object
         let pointer = canvas?.getPointer(e);
         let mouseX = pointer!.x;
@@ -193,18 +243,10 @@ function Canvas() {
     };
 
     return (
-        <>
-            <Paper className="toolBarContainer">
-                <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool}>
-                    <ToggleButton value="move"><MouseIcon /></ToggleButton>
-                    <ToggleButton value="paint"><BrushIcon /></ToggleButton>
-                    <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
-                    <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
-                    <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
-                </ToggleButtonGroup>
-                <Divider flexItem orientation="vertical" />
-                <ButtonGroup>
-                    <Button type='button' name='clear' onClick={() => canvas?.clear()}>Clear</Button>
+        <Grid container spacing={2} className="gridContainer">
+            <Grid item xs={12}>
+                <ButtonGroup className="brushToolContainer">
+                    <Button type='button' name='clear' onClick={() => socket.emit('requestCanvasClear')}>Clear</Button>
                     <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
                     <Button >
                         <Input
@@ -239,13 +281,58 @@ function Canvas() {
                         Opacity
                     </Button>
                 </ButtonGroup>
-            </Paper>
-            <Paper className='squareContainer'>
-                <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >
-                    <canvas id="canvas" />
-                </div>
-            </Paper>
-        </>
+            </Grid>
+            <Grid item >
+                <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
+                    <ToggleButton value="move"><MouseIcon /></ToggleButton>
+                    <ToggleButton value="paint"><BrushIcon /></ToggleButton>
+                    <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
+                    <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
+                    <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
+                </ToggleButtonGroup>
+            </Grid>
+            <Grid item>
+                <Paper>
+                    <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >
+                        <canvas id="canvas" />
+                    </div>
+                </Paper>
+            </Grid>
+            <Grid item className="chatContainer">
+                <Paper className={"chatBox"}>
+                    <Box className="messagesContainer">
+                        {messageList.map((message) => {
+                            let received = message.user.id === tempUser.id ? "" : "messageReceived";
+                            return (
+                                <div className="messageContainer" key={v1()}>
+                                    {message.user.color ?
+                                        <div className="messageName">
+                                            {message.user.name}
+                                        </div>
+                                        :
+                                        ""
+                                    }
+                                    <div className={"messageContent " + received}>
+                                        {message.text}
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </Box>
+                    <Paper>
+                        <InputBase
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder="Send A Message"
+                            value={messageValue}
+                            onChange={(e) => setMessageValue(e.target.value)}
+                        />
+                        <IconButton type="submit" sx={{ p: '10px' }} onClick={() => postMessage(messageValue)}>
+                            <SendIcon />
+                        </IconButton>
+                    </Paper>
+                </Paper>
+            </Grid>
+        </Grid>
     )
 }
 

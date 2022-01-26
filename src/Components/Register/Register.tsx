@@ -9,21 +9,28 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import './Register.scss';
+import { handleRegisterResponse } from '../../Util/handleResponse';
 
 function Register() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setErrorText("");
         const data = new FormData(event.currentTarget);
         const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
 
-        const url = "https://api.operce.net/auth/register"
+        const prod_url = "https://api.operce.net/auth/register";
         const req = new XMLHttpRequest();
         
-        req.open("POST", url, true); // open async http post request
+        req.open("POST", prod_url, true); // open async http post request
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = () => {
             if(req.readyState === 4 && req.status === 201) {
-                console.log(JSON.parse(req.status.toString()));
+                // on successful register, add response to localstorage
+                handleRegisterResponse(req.response);
+            }
+            else{
+                // else display error message
+                setErrorText(JSON.parse(req.responseText)['error']);
             }
         };
         req.send(body);
@@ -43,6 +50,8 @@ function Register() {
     const nameRegex = /^[A-Za-z-]*$/;   // regex pattern matches only alphabetical characters or hyphens (for hyphenated names) without spaces
     const [firstName, setFirstName] = useState("");
     const [surname, setSurname] = useState("");
+
+    const [errorText, setErrorText] = useState("");
 
     return (
         <Container className="registerContainer" component="main" maxWidth="xs">
@@ -127,6 +136,7 @@ function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
+                                helperText={errorText}
                             />
                         </Grid>
                     </Grid>

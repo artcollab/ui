@@ -67,7 +67,7 @@ function Feed(props : feed) {
                 <Suspense fallback={<div className={"loadingIcon"}><CircularProgress size={125} sx={{color: "#ffccac"}}/></div>}>
 
                     {/* uses a nested map to fetch and display the posts */}
-                    {displayPosts.map(() => props.posts?.map((post) => <FeedPost Post={post}/>))}
+                    {displayPosts.map((i) => props.posts?.map((post) => <FeedPost key={i} Post={post}/>))}
 
                 </Suspense>
 
@@ -82,7 +82,7 @@ function Feed(props : feed) {
             </div>
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
-            <IconButton size={"small"} className={'createButton'}><GestureOutlinedIcon/></IconButton>
+            <IconButton data-testid="scroll-button-test" size={"small"} className={'createButton'}><GestureOutlinedIcon/></IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&

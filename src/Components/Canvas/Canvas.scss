@@ -1,12 +1,13 @@
 .gridContainer {
-  margin-top: 10rem !important;
-  max-width: 60%;
+  //margin-top: 10rem !important;
+  width: fit-content !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
 
 .brushToolContainer {
-  margin-left: 13%;
+  margin: auto !important;
+  padding-bottom: 1rem;
 }
 
 .colorInput {

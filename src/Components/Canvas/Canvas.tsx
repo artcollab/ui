@@ -243,96 +243,100 @@ function Canvas(props: canvasProps) {
     };
 
     return (
-        <Grid container spacing={2} className="gridContainer">
-            <Grid item xs={12}>
-                <ButtonGroup className="brushToolContainer">
-                    <Button type='button' name='clear' onClick={() => socket.emit('requestCanvasClear')}>Clear</Button>
-                    <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
-                    <Button >
-                        <Input
-                            value={brushSize}
-                            onChange={(e: any) => { setBrushSize(parseInt(e.target.value, 10) || 1) }}
-                            size="small"
-                            disableUnderline
-                            inputProps={{
-                                step: 1,
-                                min: 1,
-                                max: 100,
-                                type: "number"
-                            }}
-                            sx={{ width: "3rem", marginRight: "0.5rem" }}
-                        />
-                        Brush Size
-                    </Button>
-                    <Button >
-                        <Input
-                            value={opacity}
-                            onChange={(e: any) => { setOpacity(parseInt(e.target.value, 10) || 1) }}
-                            size="small"
-                            disableUnderline
-                            inputProps={{
-                                step: 1,
-                                min: 0,
-                                max: 100,
-                                type: "number"
-                            }}
-                            sx={{ width: "3rem", marginRight: "0.5rem" }}
-                        />
-                        Opacity
-                    </Button>
-                </ButtonGroup>
+        <>
+            <Grid container sx={{marginTop: "10rem"}}>
+                <Grid item className="brushToolContainer">
+                    <ButtonGroup>
+                        <Button type='button' name='clear' onClick={() => socket.emit('requestCanvasClear')}>Clear</Button>
+                        <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
+                        <Button >
+                            <Input
+                                value={brushSize}
+                                onChange={(e: any) => { setBrushSize(parseInt(e.target.value, 10) || 1) }}
+                                size="small"
+                                disableUnderline
+                                inputProps={{
+                                    step: 1,
+                                    min: 1,
+                                    max: 100,
+                                    type: "number"
+                                }}
+                                sx={{ width: "3rem", marginRight: "0.5rem" }}
+                            />
+                            Brush Size
+                        </Button>
+                        <Button >
+                            <Input
+                                value={opacity}
+                                onChange={(e: any) => { setOpacity(parseInt(e.target.value, 10) || 1) }}
+                                size="small"
+                                disableUnderline
+                                inputProps={{
+                                    step: 1,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number"
+                                }}
+                                sx={{ width: "3rem", marginRight: "0.5rem" }}
+                            />
+                            Opacity
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
             </Grid>
-            <Grid item >
-                <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
-                    <ToggleButton value="move"><MouseIcon /></ToggleButton>
-                    <ToggleButton value="paint"><BrushIcon /></ToggleButton>
-                    <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
-                    <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
-                    <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
-                </ToggleButtonGroup>
-            </Grid>
-            <Grid item>
-                <Paper>
-                    <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >
-                        <canvas id="canvas" />
-                    </div>
-                </Paper>
-            </Grid>
-            <Grid item className="chatContainer">
-                <Paper className={"chatBox"}>
-                    <Box className="messagesContainer">
-                        {messageList.map((message) => {
-                            let received = message.user.id === tempUser.id ? "" : "messageReceived";
-                            return (
-                                <div className="messageContainer" key={v1()}>
-                                    {message.user.color ?
-                                        <div className="messageName">
-                                            {message.user.name}
-                                        </div>
-                                        :
-                                        ""
-                                    }
-                                    <div className={"messageContent " + received}>
-                                        {message.text}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </Box>
+            <Grid container spacing={2} className="gridContainer">
+                <Grid item >
+                    <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
+                        <ToggleButton value="move"><MouseIcon /></ToggleButton>
+                        <ToggleButton value="paint"><BrushIcon /></ToggleButton>
+                        <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
+                        <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
+                        <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
+                    </ToggleButtonGroup>
+                </Grid>
+                <Grid item>
                     <Paper>
-                        <InputBase
-                            sx={{ ml: 1, flex: 1 }}
-                            placeholder="Send A Message"
-                            value={messageValue}
-                            onChange={(e) => setMessageValue(e.target.value)}
-                        />
-                        <IconButton type="submit" sx={{ p: '10px' }} onClick={() => postMessage(messageValue)}>
-                            <SendIcon />
-                        </IconButton>
+                        <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >
+                            <canvas id="canvas" />
+                        </div>
                     </Paper>
-                </Paper>
+                </Grid>
+                <Grid item className="chatContainer">
+                    <Paper className={"chatBox"}>
+                        <Box className="messagesContainer">
+                            {messageList.map((message) => {
+                                let received = message.user.id === tempUser.id ? "" : "messageReceived";
+                                return (
+                                    <div className="messageContainer" key={v1()}>
+                                        {message.user.color ?
+                                            <div className="messageName">
+                                                {message.user.name}
+                                            </div>
+                                            :
+                                            ""
+                                        }
+                                        <div className={"messageContent " + received}>
+                                            {message.text}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </Box>
+                        <Paper>
+                            <InputBase
+                                sx={{ ml: 1, flex: 1 }}
+                                placeholder="Send A Message"
+                                value={messageValue}
+                                onChange={(e) => setMessageValue(e.target.value)}
+                            />
+                            <IconButton type="submit" sx={{ p: '10px' }} onClick={() => postMessage(messageValue)}>
+                                <SendIcon />
+                            </IconButton>
+                        </Paper>
+                    </Paper>
+                </Grid>
             </Grid>
-        </Grid>
+        </>
     )
 }
 

@@ -43,7 +43,7 @@ function Canvas(props: canvasProps) {
     // Currently equipped drawing tool, types can be found in types/ToolBarItems.ts
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
 
-    const [messageList, setMessageList] = useState<Array<comment>>([]);
+    const [messageList, setMessageList] = useState<Array<comment | string>>([]);
 
     // To help prevent feedback loops, we store the last received object received through socket io
     const receivedObject = useRef<fabric.Object>();
@@ -98,9 +98,12 @@ function Canvas(props: canvasProps) {
     }, [canvas, room]);
 
     socket.on("addMessage", (message: comment) => {
-        message.user.color = "message-partner";
         setMessageList([...messageList, message]);
     });
+
+    socket.on("addStatus", (message) => {
+        setMessageList([...messageList, message]);
+    })
 
     // For each change in the canvas, new changes are emitted to the socket server
     useEffect(() => {

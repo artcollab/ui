@@ -16,6 +16,10 @@ io.on('connection', (socket) => {
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
         socket.join(user.room);
+
+        let msg = user.username + " joined the room"
+        io.to(user.room).emit('addStatus', msg);
+        
         console.log(user.username + " joined " + user.room);
     })
 
@@ -23,6 +27,9 @@ io.on('connection', (socket) => {
         const user = userLeave(socket.id);
         if (user) {
             console.log(user.username + " has left " + user.room);
+
+            let msg = user.username + " left the room";
+            io.to(user.room).emit('addStatus', msg);
         }
     });
 
@@ -45,6 +52,7 @@ io.on('connection', (socket) => {
         const user = getCurrentUser(socket.id);
         socket.broadcast.to(user.room).emit('modifyObject', object);
     });
+
 });
 server.listen(8080, () => {
     console.log('listening on *:8080');

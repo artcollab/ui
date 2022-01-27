@@ -7,32 +7,39 @@ import { useState } from "react";
 import "./Canvas.scss"
 
 type ChatBoxProps = {
-    messageList: Array<comment>,
+    messageList: Array<comment | string>,
     postMessage: any,
     user: user
 }
 
-export default function ChatBox({messageList, postMessage, user} : ChatBoxProps) {
+export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps) {
     const [messageValue, setMessageValue] = useState("");
 
     return (
         <Paper className={"chatBox"}>
             <Box className="messagesContainer">
                 {messageList.map((message) => {
-                    let received = message.user.id === user.id ? "" : "messageReceived";
+                    let received = ""
+                    if (typeof message == "object") received = message.user.id === user.id ? "" : "messageReceived";
                     return (
-                        <div className="messageContainer" key={v1()}>
-                            {message.user.color ?
-                                <div className="messageName">
-                                    {message.user.name}
+                        <>
+                            {typeof message == "object" ?
+                                <div className="messageContainer" key={v1()}>
+                                    {message.user.id !== user.id ?
+                                        <div className="messageName">
+                                            {message.user.name}
+                                        </div>
+                                        :
+                                        ""
+                                    }
+                                    <div className={"messageContent " + received}>
+                                        {message.text}
+                                    </div>
                                 </div>
                                 :
-                                ""
+                                <div className="statusContainer" key={v1()}>{message}</div>
                             }
-                            <div className={"messageContent " + received}>
-                                {message.text}
-                            </div>
-                        </div>
+                        </>
                     )
                 })}
             </Box>
@@ -43,7 +50,7 @@ export default function ChatBox({messageList, postMessage, user} : ChatBoxProps)
                     value={messageValue}
                     onChange={(e) => setMessageValue(e.target.value)}
                 />
-                <IconButton type="submit" sx={{ p: '10px' }} onClick={() => {postMessage(messageValue); setMessageValue("")}}>
+                <IconButton type="submit" sx={{ p: '10px' }} onClick={() => { postMessage(messageValue); setMessageValue("") }}>
                     <SendIcon />
                 </IconButton>
             </Paper>

@@ -8,6 +8,7 @@ import {post} from "./Types/Post";
 
 const tempPost : post = {
     user: {
+        id: " ",
         name: " ",
         thumbnail: " ",
         color: " ",

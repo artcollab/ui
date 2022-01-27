@@ -10,6 +10,18 @@
     --theme-icon: #1c1c1c;
 }
 
+.Mui-focused {
+    color: var(--theme-icon) !important;
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: var(--theme-icon) !important;
+    }
+}
+
+.MuiOutlinedInput-notchedOutline {
+    background-color: white !important;
+}
+
 .registerIcon {
     background-color: var(--theme-icon) !important;
 }

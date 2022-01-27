@@ -14,14 +14,19 @@ import { handleRegisterResponse } from '../../Util/handleResponse';
 function Register() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        // reset error text upon every submit
         setErrorText("");
+
+        // extracting form data
         const data = new FormData(event.currentTarget);
-        const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
+        // converting formdata to a JSON object that can be ingested by the db
+        const body = JSON.stringify(Object.fromEntries(data.entries())); 
 
         const prod_url = "https://api.operce.net/auth/register";
         const req = new XMLHttpRequest();
         
-        req.open("POST", prod_url, true); // open async http post request
+        // open async http post request
+        req.open("POST", prod_url, true); 
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = () => {
             if(req.readyState === 4 && req.status === 201) {
@@ -36,8 +41,8 @@ function Register() {
         req.send(body);
     };
 
+    // email field validation
     const [emailValid, setEmailValid] = useState(true);
-
     const validateEmail = (e : React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;   // value inside email textField
         const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;  // regex pattern which matches the format of email addresses
@@ -47,10 +52,16 @@ function Register() {
         
     }
 
+    // first and last name validation
     const nameRegex = /^[A-Za-z-]*$/;   // regex pattern matches only alphabetical characters or hyphens (for hyphenated names) without spaces
     const [firstName, setFirstName] = useState("");
     const [surname, setSurname] = useState("");
 
+    // username validation
+    const usernameRegex = /^[a-zA-Z\d-_]*$/;
+    const [username, setUsername] = useState("");
+
+    // submission error text
     const [errorText, setErrorText] = useState("");
 
     return (
@@ -125,6 +136,10 @@ function Register() {
                                 name="username"
                                 autoComplete="username"
                                 placeholder="User Name"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                error={!usernameRegex.test(username)}
+                                helperText={usernameRegex.test(username) ? "" : "Invalid Username"}
                             />
                         </Grid>
                         <Grid item xs={12}>

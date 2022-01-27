@@ -1,20 +1,98 @@
+/* Theme CSS declarations for the Post component */
+:root {
+  --post-background: #f7f7f7;
+  --header-text-col: #000;
+  --icon-col: #42342c;
+}
+
+[data-theme = "default"] {
+  --post-background: #f7f7f7;
+  --header-text-col: #000;
+  --icon-col: #42342c;
+}
+
+[data-theme = "dark"] {
+  --post-background: #1c1c1c;
+  --header-text-col: #fff;
+  --icon-col: #fff;
+}
 
 /* desktop CSS specifications */
-.mainContainer {
+
+/* Container for Square Sized posts (464 x 480) */
+.squareContainer {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 5rem;
   margin-block-end: 1rem;
-  min-height: 40rem;
-  max-height: 40rem;
-  max-width: 55rem;
-  //   outline: dashed 1px black;
+  min-height: 29em;
+  max-height: 29em;
+  max-width: 43rem;
+  border-radius: 0.75rem;
+  padding: 0.625rem;
+  background-color: var(--post-background) !important;
+  margin-top: 5rem;
+  
+  /* Changes the TextField background to pure white */
+  .MuiInputBase-root {
+    background-color: #FFF;
+  }
+  
+}
+
+/* CSS for Square Sized post content within the Square container */
+.squarePostContent {
+  display: flex;
+  min-height: 29em;
+  max-height: 29em;
+  max-width: 29em;
+  border-radius: 0.75rem;
+}
+
+/* CSS for the Header of the post (avatar, username & caption) */
+.postHeader {
+  display: flex;
+  margin-left: 29.5em;
+  margin-top: -29.25rem;
+  word-break: break-word;
+  overflow: auto;
+}
+
+/* displays the author of the post (desktop) */
+.postAuthor {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  color: var(--header-text-col) !important;
+}
+
+/* displays the desktop caption version within the desktop view */
+.postCaptionDesktop {
+  display: block;
+  color: var(--header-text-col) !important;
+}
+
+/* hides the mobile caption version within the desktop view */
+.postCaptionMobile {
+  display: none;
+}
+
+/* Post interaction CSS (like button, comment button & edit/mashup button) */
+.desktopPostInteraction {
+  display: flex;
+  margin-left: 29.8em;
+  margin-top: 1rem;
+}
+
+/* chatBubble CSS to change its color and size (desktop) */
+.staticButtons {
+  font-size: 1.875rem !important;
+  color: var(--icon-col) !important;
 }
 
 /* comment section for desktop CSS specs */
 .desktopComment {
   display: flex;
-  margin-top: 20rem;
+  margin-top: -20.25rem;
   justify-content: flex-end;
 }
 
@@ -28,11 +106,75 @@
   display: none;
 }
 
-/* mobile styles for the main component, mainly to force it to cover the entire width of the screen */
+/* CSS color for the like button having not been clicked */
+.noLike * {
+  color: #858585;
+}
+
+/* CSS color for the like button after being clicked */
+.like * {
+  color: var(--icon-col) !important;
+}
+
+/* hides mobile post interaction elements in desktop view */
+.mobilePostInteraction {
+  display: none;
+}
+
+/* mobile styles for the main component at 800px width */
 @media (max-width: 800px) {
-  .mainContainer {
+
+  /* Resizing & tweaking square container for when in mobile view */
+  .squareContainer {
+    justify-content: center;
+    min-height: 6em;
+    max-width: 29em;
+    margin-top: 7rem;
+    max-height: fit-content
+  }
+
+  /* When in mobile view the post should be centered on the screen */
+  .squarePostContent {
+    margin-right: auto;
+    margin-left: auto;
     width: 100%;
-    margin-right: 5rem;
+    min-height: 50%;
+    height: 100%;
+  }
+
+  /* hides desktop interaction buttons */
+  .desktopPostInteraction {
+    display: none;
+  }
+
+  /* CSS for the Header of the post (avatar, username & caption) */
+  .postHeader {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.75rem;
+    word-break: break-word;
+    overflow: auto;
+  }
+
+  /* postAuthor will now have white text within mobile view */
+  .postAuthor {
+    color: var(--header-text-col) !important;
+  }
+
+  /* liked button color changed within mobile view due to different backdrop */
+  .like * {
+    color: #42342c !important;
+  }
+
+  /* hides the desktop caption version in mobile view */
+  .postCaptionDesktop {
+    display: none
+  }
+
+  /* mobile version of the caption can now be shown */
+  .postCaptionMobile {
+    display: block;
+    color: var(--header-text-col) !important;
   }
 
   /* hides desktop comment section within mobile view */
@@ -40,22 +182,40 @@
     display: none
   }
 
-  /* mobile comment section components can now be shown e.g. comment icon button */
-  .mobileComment {
-    display: block;
-    margin-right: 5rem;
+  /* Post interaction CSS (like button, comment button & edit/mashup button) */
+  .mobilePostInteraction {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   /* comment modal when selected will show up in the center of the current screen view */
   .commentModal {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 13rem;
-    min-height: 20rem;
-    max-height: 20rem;
-    min-width: 16rem;
-    max-width: 16rem;
-    padding: 4px;
+    display: flex;
+    margin-top: 10rem;
+  }
+}
+
+/* mobile styles for the main component at 600px width */
+@media (max-width: 600px) {
+
+  /* changes square containers margin from the top to 5rem */
+  .squareContainer {
+    margin-top: 6rem;
+  }
+
+}
+
+/* mobile styles for the main component at 450px width */
+@media (max-width: 450px) {
+
+  /* changes square containers margin from the top to 4.5rem */
+  .squareContainer {
+    margin-top: 4.5rem;
+  }
+
+  /* changes post interaction margin from the top to 0.5rem */
+  .mobilePostInteraction {
+    margin-top: 0.5rem;
   }
 }

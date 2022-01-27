@@ -1,5 +1,5 @@
 /* required components */
-import React, { useState } from "react";
+import React, {useState} from "react";
 import './Comment.scss'
 import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
@@ -24,13 +24,13 @@ const tempComment : comment = {
 function Comment(props : commentProps) {
 
     /* character limit within the TextField */
-    const charLimit = 100;
+    const charLimit = 100
 
     /* react hook with constant variables to be used to obtain values from the comment text box */
     const [textValue, setValue] = useState('')
 
     /* react hook with constant variables to be used for obtaining user comments */
-    const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList);
+    const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList)
 
     /* addComment function to handle the user comments */
     function addComment() {
@@ -99,6 +99,11 @@ function Comment(props : commentProps) {
             {/* TextField component, this will allow users to compose and post comments within the Comment component*/}
             <TextField
 
+                /* sets TextField background color to white */
+                sx={{color: '#FFF'}}
+
+                id={'CommentField'}
+
                 /* TextField can expand to multiple lines */
                 multiline
 
@@ -115,10 +120,13 @@ function Comment(props : commentProps) {
                 value={textValue}
 
                 /* character count below TextField object*/
-                helperText={`${textValue.length}/${charLimit}`}
+                helperText={`${textValue.trim().length}/${charLimit}`}
 
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
+
+                /* testing purposes, don't use this */
+                /*inputProps={{ "data-testid": "textfield-test" }}*/
 
                 /* Props to be used with the Comment text box such as showing user profile picture */
                 InputProps={{
@@ -136,13 +144,13 @@ function Comment(props : commentProps) {
                     /* at the end of the TextField an arrow is displayed which allows the user to post their comment */
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton color={"success"} onClick={() => {
+                            <IconButton data-testid="comment-button-test" color={"success"} onClick={() => {
 
                                 /* comment can be posted if TextField isn't empty or has under 100 characters */
-                                if(textValue.length > 0 && textValue.length <= 100) { addComment() }
+                                if(textValue.trim().length > 0 && textValue.trim().length <= 100) { addComment() }
 
                                 /* alerts user of invalid comment (no text) */
-                                else if(textValue.trim.length === 0 ) {alert("No text inputted.")}
+                                else if(textValue.trim().length === 0) {alert("No text inputted.")}
 
                                 /* alerts user of invalid comment (too many chars) */
                                 else {alert("No more than 100 characters allowed.")}

@@ -1,17 +1,12 @@
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const socketio = require('socket.io');
+import { createServer } from 'http';
+import express from 'express';
+import socketio from 'socket.io';
 
 const app = express();
-const server = http.createServer(app);
+const server = createServer(app);
 const io = socketio(server);
 
-const {
-    userJoin,
-    getCurrentUser,
-    userLeave
-  } = require('./SocketUsers');
+import { userJoin, getCurrentUser, userLeave } from './SocketUsers';
 
 io.on('connection', (socket) => {
 

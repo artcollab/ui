@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import "./Canvas.scss";
-import { Avatar, Box, Button, ButtonGroup, Divider, Grid, IconButton, Input, InputAdornment, InputBase, Paper, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, Grid, IconButton, Input, InputBase, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
 import MouseIcon from '@mui/icons-material/Mouse';
 import BrushIcon from '@mui/icons-material/Brush';
@@ -55,7 +55,7 @@ function Canvas(props: canvasProps) {
 
 
     // To help prevent feedback loops, we store the last received object received through socket io
-    let receivedObj: fabric.Object;
+    const receivedObject = useRef<fabric.Object>();
 
     // Event function to switch between toolbar items, paint tool functionality must be declared seperately using canvas.isDrawingMode
     const ToggleTool = (e: React.MouseEvent<HTMLElement>, newTool: string) => {
@@ -106,7 +106,7 @@ function Canvas(props: canvasProps) {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
-    }, []);
+    }, [canvas, room]);
 
     socket.on("addMessage", (message: comment) => {
         message.user.color = "message-partner";
@@ -119,7 +119,7 @@ function Canvas(props: canvasProps) {
         // Canvas event listener detects whenever an object is added to the page, if the object isn't a duplicate, we emit it.
         canvas?.on("object:added", (object) => {
             // This comparison allows us to know whether or not this object was created by this client or received by socket io
-            let dupe = object.target === receivedObj;
+            let dupe = object.target === receivedObject.current;
             let id = v1();
 
             if (socket && !dupe && object.target) {
@@ -177,7 +177,7 @@ function Canvas(props: canvasProps) {
             }
 
             newObj.set({ name: id });
-            receivedObj = newObj!;
+            receivedObject.current = newObj!;
             // Adding new object to canvas and rendering
             canvas?.add(newObj!);
             canvas?.renderAll();

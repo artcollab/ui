@@ -23,7 +23,7 @@ function userLeave(id) {
   }
 }
 
-export default {
+module.exports = {
   userJoin,
   getCurrentUser,
   userLeave

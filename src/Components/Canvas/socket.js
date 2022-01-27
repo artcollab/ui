@@ -1,31 +1,34 @@
-import { createServer } from 'http';
-import express from 'express';
-import socketio from 'socket.io';
+const {
+    userJoin,
+    getCurrentUser,
+    userLeave
+} = require('./SocketUsers');
+const http = require('http');
+const express = require('express');
+const socketio = require('socket.io');
 
 const app = express();
-const server = createServer(app);
+const server = http.createServer(app);
 const io = socketio(server);
-
-import { userJoin, getCurrentUser, userLeave } from './SocketUsers';
 
 io.on('connection', (socket) => {
 
-    socket.on("joinRoom", ({username, room}) => {
+    socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
         socket.join(user.room);
         console.log(user.username + " joined " + user.room);
     })
-    
+
     socket.on('disconnect', () => {
         const user = userLeave(socket.id);
-        if(user){
+        if (user) {
             console.log(user.username + " has left " + user.room);
         }
     });
 
-    socket.on('newMessage', (msg)=>{
+    socket.on('newMessage', (msg) => {
         const user = getCurrentUser(socket.id);
-        if(user) socket.broadcast.to(user.room).emit('addMessage', msg);
+        if (user) socket.broadcast.to(user.room).emit('addMessage', msg);
     });
 
     socket.on('requestCanvasClear', () => {

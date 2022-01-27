@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import "./Canvas.scss";
-import { Box, Button, ButtonGroup, Grid, IconButton, Input, InputBase, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Grid, Input, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
 import MouseIcon from '@mui/icons-material/Mouse';
 import BrushIcon from '@mui/icons-material/Brush';
@@ -13,13 +13,11 @@ import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
 import { comment } from '../../Types/Comment';
 import { user } from '../../Types/User';
-import SendIcon from '@mui/icons-material/Send';
+import ChatBox from './ChatBox';
 
 type canvasProps = {
     room: string
 }
-
-
 
 //////////////////////TEMP STUFF/////////////////////////////
 const username = "Default";
@@ -31,16 +29,11 @@ const tempUser: user = {
 }
 /////////////////////////////////////////////////////////////
 
-
-
-
-
 const socket = io('http://localhost:8080');     // connect to socket io server
 
 function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     let room = props.room;
-
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -50,9 +43,7 @@ function Canvas(props: canvasProps) {
     // Currently equipped drawing tool, types can be found in types/ToolBarItems.ts
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
 
-    const [messageValue, setMessageValue] = useState("");
     const [messageList, setMessageList] = useState<Array<comment>>([]);
-
 
     // To help prevent feedback loops, we store the last received object received through socket io
     const receivedObject = useRef<fabric.Object>();
@@ -73,8 +64,6 @@ function Canvas(props: canvasProps) {
         }
         setMessageList([...messageList, newMessage]);
         socket.emit("newMessage", newMessage);
-
-        setMessageValue("");
     }
 
     // canvas initial state
@@ -244,7 +233,7 @@ function Canvas(props: canvasProps) {
 
     return (
         <>
-            <Grid container sx={{marginTop: "10rem"}}>
+            <Grid container sx={{ marginTop: "10rem" }}>
                 <Grid item className="brushToolContainer">
                     <ButtonGroup>
                         <Button type='button' name='clear' onClick={() => socket.emit('requestCanvasClear')}>Clear</Button>
@@ -302,38 +291,7 @@ function Canvas(props: canvasProps) {
                     </Paper>
                 </Grid>
                 <Grid item className="chatContainer">
-                    <Paper className={"chatBox"}>
-                        <Box className="messagesContainer">
-                            {messageList.map((message) => {
-                                let received = message.user.id === tempUser.id ? "" : "messageReceived";
-                                return (
-                                    <div className="messageContainer" key={v1()}>
-                                        {message.user.color ?
-                                            <div className="messageName">
-                                                {message.user.name}
-                                            </div>
-                                            :
-                                            ""
-                                        }
-                                        <div className={"messageContent " + received}>
-                                            {message.text}
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </Box>
-                        <Paper>
-                            <InputBase
-                                sx={{ ml: 1, flex: 1 }}
-                                placeholder="Send A Message"
-                                value={messageValue}
-                                onChange={(e) => setMessageValue(e.target.value)}
-                            />
-                            <IconButton type="submit" sx={{ p: '10px' }} onClick={() => postMessage(messageValue)}>
-                                <SendIcon />
-                            </IconButton>
-                        </Paper>
-                    </Paper>
+                    <ChatBox messageList={messageList} postMessage={(value : string) => postMessage(value)} user={tempUser} />
                 </Grid>
             </Grid>
         </>

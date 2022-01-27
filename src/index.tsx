@@ -23,7 +23,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Header/>
     <Canvas room={'exampleRoom'}/>
-    <Post Post={tempPost}/>
 
   </React.StrictMode>,
   document.getElementById('root')

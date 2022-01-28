@@ -25,6 +25,11 @@
   border-radius: 0.75em;
 }
 
+/* changes the TextField outline to black when focused on */
+.MuiOutlinedInput-notchedOutline {
+  border-color: black !important;
+}
+
 /* CSS Specifications for the comment box container within mobile view */
 @media (max-width: 800px) {
 

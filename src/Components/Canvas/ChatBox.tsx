@@ -12,6 +12,7 @@ type ChatBoxProps = {
     user: user
 }
 
+// ChatBox displays a list of messages from a parameter, messages posted by the client are sent to the parent component using a callback function
 export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps) {
     const [messageValue, setMessageValue] = useState("");
 
@@ -23,6 +24,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                     if (typeof message == "object") received = message.user.id === user.id ? "" : "messageReceived";
                     return (
                         <>
+                            {/* if the message is a comment type, display as comment, else it must be a status message */}
                             {typeof message == "object" ?
                                 <div className="messageContainer" key={v1()}>
                                     {message.user.id !== user.id ?

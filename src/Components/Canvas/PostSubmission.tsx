@@ -6,14 +6,16 @@ type PostSubmissionProps = {
     image: string
 }
 
+// post submission elements to store inside modal, takes an SVG string of the image as parameter
 export default function PostSubmission(props: PostSubmissionProps) {
     const svg = props.image;
+
+    // converting the image string to an ingestible format
     const blob = new Blob([svg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const image = document.createElement('img'); image.addEventListener('load', () => URL.revokeObjectURL(url), { once: true }); image.src = url;
 
     const [captionText, setCaptionText] = useState("");
-    console.log(captionText);
 
     return (
         <Paper className="modalContainer">

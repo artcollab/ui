@@ -60,12 +60,14 @@ function Canvas(props: canvasProps) {
         }
     }
 
+    // upon sending posting a message to the chat box, the message list is updated and page is re-rendered
     const postMessage = (message: string) => {
         let newMessage: comment = {
             user: tempUser,
             text: message
         }
         setMessageList([...messageList, newMessage]);
+        // message sent to the server to be broadcasted to other users
         socket.emit("newMessage", newMessage);
     }
 
@@ -100,10 +102,12 @@ function Canvas(props: canvasProps) {
         }
     }, [canvas, room]);
 
+    // listens for new messages being sent, adds them to the message list and re-renders the page
     socket.on("addMessage", (message: comment) => {
         setMessageList([...messageList, message]);
     });
 
+    // listens for new status messages, also added to the message list and page is re-rendered
     socket.on("addStatus", (message) => {
         setMessageList([...messageList, message]);
     })
@@ -138,6 +142,7 @@ function Canvas(props: canvasProps) {
             if (newObject) socket.emit('newModification', { id: object.target!.name, obj: newObject });
         });
 
+        // listens for io events calling to clear the page, this happens after a client sends a request for the canvas to be cleared in the requestCanvasClear event
         socket.on("clearCanvas", () => {
             canvas?.clear();
         })
@@ -178,6 +183,7 @@ function Canvas(props: canvasProps) {
             canvas?.renderAll();
         });
 
+        // listens for object modifications being sent, updates the position of modified object on client side
         socket.on('modifyObject', (object) => {
             canvas?.getObjects().forEach((element) => {
                 if (object.id === element.name) {

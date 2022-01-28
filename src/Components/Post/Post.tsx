@@ -27,6 +27,7 @@ type caption = {
 }
 
 function Post(props : postProps) {
+    const post = props.Post;
 
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
@@ -80,7 +81,7 @@ function Post(props : postProps) {
     // const tempComment : comment = {user: {name: "DrawDojo", thumbnail: "", color: ""}, text: "Test"}
 
     /* comment component */
-    const commentSection = <Comment commentList={[]}/>
+    const commentSection = <Comment commentList={post.comments}/>
 
     return (
 
@@ -125,7 +126,7 @@ function Post(props : postProps) {
                         <Grid item xs>
 
                             {/* authors username, displayed in bold text to emphasise */}
-                            <p className={"postAuthor"}>dogs72</p>
+                            <p className={"postAuthor"}>{post.user.name} {post.user.surname}</p>
 
                             {/* line underneath the authors username to separate it from caption text */}
                             <hr/>
@@ -135,7 +136,7 @@ function Post(props : postProps) {
 
                                 {/* in the desktop view there has to be a limit on the amount of characters due to the limited size
                                  of the post container, this character limit is 15 characters as of now */}
-                                <PostCaption captionText = "the quick round frog jumps over the lazy hog" characterLimit = {15}/>
+                                <PostCaption captionText = {post.caption} characterLimit = {15}/>
 
                             </div>
 
@@ -143,7 +144,7 @@ function Post(props : postProps) {
                             <div className={'postCaptionMobile'}>
 
                                 {/* more text can be displayed in mobile view but it has a character limit of 50 */}
-                                <PostCaption captionText = "the quick round frog jumps over the lazy hog" characterLimit = {50}/>
+                                <PostCaption captionText = {post.caption} characterLimit = {50}/>
 
                             </div>
 

@@ -1,6 +1,9 @@
 export type user = {
-    id: string,
-    name: string
-    thumbnail: string
-    color: string
+    id: string;
+    username: string;
+    email: string;
+    name: string;
+    surname: string;
+    password: string;
+    following?: Array<string>;
 }

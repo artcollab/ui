@@ -1,3 +1,5 @@
+import { user } from "../Types/User";
+
 export function handleRegisterResponse(response: string) {
     const res = JSON.parse(response);
     localStorage.clear();
@@ -35,4 +37,8 @@ export function getUserData(): JSON {
     const res = localStorage.getItem('user');
 
     return JSON.parse(res ? res : "");
+}
+
+export function getUserAsObject(): user {
+    return getUserData() as unknown as user;
 }

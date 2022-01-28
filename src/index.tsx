@@ -8,7 +8,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Header/>
     <Canvas room={'exampleRoom'}/>
-
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -13,26 +13,31 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
+import { getUserAsObject } from '../../Util/handleResponse';
 
 type canvasProps = {
     room: string
 }
 
-//////////////////////TEMP STUFF/////////////////////////////
-const username = "Default";
-const tempUser: user = {
-    id: v1(),
-    name: username,
-    thumbnail: '../avatarTest.ico',
-    color: ""
-}
-/////////////////////////////////////////////////////////////
+const tempUser : user = {
+    id: '',
+    username: '',
+    email: '',
+    name: '',
+    surname: '',
+    password: ''
+};
+
+const fetchedData = getUserAsObject();
+const User : user = fetchedData ? fetchedData : tempUser;
 
 const socket = io('http://localhost:8080');     // connect to socket io server
 
 function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     let room = props.room;
+
+    console.log(User);
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -63,7 +68,7 @@ function Canvas(props: canvasProps) {
     // upon sending posting a message to the chat box, the message list is updated and page is re-rendered
     const postMessage = (message: string) => {
         let newMessage: comment = {
-            user: tempUser,
+            user: User,
             text: message
         }
         setMessageList([...messageList, newMessage]);
@@ -97,6 +102,8 @@ function Canvas(props: canvasProps) {
     // Using an empty dependency list, this block only runs on page load. Therefore this is quite useful for initializing the canvas
     useEffect(() => {
         if (!canvas) {
+            let username = User.username;
+
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
@@ -303,7 +310,7 @@ function Canvas(props: canvasProps) {
                     </Paper>
                 </Grid>
                 <Grid item className="chatContainer">
-                    <ChatBox messageList={messageList} postMessage={(value: string) => postMessage(value)} user={tempUser} />
+                    <ChatBox messageList={messageList} postMessage={(value: string) => postMessage(value)} user={User} />
                     <Button variant='outlined' className="submitButton" onClick={() => setOpen(true)}>Submit Post</Button>
                     <Modal open={open} onClose={() => setOpen(false)}>
                         <PostSubmission image={canvas?.toSVG().toString()!} />

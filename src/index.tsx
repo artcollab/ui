@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import Header from './Components/Header/Header';
-import Post from './Components/Post/Post';
+import Feed from './Components/Feed/Feed';
 import {post} from "./Types/Post";
 
 const tempPost : post = {
@@ -20,7 +20,8 @@ const tempPost : post = {
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
-    <Post Post={tempPost}/>
+      <Feed posts={[tempPost]}/>
+
 
   </React.StrictMode>,
   document.getElementById('root')

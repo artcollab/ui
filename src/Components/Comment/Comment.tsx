@@ -1,18 +1,29 @@
 /* required components */
-import React, {useState} from "react";
+import {useState} from "react";
 import './Comment.scss'
 import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { ColorName } from "../../Util/NameColourGenerator";
 import { getUserAsObject } from "../../Util/handleResponse";
+import { user } from "../../Types/User";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
     commentList : Array<comment>
 }
 
-const User = getUserAsObject();
+const tempComment: user = {
+    id: "",
+    username: "",
+    email: "",
+    name: "",
+    surname: "",
+    password: ""
+}
+const fetchUser = getUserAsObject();
+
+const User = fetchUser ? fetchUser : tempComment;
 
 /* main Comment function, constructs the Comment component */
 function Comment(props : commentProps) {

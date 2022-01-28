@@ -9,20 +9,20 @@ export function handleRegisterResponse(response: string) {
     setUserData(res['user']);
 }
 
-export function getRefreshToken(): JSON {
+export function getRefreshToken(): JSON | null {
     const res = localStorage.getItem('rt');
 
-    return JSON.parse(res ? res : "");
+    return res ? JSON.parse(res) : res;
 }
 
 export function setRefreshToken(token: JSON) {
     localStorage.setItem('rt', JSON.stringify(token));
 }
 
-export function getAccessToken(): JSON {
+export function getAccessToken(): JSON | null {
     const res = localStorage.getItem('at');
 
-    return JSON.parse(res ? res : "");
+    return res ? JSON.parse(res) : res;
 }
 
 export function setAccessToken(token: JSON) {
@@ -33,10 +33,10 @@ export function setUserData(user: JSON) {
     localStorage.setItem('user', JSON.stringify(user));
 }
 
-export function getUserData(): JSON {
+export function getUserData(): JSON | null {
     const res = localStorage.getItem('user');
 
-    return JSON.parse(res ? res : "");
+    return res ? JSON.parse(res) : res;
 }
 
 export function getUserAsObject(): user {

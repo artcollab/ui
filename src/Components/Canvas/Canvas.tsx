@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import "./Canvas.scss";
-import { Button, ButtonGroup, Grid, Input, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Grid, Input, Modal, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
 import MouseIcon from '@mui/icons-material/Mouse';
 import BrushIcon from '@mui/icons-material/Brush';
@@ -14,6 +14,7 @@ import { v1 } from 'uuid';
 import { comment } from '../../Types/Comment';
 import { user } from '../../Types/User';
 import ChatBox from './ChatBox';
+import PostSubmission from './PostSubmission';
 
 type canvasProps = {
     room: string
@@ -43,7 +44,11 @@ function Canvas(props: canvasProps) {
     // Currently equipped drawing tool, types can be found in types/ToolBarItems.ts
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
 
+    // Chat box elements to display
     const [messageList, setMessageList] = useState<Array<comment | string>>([]);
+
+    // Modal settings
+    const [open, setOpen] = useState(false);
 
     // To help prevent feedback loops, we store the last received object received through socket io
     const receivedObject = useRef<fabric.Object>();
@@ -70,8 +75,8 @@ function Canvas(props: canvasProps) {
     function initCanvas(): fabric.Canvas {
         return (
             new fabric.Canvas("canvas", {
-                height: 400,
-                width: 700,
+                height: 600,
+                width: 600,
                 backgroundColor: 'white',
             })
         );
@@ -294,7 +299,11 @@ function Canvas(props: canvasProps) {
                     </Paper>
                 </Grid>
                 <Grid item className="chatContainer">
-                    <ChatBox messageList={messageList} postMessage={(value : string) => postMessage(value)} user={tempUser} />
+                    <ChatBox messageList={messageList} postMessage={(value: string) => postMessage(value)} user={tempUser} />
+                    <Button variant='outlined' className="submitButton" onClick={() => setOpen(true)}>Submit Post</Button>
+                    <Modal open={open} onClose={() => setOpen(false)}>
+                        <PostSubmission image={canvas?.toSVG().toString()!} />
+                    </Modal>
                 </Grid>
             </Grid>
         </>

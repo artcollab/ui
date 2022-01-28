@@ -1,8 +1,33 @@
+:root {
+  --theme-icon: #42342c;
+  --theme-icon-outline: #42342c86;
+}
+
+[data-theme = "default"] {
+  --theme-icon: #42342c;
+  --theme-icon-outline: #42342c86;
+}
+
+[data-theme = "dark"] {
+  --theme-icon: #1c1c1c;
+  --theme-icon-outline:  #1c1c1c81;
+}
+
 .gridContainer {
-  //margin-top: 10rem !important;
   width: fit-content !important;
   margin-left: auto !important;
   margin-right: auto !important;
+
+  .MuiButtonBase-root {
+    color: var(--theme-icon) !important;
+    background-color: white !important;
+  }
+}
+
+.MuiButton-outlined {
+  color: var(--theme-icon) !important;
+  background-color: white !important;
+  border-color: var(--theme-icon-outline) !important;
 }
 
 .brushToolContainer {
@@ -96,4 +121,30 @@
   border: 10px solid transparent;
   border-bottom: 10px solid rgba(0, 114, 135, .2);
   border-left: none;
+}
+
+.modalContainer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 3rem;
+}
+
+.imagePreview {
+  width: 50%;
+  height: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.fieldContainer {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  width: 45%;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 3% !important;
 }

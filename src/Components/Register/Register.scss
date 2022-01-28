@@ -12,14 +12,16 @@
 
 .Mui-focused {
     color: var(--theme-icon) !important;
-
-    .MuiOutlinedInput-notchedOutline {
-        border-color: var(--theme-icon) !important;
-    }
+    border-color: var(--theme-icon) !important;
 }
 
-.MuiOutlinedInput-notchedOutline {
+.MuiFilledInput-root {
+    border-color: var(--theme-icon) !important;
     background-color: white !important;
+}
+
+.MuiFilledInput-root::after {
+    border-bottom: 2px solid var(--theme-icon) !important;
 }
 
 .registerIcon {

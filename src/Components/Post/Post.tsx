@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import './Post.scss';
-import Comment from '../Comment/Comment';
+import Comment from '../Comment/Comment'
 import {post} from "../../Types/Post";
 import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
+
+/* index for the comment textfields */
+let idx = 0;
 
 /* postProps type defined */
 type postProps = {
@@ -72,14 +75,10 @@ function Post(props : postProps) {
         setStyle(likeStyle === "like" ? "noLike" : "like")
     }
 
-
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
 
-    /* Testing purposes */
-    // const tempComment : comment = {user: {name: "DrawDojo", thumbnail: "", color: ""}, text: "Test"}
-
-    /* comment component */
+    /* comment component initialised */
     const commentSection = <Comment commentList={[]}/>
 
     return (
@@ -114,11 +113,6 @@ function Post(props : postProps) {
 
                             {/* displays the avatar of the post author */}
                             <Avatar src={"../cat.jpg"} sx={{width: 56, height: 56}}/>
-
-                            {/* DB EXAMPLE:
-                            {author.user.name.split(' ')[0][0]}
-                            </Avatar>}
-                            */}
 
                         </Grid>
 
@@ -173,10 +167,11 @@ function Post(props : postProps) {
 
                             </Tooltip>
 
-                            {/* button for the comment component, should focus on CommentField when clicked  */}
-                            <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>
+                            {/* button for the comment component, should focus on CommentField when clicked (broken due to focusing on first textfield)  */}
+                            {/*<IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>*/}
+                            <IconButton onClick={() => document.getElementsByName('CommentField')[idx++].focus()} sx={{marginLeft: '2.1875rem'}}>
 
-                                {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
+                            {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
                                 <ChatBubbleIcon className={'staticButtons'}/>
 
                             </IconButton>

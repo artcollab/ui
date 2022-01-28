@@ -3,11 +3,6 @@ import { fabric } from 'fabric';
 import "./Canvas.scss";
 import { Button, ButtonGroup, Grid, Input, Modal, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
-import MouseIcon from '@mui/icons-material/Mouse';
-import BrushIcon from '@mui/icons-material/Brush';
-import CropSquareIcon from '@mui/icons-material/CropSquare';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import CircleIcon from '@mui/icons-material/Circle';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
@@ -15,6 +10,9 @@ import { comment } from '../../Types/Comment';
 import { user } from '../../Types/User';
 import ChatBox from './ChatBox';
 import PostSubmission from './PostSubmission';
+import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
+import { IoTriangle } from "react-icons/io5";
+import { BsBrushFill } from "react-icons/bs";
 
 type canvasProps = {
     room: string
@@ -284,11 +282,11 @@ function Canvas(props: canvasProps) {
             <Grid container spacing={2} className="gridContainer">
                 <Grid item >
                     <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
-                        <ToggleButton value="move"><MouseIcon /></ToggleButton>
-                        <ToggleButton value="paint"><BrushIcon /></ToggleButton>
-                        <ToggleButton value="square"><CropSquareIcon /></ToggleButton>
-                        <ToggleButton value="triangle"><ChangeHistoryIcon /></ToggleButton>
-                        <ToggleButton value="ellipse"><CircleIcon /></ToggleButton>
+                        <ToggleButton value="move"><FaMousePointer /></ToggleButton>
+                        <ToggleButton value="paint"><BsBrushFill /></ToggleButton>
+                        <ToggleButton value="square"><FaSquareFull /></ToggleButton>
+                        <ToggleButton value="triangle"><IoTriangle /></ToggleButton>
+                        <ToggleButton value="ellipse"><FaCircle /></ToggleButton>
                     </ToggleButtonGroup>
                 </Grid>
                 <Grid item>

@@ -18,7 +18,7 @@
   margin-left: auto !important;
   margin-right: auto !important;
 
-  .MuiButtonBase-root {
+  .MuiButtonBase-root:not(:focus) {
     color: var(--theme-icon) !important;
     background-color: white !important;
   }

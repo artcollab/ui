@@ -6,6 +6,7 @@ import {post} from "../../Types/Post";
 export {}
 
 const tempPost : post = {
+    id: 0,
     user: {
         name: " ",
         thumbnail: " ",

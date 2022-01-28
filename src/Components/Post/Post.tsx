@@ -90,7 +90,7 @@ function Post(props : postProps) {
             <Paper className="squareContainer" data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error displaying image..."}/>
+                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 

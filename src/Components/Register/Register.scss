@@ -1,0 +1,37 @@
+:root {
+    --theme-icon: #42342c;
+}
+
+[data-theme = "default"] {
+    --theme-icon: #42342c;
+}
+
+[data-theme = "dark"] {
+    --theme-icon: #1c1c1c;
+}
+
+.Mui-focused {
+    color: var(--theme-icon) !important;
+    border-color: var(--theme-icon) !important;
+}
+
+.MuiFilledInput-root {
+    border-color: var(--theme-icon) !important;
+    background-color: white !important;
+}
+
+.MuiFilledInput-root::after {
+    border-bottom: 2px solid var(--theme-icon) !important;
+}
+
+.registerIcon {
+    background-color: var(--theme-icon) !important;
+}
+
+.registerButton {
+    background-color: var(--theme-icon) !important;
+}
+
+.registerContainer {
+    margin-top: 10rem;
+}

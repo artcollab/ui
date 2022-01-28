@@ -74,24 +74,31 @@ function Comment(props : commentProps) {
                     <Paper key={i} sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
 
                         {/* aligns items in the center of the Paper container */}
-                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
+                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={0.75}>
 
                             {/* user Avatar icon */}
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(tempComment.user.name)}}>
+                                {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(tempComment.user.name)}}>
                                     {tempComment.user.name.split(' ')[0][0]}
                                 </Avatar>}
 
                             </Grid>
 
-                            {/* comment text displayed next to username */}
+                            {/* displays the username */}
                             <Grid item xs>
-                                {tempComment.user.name}
-                                {' - ' + c.text}
+                                <span style={{fontSize: 13, fontWeight: 'bold'}}>
+                                    {tempComment.user.name}
+                                </span>
                             </Grid>
                         </Grid>
+
+                        {/* displays the comment text below the user avatar & name */}
+                        <span style={{fontSize: 13}}>
+                            {c.text}
+                        </span>
+
                     </Paper>
                 )
             })}
@@ -102,7 +109,7 @@ function Comment(props : commentProps) {
                 /* sets TextField background color to white */
                 sx={{color: '#FFF'}}
 
-                id={'CommentField'}
+                name="CommentField"
 
                 /* TextField can expand to multiple lines */
                 multiline
@@ -131,6 +138,9 @@ function Comment(props : commentProps) {
                 /* Props to be used with the Comment text box such as showing user profile picture */
                 InputProps={{
 
+
+                    style: {fontSize: 13},
+
                     /* at the beginning of the TextField the users profile picture will be displayed if they have one,
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
@@ -144,7 +154,7 @@ function Comment(props : commentProps) {
                     /* at the end of the TextField an arrow is displayed which allows the user to post their comment */
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton data-testid="comment-button-test" color={"success"} onClick={() => {
+                            <IconButton data-testid="comment-button-test" style={{width: 24, height: 24, color: 'black'}} onClick={() => {
 
                                 /* comment can be posted if TextField isn't empty or has under 100 characters */
                                 if(textValue.trim().length > 0 && textValue.trim().length <= 100) { addComment() }
@@ -155,7 +165,7 @@ function Comment(props : commentProps) {
                                 /* alerts user of invalid comment (too many chars) */
                                 else {alert("No more than 100 characters allowed.")}
                             }}>
-                                <ArrowForwardIcon/>
+                                <ArrowForwardIcon style={{color: 'black'}}/>
                             </IconButton>
                         </InputAdornment>
                     )

@@ -7,7 +7,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
-    commentList : Array<comment>
+    commentList : Array<comment>,
+    focused: boolean
 }
 
 /* tempComment constant, to be used for testing until DB is up */
@@ -131,6 +132,9 @@ function Comment(props : commentProps) {
 
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
+
+                /* setting focused prop */
+                focused={props.focused}
 
                 /* testing purposes, don't use this */
                 /*inputProps={{ "data-testid": "textfield-test" }}*/

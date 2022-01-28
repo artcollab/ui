@@ -29,9 +29,6 @@ type caption = {
 
 function Post(props : postProps) {
 
-    /* Post index variable, this will keep track of the current post which is needed for comment field focusing */
-    let idx = props?.Post.id;
-
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
 
@@ -76,11 +73,14 @@ function Post(props : postProps) {
         setStyle(likeStyle === "like" ? "noLike" : "like")
     }
 
+    /* setting focus prop of comment field */
+    const [focused, setFocused] = useState(false);
+
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
 
     /* comment component initialised */
-    const commentSection = <Comment commentList={[]}/>
+    const commentSection = <Comment commentList={[]} focused={focused}/>
 
     return (
 
@@ -167,7 +167,7 @@ function Post(props : postProps) {
                         </Tooltip>
 
                         {/* button for the comment component, should focus on CommentField when clicked (broken due to focusing on first textfield)  */}
-                        <IconButton onClick={() => document.getElementsByName('CommentField')[idx].focus()} sx={{margin: "auto"}}>
+                        <IconButton onClick={() => setFocused(!focused)} sx={{margin: "auto"}}>
 
                             {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
                             <ChatBubbleIcon className={'staticButtons'}/>

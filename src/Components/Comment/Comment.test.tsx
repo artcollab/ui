@@ -7,7 +7,7 @@ export{}
 it("comment section tests", () => {
 
     /* initialises & renders the comment component */
-    const commentSection = render(<Comment commentList={[]}/>);
+    const commentSection = render(<Comment commentList={[]} focused={false}/>);
 
     /* Test that the TextField contains the correct placeholder text */
     const textFieldPlaceholder = commentSection.queryByPlaceholderText(/...../i);

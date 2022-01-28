@@ -6,6 +6,7 @@ import Feed from './Components/Feed/Feed';
 import {post} from "./Types/Post";
 
 const tempPost : post = {
+    id: 0,
     user: {
         name: " ",
         thumbnail: " ",
@@ -14,7 +15,7 @@ const tempPost : post = {
     image: " ",
     caption: " ",
     likes: [],
-    comments: []
+    comments: [],
 }
 
 ReactDOM.render(

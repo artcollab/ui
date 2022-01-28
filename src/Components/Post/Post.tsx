@@ -8,8 +8,6 @@ import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
 
-/* index for the comment textfields */
-let idx = 0;
 
 /* postProps type defined */
 type postProps = {
@@ -30,6 +28,9 @@ type caption = {
 }
 
 function Post(props : postProps) {
+
+    /* Post index variable, this will keep track of the current post which is needed for comment field focusing */
+    let idx = props?.Post.id;
 
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
@@ -151,41 +152,37 @@ function Post(props : postProps) {
                     {/* Grid container used here to easily align these components horizontally */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap">
 
-                        <Grid item>
+                        {/* ERROR: follow cursor & transition component work but throwing some warnings */}
+                        {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
+                        <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
-                            {/* ERROR: follow cursor & transition component work but throwing some warnings */}
-                            {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
-                            <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
+                            {/* button for the like component */}
+                            <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
 
-                                {/* button for the like component */}
-                                <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
+                                {/* uses a smiley face showing where desktop users can like the post */}
+                                <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
 
-                                    {/* uses a smiley face showing where desktop users can like the post */}
-                                    <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
+                            </IconButton>
 
-                                </IconButton>
+                        </Tooltip>
 
-                            </Tooltip>
-
-                            {/* button for the comment component, should focus on CommentField when clicked (broken due to focusing on first textfield)  */}
-                            {/*<IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>*/}
-                            <IconButton onClick={() => document.getElementsByName('CommentField')[idx++].focus()} sx={{marginLeft: '2.1875rem'}}>
+                        {/* button for the comment component, should focus on CommentField when clicked (broken due to focusing on first textfield)  */}
+                        <IconButton onClick={() => document.getElementsByName('CommentField')[idx].focus()} sx={{margin: "auto"}}>
 
                             {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
-                                <ChatBubbleIcon className={'staticButtons'}/>
+                            <ChatBubbleIcon className={'staticButtons'}/>
 
-                            </IconButton>
+                        </IconButton>
 
-                            {/* button for the edit component, not implemented yet */}
-                            <IconButton sx={{marginLeft: '2.1875rem'}}>
+                        {/* button for the edit component, not implemented yet */}
+                        <IconButton>
 
-                                {/* uses a pencil icon depicting where desktop users can access the edit feature */}
-                                <CreateIcon className={'staticButtons'}/>
+                            {/* uses a pencil icon depicting where desktop users can access the edit feature */}
+                            <CreateIcon className={'staticButtons'}/>
 
-                            </IconButton>
+                        </IconButton>
 
                         </Grid>
-                    </Grid>
                 </div>
 
             </Paper>

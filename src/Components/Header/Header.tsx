@@ -17,6 +17,8 @@ import './Header.scss'
 import { Switch } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
+import { logOut } from '../../Util/handleResponse';
+import { useNavigate } from 'react-router-dom';
 
 // event function used to switch from light mode to dark mode
 function toggleTheme() { 
@@ -74,6 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 ///////////////////////////////////////////////////////////////
 
 export default function Header() {
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -119,6 +122,7 @@ export default function Header() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => {logOut(); navigate("/home")}}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>
         </Menu>
     );
@@ -179,8 +183,8 @@ export default function Header() {
         <Box sx={{flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <img src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo'/>
-                    <img src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' />
+                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")}/>
+                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")}/>
                     <Search style={{marginLeft: "15%"}}>
                         <SearchIconWrapper>
                             <SearchIcon />

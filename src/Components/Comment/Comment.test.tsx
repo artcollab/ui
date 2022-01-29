@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import Comment from "./Comment";
 import React from "react";
 
@@ -7,17 +7,17 @@ export{}
 it("comment section tests", () => {
 
     /* initialises & renders the comment component */
-    const commentSection = render(<Comment commentList={[]} focused={false}/>);
+    render(<Comment commentsList={[]}/>);
 
     /* Test that the TextField contains the correct placeholder text */
-    const textFieldPlaceholder = commentSection.queryByPlaceholderText(/...../i);
+    const textFieldPlaceholder = screen.queryByPlaceholderText(/...../i);
     expect(textFieldPlaceholder).toBeTruthy();
 
     /* 'alertPopup' spies on the window for an alert method being called */
     const alertPopup = jest.spyOn(window, 'alert').mockImplementation();
 
     /* gets the button for submitting comments  */
-    const commentButton = commentSection.getByTestId("comment-button-test");
+    const commentButton = screen.getByTestId("comment-button-test");
 
     /* uses fireEvent to simulate a click of the comment button */
     fireEvent.click(commentButton);

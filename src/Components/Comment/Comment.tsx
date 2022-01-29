@@ -7,8 +7,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
-    commentList : Array<comment>,
-    focused: boolean
+    commentsList : Array<comment>,
+    focused?: boolean
 }
 
 /* tempComment constant, to be used for testing until DB is up */
@@ -22,7 +22,7 @@ const tempComment : comment = {
 }
 
 /* main Comment function, constructs the Comment component */
-function Comment(props : commentProps) {
+function Comment({commentsList, focused=false} : commentProps) {
 
     /* character limit within the TextField */
     const charLimit = 100
@@ -31,7 +31,7 @@ function Comment(props : commentProps) {
     const [textValue, setValue] = useState('')
 
     /* react hook with constant variables to be used for obtaining user comments */
-    const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList)
+    const [commentList, setCommentList] = useState<Array<comment>>(commentsList)
 
     /* addComment function to handle the user comments */
     function addComment() {
@@ -134,7 +134,7 @@ function Comment(props : commentProps) {
                 onChange={(e) => {setValue(e.target.value)}}
 
                 /* setting focused prop */
-                focused={props.focused}
+                focused={focused}
 
                 /* testing purposes, don't use this */
                 /*inputProps={{ "data-testid": "textfield-test" }}*/

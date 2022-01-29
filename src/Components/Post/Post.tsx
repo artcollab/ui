@@ -80,7 +80,7 @@ function Post(props : postProps) {
     const [open, setOpen] = useState(false);
 
     /* comment component initialised */
-    const commentSection = <Comment commentsList={[]} focused={focused}/>
+    const commentSection = <Comment commentsList={[]} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
 
     return (
 
@@ -166,10 +166,10 @@ function Post(props : postProps) {
 
                         </Tooltip>
 
-                        {/* button for the comment component, should focus on CommentField when clicked (broken due to focusing on first textfield)  */}
+                        {/* button for the comment component, should focus on CommentField when clicked (works somewhat)  */}
                         <IconButton onClick={() => setFocused(!focused)} sx={{margin: "auto"}}>
 
-                            {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
+                        {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
                             <ChatBubbleIcon className={'staticButtons'}/>
 
                         </IconButton>
@@ -182,7 +182,7 @@ function Post(props : postProps) {
 
                         </IconButton>
 
-                        </Grid>
+                    </Grid>
                 </div>
 
             </Paper>
@@ -230,4 +230,3 @@ function Post(props : postProps) {
 }
 
 export default Post;
-

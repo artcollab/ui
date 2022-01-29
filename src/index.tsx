@@ -4,6 +4,7 @@ import './index.scss';
 import Header from './Components/Header/Header';
 import Register from './Components/Register/Register';
 import Feed from './Components/Feed/Feed';
+import {post} from "./Types/Post";
         
 const tempPost : post = {
     id: 0,

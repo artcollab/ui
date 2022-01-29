@@ -38,7 +38,7 @@ function Feed(props : feed) {
     window.addEventListener("scroll", () => {
 
         /* if past this threshold then the arrow is displayed onscreen */
-        if (window.scrollY > 350) {
+        if (window.scrollY >= 350) {
             setUpArrow(true)
         }
 
@@ -53,7 +53,7 @@ function Feed(props : feed) {
     function scrollToTop() {
 
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */
-        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+        window.scroll({ top: 0, behavior: 'smooth' });
 
     }
 
@@ -82,12 +82,12 @@ function Feed(props : feed) {
             </div>
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
-            <IconButton data-testid="scroll-button-test" size={"small"} className={'createButton'}><GestureOutlinedIcon/></IconButton>
+            <IconButton size={"small"} className={'createButton'} data-testid="create-button-test"><GestureOutlinedIcon/></IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
             (<span>
-                <IconButton size={"small"} className={'scrollButton'} onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
+                <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test" onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
             </span>)}
 
         </>

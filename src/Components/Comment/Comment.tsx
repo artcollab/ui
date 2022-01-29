@@ -9,6 +9,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 type commentProps = {
     commentsList : Array<comment>,
     focused?: boolean
+    setFocused?: any
 }
 
 /* tempComment constant, to be used for testing until DB is up */
@@ -22,7 +23,7 @@ const tempComment : comment = {
 }
 
 /* main Comment function, constructs the Comment component */
-function Comment({commentsList, focused=false} : commentProps) {
+function Comment({commentsList, focused=false, setFocused} : commentProps) {
 
     /* character limit within the TextField */
     const charLimit = 100
@@ -136,13 +137,16 @@ function Comment({commentsList, focused=false} : commentProps) {
                 /* setting focused prop */
                 focused={focused}
 
+                /* onClick of TextField will set the focus, on/off */
+                onClick={() => {setFocused(!focused)}}
+
                 /* testing purposes, don't use this */
                 /*inputProps={{ "data-testid": "textfield-test" }}*/
 
                 /* Props to be used with the Comment text box such as showing user profile picture */
                 InputProps={{
 
-
+                    /* styles the input props to be fontSize 13 */
                     style: {fontSize: 13},
 
                     /* at the beginning of the TextField the users profile picture will be displayed if they have one,

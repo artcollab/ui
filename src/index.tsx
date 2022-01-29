@@ -4,6 +4,7 @@ import './index.scss';
 import Header from './Components/Header/Header';
 import Feed from './Components/Feed/Feed';
 import {post} from "./Types/Post";
+import Register from './Components/Register/Register';
 
 const tempPost : post = {
     id: 0,
@@ -21,9 +22,8 @@ const tempPost : post = {
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
-      <Feed posts={[tempPost]}/>
-
-
+    <Feed posts={[tempPost]}/>
+    <Register />
   </React.StrictMode>,
   document.getElementById('root')
 );

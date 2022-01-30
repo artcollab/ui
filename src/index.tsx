@@ -2,28 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import Header from './Components/Header/Header';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Register from './Components/Register/Register';
-import Feed from './Components/Feed/Feed';
-import {post} from "./Types/Post";
-        
-const tempPost : post = {
-    id: 0,
-    user: {
-        name: " ",
-        thumbnail: " ",
-        color: " ",
-    },
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: [],
-}
+import Error from './Pages/Error';
+import Login from './Components/Login/Login';
+import Home from './Pages/Home';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Header/>
-    <Register/>
-    <Feed posts={[tempPost]}/>
+    <Router>
+      <Header />
+        <Routes>
+          <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/home" element={<Home/>}/>
+          <Route path="/" element={<Home/>}/>
+          <Route path="*" element={<Error/>} />
+        </Routes>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

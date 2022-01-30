@@ -53,7 +53,7 @@ function Feed(props : feed) {
     function scrollToTop() {
 
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */
-        window.scroll({ top: 0, behavior: 'smooth' });
+        window.scroll({top: 0, behavior: 'smooth'});
 
     }
 
@@ -64,7 +64,9 @@ function Feed(props : feed) {
             <div>
 
                 {/* Suspense tag, on fallback will display a loading circle icon to depict the loading of the feed component*/}
-                <Suspense fallback={<div className={"loadingIcon"}><CircularProgress size={125} sx={{color: "#ffccac"}}/></div>}>
+                <Suspense
+                    fallback={<div className={"loadingIcon"}><CircularProgress size={125} sx={{color: "#ffccac"}}/>
+                    </div>}>
 
                     {/* uses a nested map to fetch and display the posts */}
                     {displayPosts.map((i) => props.posts?.map((post) => <FeedPost key={i} Post={post}/>))}
@@ -82,14 +84,20 @@ function Feed(props : feed) {
             </div>
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
-            <IconButton size={"small"} className={'createButton'} data-testid="create-button-test"><GestureOutlinedIcon/></IconButton>
+            <IconButton size={"small"} className={'createButton'}
+                        data-testid="create-button-test"><GestureOutlinedIcon/></IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
             (<span>
-                <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test" onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
+                <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
+                            onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
             </span>)}
 
         </>
+
+    )
+
+}
 
 export default Feed;

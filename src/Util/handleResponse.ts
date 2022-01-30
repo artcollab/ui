@@ -42,3 +42,7 @@ export function getUserData(): JSON | null {
 export function getUserAsObject(): user {
     return getUserData() as unknown as user;
 }
+
+export function logOut(){
+    localStorage.clear();
+}

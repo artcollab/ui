@@ -6,5 +6,5 @@ export default function Error() {
             <img src="./404.png" alt="404_error" style={{height: "40%", width: "40%"}}/>
             <h1>The page you are looking for does not exist</h1>
         </Box>
-    )
+      )
 }

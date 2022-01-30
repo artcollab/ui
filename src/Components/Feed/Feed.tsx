@@ -91,8 +91,5 @@ function Feed(props : feed) {
             </span>)}
 
         </>
-    )
-}
 
 export default Feed;
-

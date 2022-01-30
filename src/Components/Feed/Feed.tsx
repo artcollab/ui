@@ -5,6 +5,7 @@ import {Button, CircularProgress, IconButton} from '@mui/material';
 import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
+import {post} from "../../Types/Post";
 
 /* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
 const FeedPost = lazy(() => {return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post"))})
@@ -14,6 +15,20 @@ let postsDisplayed = 2;
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
+
+
+const tempPost : post = {
+    id: 0,
+    user: {
+        name: " ",
+        thumbnail: " ",
+        color: " ",
+    },
+    image: " ",
+    caption: " ",
+    likes: [],
+    comments: []
+}
 
 function Feed(props : feed) {
 
@@ -69,7 +84,7 @@ function Feed(props : feed) {
                     </div>}>
 
                     {/* uses a nested map to fetch and display the posts */}
-                    {displayPosts.map((i) => props.posts?.map((post) => <FeedPost key={i} Post={post}/>))}
+                    {displayPosts.map((i) => [tempPost].map((tempPost) => <FeedPost key={i} Post={tempPost}/>))}
 
                 </Suspense>
 

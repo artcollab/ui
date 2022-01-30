@@ -13,13 +13,13 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import { getUserAsObject } from '../../Util/handleResponse';
+import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
 
 type canvasProps = {
     room: string
 }
 
-const tempUser : user = {
+const tempUser: user = {
     id: '',
     username: '',
     email: '',
@@ -29,15 +29,16 @@ const tempUser : user = {
 };
 
 const fetchedData = getUserAsObject();
-const User : user = fetchedData ? fetchedData : tempUser;
+const User: user = fetchedData ? fetchedData : tempUser;
+const at = getAccessToken();
 
-const socket = io('http://localhost:8080');     // connect to socket io server
+const socket = io('https://api.operce.net:8080', {
+    query: { secret: at }
+});     // connect to socket io server
 
 function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     let room = props.room;
-
-    console.log(User);
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -295,11 +296,21 @@ function Canvas(props: canvasProps) {
             <Grid container spacing={2} className="gridContainer">
                 <Grid item >
                     <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
-                        <ToggleButton value="move"><FaMousePointer /></ToggleButton>
-                        <ToggleButton value="paint"><BsBrushFill /></ToggleButton>
-                        <ToggleButton value="square"><FaSquareFull /></ToggleButton>
-                        <ToggleButton value="triangle"><IoTriangle /></ToggleButton>
-                        <ToggleButton value="ellipse"><FaCircle /></ToggleButton>
+                        <ToggleButton value="move">
+                            <FaMousePointer />
+                        </ToggleButton>
+                        <ToggleButton value="paint">
+                            <BsBrushFill />
+                        </ToggleButton>
+                        <ToggleButton value="square">
+                            <FaSquareFull />
+                        </ToggleButton>
+                        <ToggleButton value="triangle">
+                            <IoTriangle />
+                        </ToggleButton>
+                        <ToggleButton value="ellipse">
+                            <FaCircle />
+                        </ToggleButton>
                     </ToggleButtonGroup>
                 </Grid>
                 <Grid item>
@@ -312,9 +323,11 @@ function Canvas(props: canvasProps) {
                 <Grid item className="chatContainer">
                     <ChatBox messageList={messageList} postMessage={(value: string) => postMessage(value)} user={User} />
                     <Button variant='outlined' className="submitButton" onClick={() => setOpen(true)}>Submit Post</Button>
-                    <Modal open={open} onClose={() => setOpen(false)}>
-                        <PostSubmission image={canvas?.toSVG().toString()!} />
-                    </Modal>
+                    {canvas && (
+                        <Modal open={open} onClose={() => setOpen(false)}>
+                            <PostSubmission image={canvas.toSVG().toString()} />
+                        </Modal>
+                    )}
                 </Grid>
             </Grid>
         </>

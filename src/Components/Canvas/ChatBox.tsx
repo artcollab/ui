@@ -1,7 +1,6 @@
 import { Box, IconButton, InputBase, Paper } from "@mui/material";
 import { comment } from "../../Types/Comment";
 import SendIcon from '@mui/icons-material/Send';
-import { v1 } from "uuid";
 import { user } from "../../Types/User";
 import { useState } from "react";
 import "./Canvas.scss"
@@ -19,14 +18,14 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
     return (
         <Paper className={"chatBox"}>
             <Box className="messagesContainer">
-                {messageList.map((message) => {
+                {messageList.map((message, id) => {
                     let received = ""
                     if (typeof message == "object") received = message.user.id === user.id ? "" : "messageReceived";
                     return (
                         <>
                             {/* if the message is a comment type, display as comment, else it must be a status message */}
                             {typeof message == "object" ?
-                                <div className="messageContainer" key={v1()}>
+                                <div className="messageContainer" key={id}>
                                     {message.user.id !== user.id ?
                                         <div className="messageName">
                                             {message.user.name}
@@ -39,7 +38,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                                     </div>
                                 </div>
                                 :
-                                <div className="statusContainer" key={v1()}>{message}</div>
+                                <div className="statusContainer">{message}</div>
                             }
                         </>
                     )

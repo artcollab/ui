@@ -10,8 +10,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import './Register.scss';
 import { handleRegisterResponse } from '../../Util/handleResponse';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
+    const navigate = useNavigate();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // reset error text upon every submit
@@ -32,6 +34,8 @@ function Register() {
             if(req.readyState === 4 && req.status === 201) {
                 // on successful register, add response to localstorage
                 handleRegisterResponse(req.response);
+                // return to homepage
+                navigate("/home");
             }
             else{
                 // else display error message
@@ -171,7 +175,7 @@ function Register() {
                     </Button>
                     <Grid container justifyContent="center">
                         <Grid item>
-                            <Link href="#">
+                            <Link href="/login">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

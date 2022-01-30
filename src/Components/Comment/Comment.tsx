@@ -138,7 +138,7 @@ function Comment({commentsList, focused=false, setFocused} : commentProps) {
                 focused={focused}
 
                 /* onClick of TextField will set the focus, on/off */
-                onClick={() => {setFocused(!focused)}}
+                onClick={() => {setFocused = !focused}}
 
                 /* testing purposes, don't use this */
                 /*inputProps={{ "data-testid": "textfield-test" }}*/

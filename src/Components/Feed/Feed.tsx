@@ -1,6 +1,5 @@
 import React, {lazy, Suspense, useState} from "react";
 import './Feed.scss'
-import { feed } from "../../Types/Feed";
 import {Button, CircularProgress, IconButton} from '@mui/material';
 import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';

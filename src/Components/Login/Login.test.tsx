@@ -1,25 +1,32 @@
-import { render } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Login from "./Login";
 
 export {}
 
-it("email validation detects incorrect email", () => {
-    const example = render(<Login />);
+const mockedUsedNavigate = jest.fn();
 
-    const inputField = example.queryByPlaceholderText(/Email Address/i);
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom') as any,
+  useNavigate: () => mockedUsedNavigate,
+}));
+
+it("email validation detects incorrect email", () => {
+    render(<Login />);
+
+    const inputField = screen.queryByPlaceholderText(/Email Address/i);
     expect(inputField).toBeTruthy();
 
     userEvent.type(inputField!, "not an email")
-    expect(example.queryByText(/Invalid email/i)).toBeTruthy();
+    expect(screen.getByText(/Invalid email/i)).toBeTruthy();
 });
 
 it("email validation allows correct email", () => {
-    const example = render(<Login />);
+    render(<Login />);
 
-    const inputField = example.queryByPlaceholderText(/Email Address/i);
+    const inputField = screen.queryByPlaceholderText(/Email Address/i);
     expect(inputField).toBeTruthy();
 
     userEvent.type(inputField!, "example@email.com")
-    expect(example.queryByText(/Invalid email/i)).toBeFalsy();
+    expect(screen.queryByText(/Invalid email/i)).toBeFalsy();
 });

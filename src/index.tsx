@@ -5,8 +5,8 @@ import Header from './Components/Header/Header';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Register from './Components/Register/Register';
 import Error from './Pages/Error';
-import Login from './Components/Login/Login';
 import Home from './Pages/Home';
+import Login from './Components/Login/Login';
 
 ReactDOM.render(
   <React.StrictMode>

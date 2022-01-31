@@ -23,20 +23,19 @@
 .squareContainer {
   margin-left: auto;
   margin-right: auto;
-  margin-block-end: 1rem;
+  margin-block-end: 1em;
   min-height: 29em;
   max-height: 29em;
-  max-width: 43rem;
-  border-radius: 0.75rem;
-  padding: 0.625rem;
+  max-width: 43em;
+  padding: 0.625em;
   background-color: var(--post-background) !important;
-  margin-top: 5rem;
-  
+  margin-top: 5em;
+
   /* Changes the TextField background to pure white */
   .MuiInputBase-root {
     background-color: #FFF;
   }
-  
+
 }
 
 /* CSS for Square Sized post content within the Square container */
@@ -45,45 +44,34 @@
   min-height: 29em;
   max-height: 29em;
   max-width: 29em;
-  border-radius: 0.75rem;
+  border-radius: 0.75em;
 }
 
 /* CSS for the Header of the post (avatar, username & caption) */
 .postHeader {
-  display: flex;
   margin-left: 29.5em;
-  margin-top: -29.25rem;
-  word-break: break-word;
-  overflow: auto;
+  margin-top: -30em;
 }
 
 /* displays the author of the post (desktop) */
 .postAuthor {
   font-weight: bold;
   margin: 0;
-  padding: 0;
   color: var(--header-text-col) !important;
 }
 
 /* displays the desktop caption version within the desktop view */
 .postCaptionDesktop {
-  display: block;
   color: var(--header-text-col) !important;
-}
-
-/* hides the mobile caption version within the desktop view */
-.postCaptionMobile {
-  display: none;
 }
 
 /* Post interaction CSS (like button, comment button & edit/mashup button) */
 .desktopPostInteraction {
-  display: flex;
   margin-left: 29.8em;
-  margin-top: 1rem;
+  margin-top: 1em;
 }
 
-/* chatBubble CSS to change its color and size (desktop) */
+/* static button CSS to change their colors and sizes (desktop) */
 .staticButtons {
   font-size: 1.875rem !important;
   color: var(--icon-col) !important;
@@ -92,18 +80,8 @@
 /* comment section for desktop CSS specs */
 .desktopComment {
   display: flex;
-  margin-top: -20.25rem;
+  margin-top: -20.25em;
   justify-content: flex-end;
-}
-
-/* hides mobile comment components when in desktop view */
-.mobileComment {
-  display: none;
-}
-
-/* hides the modal in desktop view if its been opened in mobile view before being resized */
-.commentModal {
-  display: none;
 }
 
 /* CSS color for the like button having not been clicked */
@@ -116,8 +94,13 @@
   color: var(--icon-col) !important;
 }
 
-/* hides mobile post interaction elements in desktop view */
-.mobilePostInteraction {
+/* hides mobile component versions while in desktop view */
+.postCaptionMobile, .mobileComment, .mobilePostInteraction {
+  display: none;
+}
+
+/* hides the modal in desktop view if its been opened in mobile view before being resized */
+.commentModal {
   display: none;
 }
 
@@ -126,7 +109,6 @@
 
   /* Resizing & tweaking square container for when in mobile view */
   .squareContainer {
-    justify-content: center;
     min-height: 6em;
     max-width: 29em;
     margin-top: 7rem;
@@ -135,25 +117,15 @@
 
   /* When in mobile view the post should be centered on the screen */
   .squarePostContent {
-    margin-right: auto;
-    margin-left: auto;
     width: 100%;
     min-height: 50%;
-    height: 100%;
-  }
-
-  /* hides desktop interaction buttons */
-  .desktopPostInteraction {
-    display: none;
   }
 
   /* CSS for the Header of the post (avatar, username & caption) */
   .postHeader {
     margin-right: auto;
     margin-left: auto;
-    margin-top: 0.75rem;
-    word-break: break-word;
-    overflow: auto;
+    margin-top: 0.75em;
   }
 
   /* postAuthor will now have white text within mobile view */
@@ -166,42 +138,41 @@
     color: #42342c !important;
   }
 
-  /* hides the desktop caption version in mobile view */
-  .postCaptionDesktop {
-    display: none
-  }
-
   /* mobile version of the caption can now be shown */
   .postCaptionMobile {
     display: block;
     color: var(--header-text-col) !important;
   }
 
-  /* hides desktop comment section within mobile view */
-  .desktopComment {
-    display: none
-  }
-
   /* Post interaction CSS (like button, comment button & edit/mashup button) */
   .mobilePostInteraction {
     display: flex;
-    margin-right: auto;
-    margin-left: auto;
   }
 
   /* comment modal when selected will show up in the center of the current screen view */
   .commentModal {
     display: flex;
-    margin-top: 10rem;
+    margin-top: 10em;
+
+    /* Changes the TextField background to pure white */
+    .MuiInputBase-root {
+      background-color: #FFF;
+    }
   }
+
+  /* hides some desktop components while in mobile view */
+  .postCaptionDesktop, .desktopPostInteraction, .desktopComment {
+    display: none
+  }
+
 }
 
 /* mobile styles for the main component at 600px width */
 @media (max-width: 600px) {
 
-  /* changes square containers margin from the top to 5rem */
+  /* changes square containers margin from the top to 6em */
   .squareContainer {
-    margin-top: 6rem;
+    margin-top: 6em;
   }
 
 }
@@ -209,13 +180,13 @@
 /* mobile styles for the main component at 450px width */
 @media (max-width: 450px) {
 
-  /* changes square containers margin from the top to 4.5rem */
+  /* changes square containers margin from the top to 4.5em */
   .squareContainer {
-    margin-top: 4.5rem;
+    margin-top: 4.5em;
   }
 
-  /* changes post interaction margin from the top to 0.5rem */
+  /* changes post interaction margin from the top to 0.5em */
   .mobilePostInteraction {
-    margin-top: 0.5rem;
+    margin-top: 0.5em;
   }
 }

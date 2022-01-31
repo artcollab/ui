@@ -4,7 +4,6 @@ import { getUserData } from "../Util/handleResponse"
 
 export default function Home() {
     const user = getUserData();
-    console.log(user);
 
     return (
         <>
@@ -15,3 +14,4 @@ export default function Home() {
         </>
     )
 }
+

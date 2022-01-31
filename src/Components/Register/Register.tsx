@@ -39,7 +39,7 @@ function Register() {
             }
             else{
                 // else display error message
-                setErrorText(JSON.parse(req.responseText)['error']);
+                if(req.responseText) setErrorText(JSON.parse(req.responseText)['error']);
             }
         };
         req.send(body);

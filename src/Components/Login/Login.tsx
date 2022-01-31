@@ -29,14 +29,13 @@ function Login() {
         req.open("POST", url, true); // open async http post request
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = () => {
-            if(req.readyState === 4 && req.status === 201) {
+            if(req.readyState === 4 && req.status === 200) {
                 // on successful request, handle the response
                 handleResponse(req.response);
                 navigate("/home");
             }
             else {
-                const error = JSON.parse(req.responseText)['error'];
-                if(error) setErrorText(error);
+                if(req.responseText) setErrorText(JSON.parse(req.responseText)['error']);
             }
         };
         req.send(body);

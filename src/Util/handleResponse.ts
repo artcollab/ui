@@ -1,7 +1,9 @@
 import { user } from "../Types/User";
 
 export function handleResponse(response: string) {
-    const res = JSON.parse(response);
+    let res;
+    
+    if(response) res = JSON.parse(response);
     localStorage.clear();
 
     setRefreshToken(res['rt']);

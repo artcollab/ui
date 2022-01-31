@@ -1,0 +1,23 @@
+:root {
+    --theme-icon: #42342c;
+}
+
+[data-theme = "default"] {
+    --theme-icon: #42342c;
+}
+
+[data-theme = "dark"] {
+    --theme-icon: #1c1c1c;
+}
+
+.loginIcon {
+    background-color: var(--theme-icon) !important;
+}
+
+.loginButton {
+    background-color: var(--theme-icon) !important;
+}
+
+.loginContainer {
+    margin-top: 10rem;
+}

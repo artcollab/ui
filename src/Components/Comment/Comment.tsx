@@ -1,24 +1,29 @@
 /* required components */
-import React, {useState} from "react";
+import {useState} from "react";
 import './Comment.scss'
 import {comment} from "../../Types/Comment";
 import {Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField} from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ColorName } from "../../Util/NameColourGenerator";
+import { getUserAsObject } from "../../Util/handleResponse";
+import { user } from "../../Types/User";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
     commentList : Array<comment>
 }
 
-/* tempComment constant, to be used for testing until DB is up */
-const tempComment : comment = {
-    user: {
-        name: "DrawDojo",
-        thumbnail: "",
-        color: ""
-    },
-    text: ""
+const tempComment: user = {
+    id: "",
+    username: "",
+    email: "",
+    name: "",
+    surname: "",
+    password: ""
 }
+const fetchUser = getUserAsObject();
+
+const User = fetchUser ? fetchUser : tempComment;
 
 /* main Comment function, constructs the Comment component */
 function Comment(props : commentProps) {
@@ -38,11 +43,7 @@ function Comment(props : commentProps) {
         /* userComment structure (temp values currently) */
         const userComment: comment = {
 
-            user: {
-                name: "",
-                thumbnail: "",
-                color: ""
-            },
+            user: User,
             text: textValue
 
         };
@@ -80,15 +81,15 @@ function Comment(props : commentProps) {
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(tempComment.user.name)}}>
-                                    {tempComment.user.name.split(' ')[0][0]}
+                                {<Avatar src={"../avatarTest.ico"} sx={{bgcolor: ColorName(User.name)}}>
+                                    {User.name.split(' ')[0][0]}
                                 </Avatar>}
 
                             </Grid>
 
                             {/* comment text displayed next to username */}
                             <Grid item xs>
-                                {tempComment.user.name}
+                                {User.name}
                                 {' - ' + c.text}
                             </Grid>
                         </Grid>
@@ -135,8 +136,8 @@ function Comment(props : commentProps) {
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(tempComment.user.name)}}>
-                                {tempComment.user.name.split(' ')[0][0]}
+                            {<Avatar src={"../avatarTest.ico"} sx={{width: 24, height: 24, bgcolor: ColorName(User.name)}}>
+                                {User.name.split(' ')[0][0]}
                             </Avatar>}
                         </InputAdornment>
                     ),
@@ -164,35 +165,6 @@ function Comment(props : commentProps) {
 
         </Box>
     )
-}
-
-/* generates a random color background for the user if they don't have a profile picture */
-function ColorName(name: string | String | undefined) {
-
-    /* initial variables */
-    let hash = 0
-    let idx = 0
-    let color = '#'
-
-    /* default color in unexpected undefined name */
-    if(name === undefined) {
-        return color + 'f8f8ff'
-    }
-
-    /* generates hash value dependent on username */
-    while (idx < name.length) {
-        hash = name.charCodeAt(idx) + ((hash << 5) - hash)
-        idx++
-    }
-
-    /* generates the color based on the hash value obtained previously */
-    for (idx = 0; idx <= 2; idx++) {
-        const randomColVal = (hash >> (idx * 8)) & 0xFF
-        color += randomColVal.toString(16)
-    }
-
-    return color
-
 }
 
 export default Comment;

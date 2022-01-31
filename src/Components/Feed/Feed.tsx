@@ -30,7 +30,7 @@ const tempPost : post = {
     comments: []
 }
 
-function Feed(props : feed) {
+function Feed() {
 
     /* React hook for the array of posts, used for generating and keeping track of how many posts are displayed */
     const [displayPosts, setDisplayPosts] = useState(Array.from(Array(postsDisplayed).keys()))

@@ -1,6 +1,6 @@
 import { user } from "../Types/User";
 
-export function handleRegisterResponse(response: string) {
+export function handleResponse(response: string) {
     const res = JSON.parse(response);
     localStorage.clear();
 

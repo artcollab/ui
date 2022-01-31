@@ -11,10 +11,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import './Login.scss';
+import { useNavigate } from 'react-router-dom';
+import { handleResponse } from '../../Util/handleResponse';
 
 function Login() {
+    const navigate = useNavigate();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        setErrorText("");
         event.preventDefault();
+        // extracting form data
         const data = new FormData(event.currentTarget);
         const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
 
@@ -25,7 +30,13 @@ function Login() {
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = () => {
             if(req.readyState === 4 && req.status === 201) {
-                console.log(JSON.parse(req.status.toString()));
+                // on successful request, handle the response
+                handleResponse(req.response);
+                navigate("/home");
+            }
+            else {
+                const error = JSON.parse(req.responseText)['error'];
+                if(error) setErrorText(error);
             }
         };
         req.send(body);
@@ -41,6 +52,9 @@ function Login() {
         else setEmailValid(false);
         
     }
+
+    // submission error text
+    const [errorText, setErrorText] = useState("");
 
     return (
         <Container className="loginContainer" component="main" maxWidth="xs">
@@ -72,6 +86,7 @@ function Login() {
                         autoComplete="email"
                         autoFocus
                         placeholder="Email Address"
+                        variant="filled"
                     />
                     <TextField
                         margin="normal"
@@ -82,6 +97,8 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        variant="filled"
+                        helperText={errorText}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -103,7 +120,7 @@ function Login() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/register" variant="body2">
                                 Don't have an account? Sign Up
                             </Link>
                         </Grid>

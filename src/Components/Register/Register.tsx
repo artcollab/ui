@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import './Register.scss';
-import { handleRegisterResponse } from '../../Util/handleResponse';
+import { handleResponse } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
@@ -33,7 +33,7 @@ function Register() {
         req.onreadystatechange = () => {
             if(req.readyState === 4 && req.status === 201) {
                 // on successful register, add response to localstorage
-                handleRegisterResponse(req.response);
+                handleResponse(req.response);
                 // return to homepage
                 navigate("/home");
             }

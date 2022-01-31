@@ -1,14 +1,13 @@
 import { user } from "../Types/User";
 
 export function handleResponse(response: string) {
-    let res;
-    
-    if(response) res = JSON.parse(response);
     localStorage.clear();
-
-    setRefreshToken(res['rt']);
-    setAccessToken(res['at']);
-    setUserData(res['user']);
+    if (response) {
+        let res = JSON.parse(response);
+        setRefreshToken(res['rt']);
+        setAccessToken(res['at']);
+        setUserData(res['user']);
+    }
 }
 
 export function getRefreshToken(): JSON | null {
@@ -45,6 +44,6 @@ export function getUserAsObject(): user {
     return getUserData() as unknown as user;
 }
 
-export function logOut(){
+export function logOut() {
     localStorage.clear();
 }

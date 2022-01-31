@@ -116,7 +116,7 @@ function Canvas(props: canvasProps) {
     });
 
     // listens for new status messages, also added to the message list and page is re-rendered
-    socket.on("addStatus", (message) => {
+    socket.on("addStatus", (message : string) => {
         setMessageList([...messageList, message]);
     })
 
@@ -124,7 +124,7 @@ function Canvas(props: canvasProps) {
     useEffect(() => {
 
         // Canvas event listener detects whenever an object is added to the page, if the object isn't a duplicate, we emit it.
-        canvas?.on("object:added", (object) => {
+        canvas?.on("object:added", (object : any) => {
             // This comparison allows us to know whether or not this object was created by this client or received by socket io
             let dupe = object.target === receivedObject.current;
             let id = v1();
@@ -136,16 +136,16 @@ function Canvas(props: canvasProps) {
             }
         })
 
-        canvas?.on("object:modified", (object) => {
+        canvas?.on("object:modified", (object : any) => {
             // finding the same object in the object list in order to preserve the ID
             let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
             newObject?.set({ name: object.target!.name });
             if (newObject) socket.emit('newModification', { id: object.target!.name, obj: newObject });
         });
 
-        canvas?.on("object:moving", (object) => {
+        canvas?.on("object:moving", (object : any) => {
             // finding the same object in the object list in order to preserve the ID
-            let newObject = canvas.getObjects().find((e) => e.name === object.target!.name);
+            let newObject = canvas.getObjects().find((e : any) => e.name === object.target!.name);
             newObject?.set({ name: object.target!.name });
             if (newObject) socket.emit('newModification', { id: object.target!.name, obj: newObject });
         });
@@ -192,8 +192,8 @@ function Canvas(props: canvasProps) {
         });
 
         // listens for object modifications being sent, updates the position of modified object on client side
-        socket.on('modifyObject', (object) => {
-            canvas?.getObjects().forEach((element) => {
+        socket.on('modifyObject', (object : any) => {
+            canvas?.getObjects().forEach((element : any) => {
                 if (object.id === element.name) {
                     element.set({ ...object.obj })
                     element.setCoords();
@@ -256,8 +256,8 @@ function Canvas(props: canvasProps) {
             <Grid container sx={{ marginTop: "10rem" }}>
                 <Grid item className="brushToolContainer">
                     <ButtonGroup>
-                        <Button type='button' name='clear' onClick={() => socket.emit('requestCanvasClear')}>Clear</Button>
-                        <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => setColour(e.target.value)} disableUnderline />Colour</Button>
+                        <Button type='button' name='clear' onClick={() => {socket.emit('requestCanvasClear')}}>Clear</Button>
+                        <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => {setColour(e.target.value)}} disableUnderline />Colour</Button>
                         <Button >
                             <Input
                                 value={brushSize}
@@ -321,10 +321,10 @@ function Canvas(props: canvasProps) {
                     </Paper>
                 </Grid>
                 <Grid item className="chatContainer">
-                    <ChatBox messageList={messageList} postMessage={(value: string) => postMessage(value)} user={User} />
-                    <Button variant='outlined' className="submitButton" onClick={() => setOpen(true)}>Submit Post</Button>
+                    <ChatBox messageList={messageList} postMessage={(value: string) => {postMessage(value)}} user={User} />
+                    <Button variant='outlined' className="submitButton" onClick={() => {setOpen(true)}}>Submit Post</Button>
                     {canvas && (
-                        <Modal open={open} onClose={() => setOpen(false)}>
+                        <Modal open={open} onClose={() => {setOpen(false)}}>
                             <PostSubmission image={canvas.toSVG().toString()} />
                         </Modal>
                     )}

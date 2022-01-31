@@ -54,7 +54,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/smoothscroll-polyfill": "^0.3.1"
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }

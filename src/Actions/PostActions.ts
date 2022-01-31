@@ -6,7 +6,7 @@ export function handlePost(content : string, caption: string): void{
         content: content,
     }
     const body = JSON.stringify(Post);
-    const url = "http://localhost:8080/posts";
+    const url = "https://api.operce.net/posts";
     const req = new XMLHttpRequest();
     // open async http post request
     req.open("POST", url, true); 

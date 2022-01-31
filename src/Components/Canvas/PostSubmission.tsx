@@ -1,5 +1,6 @@
 import { Box, Button, Paper, TextField } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { handlePost } from "../../Actions/PostActions";
 import "./Canvas.scss";
 
@@ -9,6 +10,7 @@ type PostSubmissionProps = {
 
 // post submission elements to store inside modal, takes an SVG string of the image as parameter
 export default function PostSubmission(props: PostSubmissionProps) {
+    const navigate = useNavigate();
     const svg = props.image;
 
     // converting the image string to an ingestible format
@@ -30,7 +32,7 @@ export default function PostSubmission(props: PostSubmissionProps) {
                     value={captionText}
                     onChange={(e) => {setCaptionText(e.target.value)}}
                 />
-                <Button variant="outlined" onClick={() => {handlePost(svg, captionText)}} sx={{marginTop: "2%"}}>Submit</Button>
+                <Button variant="outlined" onClick={() => {handlePost(svg, captionText); navigate("/home")}} sx={{marginTop: "2%"}}>Submit</Button>
             </Box>
         </Paper>
     )

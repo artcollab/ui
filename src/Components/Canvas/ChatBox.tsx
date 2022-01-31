@@ -3,6 +3,7 @@ import { comment } from "../../Types/Comment";
 import SendIcon from '@mui/icons-material/Send';
 import { user } from "../../Types/User";
 import { useState } from "react";
+import { v1 } from "uuid"
 import "./Canvas.scss"
 
 type ChatBoxProps = {
@@ -22,7 +23,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                     let received = ""
                     if (typeof message == "object") received = message.user.id === user.id ? "" : "messageReceived";
                     return (
-                        <>
+                        <div key={v1()}>
                             {/* if the message is a comment type, display as comment, else it must be a status message */}
                             {typeof message == "object" ?
                                 <div className="messageContainer" key={id}>
@@ -40,7 +41,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                                 :
                                 <div className="statusContainer">{message}</div>
                             }
-                        </>
+                        </div>
                     )
                 })}
             </Box>

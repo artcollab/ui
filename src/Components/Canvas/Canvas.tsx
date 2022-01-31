@@ -210,8 +210,8 @@ function Canvas(props: canvasProps) {
 
         // Extracting mouse location to allow us to choose the position of the object
         let pointer = canvas?.getPointer(e);
-        let mouseX = pointer!.x;
-        let mouseY = pointer!.y;
+        let mouseX = pointer ? pointer.x : 0;
+        let mouseY = pointer ? pointer.y : 0;
 
         let defaultSize = 100;
 

@@ -1,0 +1,49 @@
+
+/* CSS for the loading icon when loading/reloading the feed */
+.loadingIcon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%)
+}
+
+/* loadingButton CSS for colors */
+.loadingButton {
+  background-color: #858585 !important;
+  color: #ffffff !important;
+}
+
+/* positions the scroll button along with some styling */
+.scrollButton {
+    position: fixed !important;
+    bottom: 1em;
+    right: 0.5em;
+    background-color: white !important;
+    box-shadow: 0 5px 10px dimgrey;
+}
+
+/* positions the create button along with some styling */
+.createButton {
+  position: fixed !important;
+  bottom: 1em;
+  left: 0.5em;
+  background-color: white !important;
+  box-shadow: 0 5px 10px dimgrey;
+}
+
+/* smaller mobile view CSS */
+@media (max-width: 600px) {
+
+  /* positions the scroll button slightly more to the right + bottom when in this view,
+  it will still overlap other elements but this way its more legible */
+  .scrollButton {
+    right: 0.25em;
+    bottom: 0.5em;
+  }
+
+  /* same idea as above CSS */
+  .createButton {
+    left: 0.25em;
+    bottom: 0.5em;
+  }
+}

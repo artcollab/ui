@@ -10,7 +10,9 @@ import { user } from "../../Types/User";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
-    commentList : Array<comment>
+    commentsList : Array<comment>,
+    focused?: boolean
+    setFocused: Function
 }
 
 const tempComment: user = {
@@ -26,7 +28,7 @@ const fetchUser = getUserAsObject();
 const User = fetchUser ? fetchUser : tempComment;
 
 /* main Comment function, constructs the Comment component */
-function Comment(props : commentProps) {
+function Comment({commentsList, focused=false, setFocused} : commentProps) {
 
     /* character limit within the TextField */
     const charLimit = 100
@@ -35,7 +37,7 @@ function Comment(props : commentProps) {
     const [textValue, setValue] = useState('')
 
     /* react hook with constant variables to be used for obtaining user comments */
-    const [commentList, setCommentList] = useState<Array<comment>>(props?.commentList)
+    const [commentList, setCommentList] = useState<Array<comment>>(commentsList)
 
     /* addComment function to handle the user comments */
     function addComment() {
@@ -75,7 +77,7 @@ function Comment(props : commentProps) {
                     <Paper key={i} sx={{maxWidth: 225, my: 1, mx: 'auto', p: 2, borderRadius: 2.5}}>
 
                         {/* aligns items in the center of the Paper container */}
-                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
+                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={0.75}>
 
                             {/* user Avatar icon */}
                             <Grid item>
@@ -87,12 +89,19 @@ function Comment(props : commentProps) {
 
                             </Grid>
 
-                            {/* comment text displayed next to username */}
+                            {/* displays the username */}
                             <Grid item xs>
-                                {User.name}
-                                {' - ' + c.text}
+                                <span style={{fontSize: 13, fontWeight: 'bold'}}>
+                                    {User.name}
+                                </span>
                             </Grid>
                         </Grid>
+
+                        {/* displays the comment text below the user avatar & name */}
+                        <span style={{fontSize: 13}}>
+                            {c.text}
+                        </span>
+
                     </Paper>
                 )
             })}
@@ -103,7 +112,7 @@ function Comment(props : commentProps) {
                 /* sets TextField background color to white */
                 sx={{color: '#FFF'}}
 
-                id={'CommentField'}
+                name="CommentField"
 
                 /* TextField can expand to multiple lines */
                 multiline
@@ -126,11 +135,20 @@ function Comment(props : commentProps) {
                 /* whenever the user types in the TextField the value of the string is saved */
                 onChange={(e) => {setValue(e.target.value)}}
 
+                /* setting focused prop */
+                focused={focused}
+
+                /* onClick of TextField will set the focus, on/off */
+                onClick={() => {setFocused(!focused)}}
+
                 /* testing purposes, don't use this */
                 /*inputProps={{ "data-testid": "textfield-test" }}*/
 
                 /* Props to be used with the Comment text box such as showing user profile picture */
                 InputProps={{
+
+                    /* styles the input props to be fontSize 13 */
+                    style: {fontSize: 13},
 
                     /* at the beginning of the TextField the users profile picture will be displayed if they have one,
                     * if they don't then a random one is generated for them based on username */
@@ -145,7 +163,7 @@ function Comment(props : commentProps) {
                     /* at the end of the TextField an arrow is displayed which allows the user to post their comment */
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton data-testid="comment-button-test" color={"success"} onClick={() => {
+                            <IconButton data-testid="comment-button-test" style={{width: 24, height: 24, color: 'black'}} onClick={() => {
 
                                 /* comment can be posted if TextField isn't empty or has under 100 characters */
                                 if(textValue.trim().length > 0 && textValue.trim().length <= 100) { addComment() }
@@ -156,7 +174,7 @@ function Comment(props : commentProps) {
                                 /* alerts user of invalid comment (too many chars) */
                                 else {alert("No more than 100 characters allowed.")}
                             }}>
-                                <ArrowForwardIcon/>
+                                <ArrowForwardIcon style={{color: 'black'}}/>
                             </IconButton>
                         </InputAdornment>
                     )

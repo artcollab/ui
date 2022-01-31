@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import './Post.scss';
-import Comment from '../Comment/Comment';
+import Comment from '../Comment/Comment'
 import {post} from "../../Types/Post";
 import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
+
 
 /* postProps type defined */
 type postProps = {
@@ -73,15 +74,14 @@ function Post(props : postProps) {
         setStyle(likeStyle === "like" ? "noLike" : "like")
     }
 
+    /* setting focus prop of comment field */
+    const [focused, setFocused] = useState(false);
 
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
 
-    /* Testing purposes */
-    // const tempComment : comment = {user: {name: "DrawDojo", thumbnail: "", color: ""}, text: "Test"}
-
-    /* comment component */
-    const commentSection = <Comment commentList={post.comments}/>
+    /* comment component initialised */
+    const commentSection = <Comment commentsList={[]} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
 
     return (
 
@@ -115,11 +115,6 @@ function Post(props : postProps) {
 
                             {/* displays the avatar of the post author */}
                             <Avatar src={"../cat.jpg"} sx={{width: 56, height: 56}}/>
-
-                            {/* DB EXAMPLE:
-                            {author.user.name.split(' ')[0][0]}
-                            </Avatar>}
-                            */}
 
                         </Grid>
 
@@ -158,39 +153,36 @@ function Post(props : postProps) {
                     {/* Grid container used here to easily align these components horizontally */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap">
 
-                        <Grid item>
+                        {/* ERROR: follow cursor & transition component work but throwing some warnings */}
+                        {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
+                        <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
-                            {/* ERROR: follow cursor & transition component work but throwing some warnings */}
-                            {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
-                            <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
+                            {/* button for the like component */}
+                            <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
 
-                                {/* button for the like component */}
-                                <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
-
-                                    {/* uses a smiley face showing where desktop users can like the post */}
-                                    <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
-
-                                </IconButton>
-
-                            </Tooltip>
-
-                            {/* button for the comment component, should focus on CommentField when clicked  */}
-                            <IconButton onClick={() => document.getElementById('CommentField')?.focus()} sx={{marginLeft: '2.1875rem'}}>
-
-                                {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
-                                <ChatBubbleIcon className={'staticButtons'}/>
+                                {/* uses a smiley face showing where desktop users can like the post */}
+                                <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
 
                             </IconButton>
 
-                            {/* button for the edit component, not implemented yet */}
-                            <IconButton sx={{marginLeft: '2.1875rem'}}>
+                        </Tooltip>
 
-                                {/* uses a pencil icon depicting where desktop users can access the edit feature */}
-                                <CreateIcon className={'staticButtons'}/>
+                        {/* button for the comment component, should focus on CommentField when clicked (works somewhat)  */}
+                        <IconButton onClick={() => setFocused(!focused)} sx={{margin: "auto"}}>
 
-                            </IconButton>
+                        {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
+                            <ChatBubbleIcon className={'staticButtons'}/>
 
-                        </Grid>
+                        </IconButton>
+
+                        {/* button for the edit component, not implemented yet */}
+                        <IconButton>
+
+                            {/* uses a pencil icon depicting where desktop users can access the edit feature */}
+                            <CreateIcon className={'staticButtons'}/>
+
+                        </IconButton>
+
                     </Grid>
                 </div>
 
@@ -204,18 +196,13 @@ function Post(props : postProps) {
 
                     <Grid marginLeft="auto" marginRight="auto" item>
 
-                        {/* Tooltip element to show the likes on the current post instead of them always showing, keeps the container compact */}
-                        <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
+                        {/* button for the like component */}
+                        <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
 
-                            {/* button for the like component */}
-                            <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
+                            {/* uses a smiley face showing where mobile users can like the post */}
+                            <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
 
-                                {/* uses a smiley face showing where mobile users can like the post */}
-                                <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
-
-                            </IconButton>
-
-                        </Tooltip>
+                        </IconButton>
 
                         {/* button component which can be pressed to display the comment section in a Modal */}
                         <IconButton sx={{marginLeft: '2em'}} onClick={() => setOpen(true)}>
@@ -226,20 +213,21 @@ function Post(props : postProps) {
                         </IconButton>
 
                         {/* button for the edit component */}
-                        <IconButton sx={{marginLeft: '2em'}} >
+                        <IconButton sx={{marginLeft: '2em'}}>
 
                             {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
                             <CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
 
                         </IconButton>
 
+                        {/* like counter for when in mobile view, tooltip wont work since no cursor on mobile */}
+                        <div style={{marginLeft: '1.15em'}}>{likes}</div>
+
                     </Grid>
                 </Grid>
             </div>
-
         </Container>
     )
 }
 
 export default Post;
-

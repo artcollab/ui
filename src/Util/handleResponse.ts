@@ -4,26 +4,26 @@ export function handleResponse(response: string) {
     localStorage.clear();
     if (response) {
         let res = JSON.parse(response);
-        setRefreshToken(res['rt']);
-        setAccessToken(res['at']);
+        setRefreshToken(res['tokens']['rt']);
+        setAccessToken(res['tokens']['at']);
         setUserData(res['user']);
     }
 }
 
-export function getRefreshToken(): JSON | null {
+export function getRefreshToken(): string | null {
     const res = localStorage.getItem('rt');
 
-    return res ? JSON.parse(res) : res;
+    return res ? res : "";
 }
 
 export function setRefreshToken(token: JSON) {
     localStorage.setItem('rt', JSON.stringify(token));
 }
 
-export function getAccessToken(): JSON | null {
+export function getAccessToken(): string | null {
     const res = localStorage.getItem('at');
 
-    return res ? JSON.parse(res) : res;
+    return res ? res : "";
 }
 
 export function setAccessToken(token: JSON) {

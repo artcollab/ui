@@ -7,6 +7,8 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
+import { getUserAsObject } from "../../Util/handleResponse";
+import { user } from "../../Types/User";
 
 
 /* postProps type defined */
@@ -16,6 +18,19 @@ type postProps = {
     Post : post
 
 }
+
+const postcaption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus eros quis neque aliquet, vel molestie sapien volutpat. Vestibulum at maximus nunc, ut maximus lacus. Donec et ante gravida, viverra felis id, pulvinar sapien. Curabitur vel vestibulum leo. Proin quis mauris sit amet purus congue pellentesque id ut nisl."
+const fetchUser = getUserAsObject();
+const tempUser: user = {
+    id: "",
+    username: "",
+    email: "",
+    name: "",
+    surname: "",
+    password: ""
+}
+
+const User = fetchUser ? fetchUser : tempUser;
 
 /* type definitions for caption variables, need to avoid errors */
 type caption = {
@@ -121,7 +136,7 @@ function Post(props : postProps) {
                         <Grid item xs>
 
                             {/* authors username, displayed in bold text to emphasise */}
-                            <p className={"postAuthor"}>{post.user.name} {post.user.surname}</p>
+                            <p className={"postAuthor"}>{User.name} {post.user.surname}</p>
 
                             {/* line underneath the authors username to separate it from caption text */}
                             <hr/>
@@ -131,7 +146,7 @@ function Post(props : postProps) {
 
                                 {/* in the desktop view there has to be a limit on the amount of characters due to the limited size
                                  of the post container, this character limit is 15 characters as of now */}
-                                <PostCaption captionText = {post.caption} characterLimit = {15}/>
+                                <PostCaption captionText = {postcaption} characterLimit = {15}/>
 
                             </div>
 

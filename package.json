@@ -56,5 +56,8 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
+  },
+  "devDependencies": {
+    "@types/smoothscroll-polyfill": "^0.3.1"
   }
 }

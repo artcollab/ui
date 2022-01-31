@@ -1,23 +1,9 @@
 import {render, fireEvent} from "@testing-library/react";
 import Feed from "./Feed";
 import React from "react";
-import {post} from "../../Types/Post";
 import '@testing-library/jest-dom';
 
 export {}
-
-const tempPost : post = {
-    id: 0,
-    user: {
-        name: " ",
-        thumbnail: " ",
-        color: " ",
-    },
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: []
-}
 
 global.scroll = jest.fn()
 global.scrollTo = jest.fn()
@@ -26,7 +12,7 @@ global.scrollTo = jest.fn()
 it("scroll button display test", () => {
 
     /* renders the Feed component for testing */
-    const feedComponent = render(<Feed posts={[tempPost]}/>);
+    const feedComponent = render(<Feed/>);
 
     /* fireEvent makes the window scroll down to the Y position of 350,
     this the threshold where the scroll button will show  */
@@ -44,7 +30,7 @@ it("scroll button display test", () => {
 it("create button display test", () => {
 
     /* renders the Feed component for testing */
-    const feedComponent = render(<Feed posts={[tempPost]}/>);
+    const feedComponent = render(<Feed/>);
 
     /* gets the create button element from the feed component via test id */
     const createButton = feedComponent.getByTestId("create-button-test");
@@ -58,7 +44,7 @@ it("create button display test", () => {
 it("scroll button function test", () => {
 
     /* renders the Feed component for testing */
-    const feedComponent = render(<Feed posts={[tempPost]}/>);
+    const feedComponent = render(<Feed/>);
 
     /* fireEvent makes the window scroll down to the Y position of 350,
     this the threshold where the scroll button will show  */

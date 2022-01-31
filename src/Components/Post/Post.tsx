@@ -18,7 +18,7 @@ type postProps = {
 
 }
 
-const caption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus eros quis neque aliquet, vel molestie sapien volutpat. Vestibulum at maximus nunc, ut maximus lacus. Donec et ante gravida, viverra felis id, pulvinar sapien. Curabitur vel vestibulum leo. Proin quis mauris sit amet purus congue pellentesque id ut nisl."
+const postcaption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus eros quis neque aliquet, vel molestie sapien volutpat. Vestibulum at maximus nunc, ut maximus lacus. Donec et ante gravida, viverra felis id, pulvinar sapien. Curabitur vel vestibulum leo. Proin quis mauris sit amet purus congue pellentesque id ut nisl."
 const user = getUserAsObject();
 
 /* type definitions for caption variables, need to avoid errors */
@@ -135,7 +135,7 @@ function Post(props : postProps) {
 
                                 {/* in the desktop view there has to be a limit on the amount of characters due to the limited size
                                  of the post container, this character limit is 15 characters as of now */}
-                                <PostCaption captionText = {caption} characterLimit = {15}/>
+                                <PostCaption captionText = {postcaption} characterLimit = {15}/>
 
                             </div>
 

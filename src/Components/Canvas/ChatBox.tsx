@@ -49,7 +49,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Send A Message"
                     value={messageValue}
-                    onChange={(e) => setMessageValue(e.target.value)}
+                    onChange={(e) => {setMessageValue(e.target.value)}}
                 />
                 <IconButton type="submit" sx={{ p: '10px' }} onClick={() => { postMessage(messageValue); setMessageValue("") }}>
                     <SendIcon />

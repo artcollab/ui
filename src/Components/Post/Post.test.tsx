@@ -5,9 +5,13 @@ import {post} from "../../Types/Post";
 const tempPost : post = {
     id: 0,
     user: {
-        name: " ",
-        thumbnail: " ",
-        color: " ",
+        id: "",
+        username: "",
+        email: "",
+        name: "",
+        surname: "",
+        password: "",
+        following: undefined
     },
     image: " ",
     caption: " ",
@@ -19,13 +23,8 @@ it("appears on the screen", () => {
     render(<Post Post={tempPost}/>);
 
     /* checks if the square container renders on screen */
-    expect(screen.getByTestId("container-test")).toBeInTheDocument;
+    expect(screen.getByTestId("container-test")).toBeTruthy();
 
     /* checks if the post header renders on screen */
-    expect(screen.getByTestId("post-header-test")).toBeInTheDocument;
-
-    /* checks if the author name 'dogs72' is included within the page */
-    const authorName = screen.getByText(/dogs72/i);
-    expect(authorName).toBeInTheDocument;
-
+    expect(screen.getByTestId("post-header-test")).toBeTruthy();
 });

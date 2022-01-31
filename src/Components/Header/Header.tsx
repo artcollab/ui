@@ -31,6 +31,7 @@ function toggleTheme() {
 
     // sets an attribute in the HTML root element which can be found in Header.scss
     document.documentElement.setAttribute('data-theme', targetTheme)
+    localStorage.setItem('theme', targetTheme);
 }
 
 ////// Search Bar styles sourced from MUI component library///// 
@@ -77,6 +78,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header() {
     const navigate = useNavigate();
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') ?? "default")
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);

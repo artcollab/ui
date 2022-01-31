@@ -1,5 +1,5 @@
 import Feed from "../Components/Feed/Feed";
-import Register from "../Components/Register/Register";
+import Login from "../Components/Login/Login";
 import { getUserData } from "../Util/handleResponse"
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
         <>
             {user ?
                 <Feed /> :
-                <Register />
+                <Login/>
             }
         </>
     )

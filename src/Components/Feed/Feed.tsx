@@ -18,15 +18,19 @@ smoothscroll.polyfill();
 
 const tempPost : post = {
     id: 0,
-    user: {
-        name: " ",
-        thumbnail: " ",
-        color: " ",
-    },
     image: " ",
     caption: " ",
     likes: [],
-    comments: []
+    comments: [],
+    user: {
+        id: "",
+        username: "",
+        email: "",
+        name: "",
+        surname: "",
+        password: "",
+        following: undefined
+    }
 }
 
 function Feed() {

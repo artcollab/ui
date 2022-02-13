@@ -13,28 +13,16 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
+import { getUserAsObject } from '../../Util/handleResponse';
 
 type canvasProps = {
     room: string
 }
 
-const tempUser: user = {
-    id: '',
-    username: '',
-    email: '',
-    name: '',
-    surname: '',
-    password: ''
-};
-
 const fetchedData = getUserAsObject();
-const User: user = fetchedData ? fetchedData : tempUser;
-const at = getAccessToken();
+const User: user = fetchedData;
 
-const socket = io('https://api.operce.net:8081', {
-    query: { secret: at }
-});     // connect to socket io server
+const socket = io('http://localhost:8081');     // connect to socket io server
 
 function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);

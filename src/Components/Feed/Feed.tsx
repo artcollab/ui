@@ -5,6 +5,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 import {post} from "../../Types/Post";
+import { useNavigate } from "react-router-dom";
 
 /* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
 const FeedPost = lazy(() => {return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post"))})
@@ -34,6 +35,7 @@ const tempPost : post = {
 }
 
 function Feed() {
+    const navigate = useNavigate();
 
     /* React hook for the array of posts, used for generating and keeping track of how many posts are displayed */
     const [displayPosts, setDisplayPosts] = useState(Array.from(Array(postsDisplayed).keys()))
@@ -103,7 +105,7 @@ function Feed() {
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
             <IconButton size={"small"} className={'createButton'}
-                        data-testid="create-button-test"><GestureOutlinedIcon/></IconButton>
+                        data-testid="create-button-test" onClick={() => navigate('/canvas')}><GestureOutlinedIcon/></IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&

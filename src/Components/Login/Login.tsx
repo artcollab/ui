@@ -23,7 +23,7 @@ function Login() {
         const data = new FormData(event.currentTarget);
         const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
 
-        const url = "https://api.operce.net/auth/login"
+        const url = "http://localhost:8080/auth/login"
         const req = new XMLHttpRequest();
         
         req.open("POST", url, true); // open async http post request

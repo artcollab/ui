@@ -88,7 +88,7 @@ function Feed() {
                     </div>}>
 
                     {/* uses a nested map to fetch and display the posts */}
-                    {posts.map((value, ind) => {
+                    {posts.length > 0 && posts.map((value, ind) => {
                         return (ind < index && (
                             <FeedPost key={v1()} Post={value} />
                         ))

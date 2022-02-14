@@ -30,6 +30,11 @@ type caption = {
 function Post(props : postProps) {
     const post = props.Post;
 
+    const svg = post.content;
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const image = document.createElement('img'); image.addEventListener('load', () => {URL.revokeObjectURL(url)}, { once: true }); image.src = url;
+
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
 
@@ -92,7 +97,7 @@ function Post(props : postProps) {
             <Paper className="squareContainer" data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
+                <img draggable={"false"} className={"squarePostContent"} src={image.src} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 
@@ -121,7 +126,7 @@ function Post(props : postProps) {
                         <Grid item xs>
 
                             {/* authors username, displayed in bold text to emphasise */}
-                            <p className={"postAuthor"}>{post.user.name} {post.user.surname}</p>
+                            <p className={"postAuthor"}>{post.author.name} {post.author.surname}</p>
 
                             {/* line underneath the authors username to separate it from caption text */}
                             <hr/>
@@ -131,7 +136,7 @@ function Post(props : postProps) {
 
                                 {/* in the desktop view there has to be a limit on the amount of characters due to the limited size
                                  of the post container, this character limit is 15 characters as of now */}
-                                <PostCaption captionText = {post.caption} characterLimit = {15}/>
+                                <PostCaption captionText = {post.title} characterLimit = {15}/>
 
                             </div>
 
@@ -139,7 +144,7 @@ function Post(props : postProps) {
                             <div className={'postCaptionMobile'}>
 
                                 {/* more text can be displayed in mobile view but it has a character limit of 50 */}
-                                <PostCaption captionText = {post.caption} characterLimit = {50}/>
+                                <PostCaption captionText = {post.title} characterLimit = {50}/>
 
                             </div>
 

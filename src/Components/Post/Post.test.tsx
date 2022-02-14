@@ -3,8 +3,8 @@ import Post from "./Post";
 import {post} from "../../Types/Post";
 
 const tempPost : post = {
-    id: 0,
-    user: {
+    id: "",
+    author: {
         id: "",
         username: "",
         email: "",
@@ -13,10 +13,11 @@ const tempPost : post = {
         password: "",
         following: undefined
     },
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: []
+    title: "",
+    content: "",
+    likes: 0,
+    created: 0,
+    users: []
 }
 
 it("appears on the screen", () => {

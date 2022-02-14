@@ -1,3 +1,4 @@
+import { post } from "../Types/Post";
 import { getAccessToken, getUserAsObject } from "../Util/handleResponse";
 
 const at = getAccessToken();
@@ -18,10 +19,29 @@ export function handlePost(content : string, caption: string): void{
     req.setRequestHeader('Authorization', "Bearer " + JSON.parse(at));
     req.onreadystatechange = () => {
         if(req.readyState === 4 && req.status === 201) {
-            // on successful register, add response to localstorage
-            localStorage.setItem('post', JSON.parse(req.response));
+            console.log("Success creating post");
         }
     };
     req.send(body);
 
+}
+
+export function fetchPosts() : Array<post> {
+    let res : post[] = [];
+    const url = "http://localhost:8080/posts";
+    const req = new XMLHttpRequest();
+    // open async http post request
+    req.open("GET", url, true); 
+    req.setRequestHeader("Content-Type", "application/json");
+    req.setRequestHeader('Authorization', "Bearer " + JSON.parse(at));
+    req.onreadystatechange = () => {
+        if(req.readyState === 4 && req.status === 200) {
+            //console.log(JSON.parse(req.response));
+            res = JSON.parse(req.response) as unknown as Array<post>;
+            return res;
+        }
+    };
+    req.send();
+
+    return res;
 }

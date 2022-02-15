@@ -154,7 +154,7 @@ function Post(props : postProps) {
                             <div className={'postCaptionMobile'}>
 
                                 {/* more text can be displayed in mobile view but it has a character limit of 50 */}
-                                <PostCaption captionText = {post.caption} characterLimit = {50}/>
+                                <PostCaption captionText = {postcaption} characterLimit = {50}/>
 
                             </div>
 

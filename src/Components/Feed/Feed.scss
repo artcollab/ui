@@ -1,10 +1,29 @@
+/* determines the initial theme state */
+:root {
+  --loading-color: #ffccac
+}
+
+/* sets the theme whenever the data-theme is toggled back to default */
+[data-theme = "default"] {
+  --loading-color: #ffccac;
+}
+
+/* sets the theme when the data-theme is toggled to dark mode */
+[data-theme = "dark"] {
+  --loading-color: #1c1c1c;
+}
+
+/* loading graphic color is different depending on the currently activated theme */
+.loadingGraphic {
+  color: var(--loading-color) !important;
+}
 
 /* CSS for the loading icon when loading/reloading the feed */
 .loadingIcon {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
 
 /* loadingButton CSS for colors */

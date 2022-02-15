@@ -36,6 +36,11 @@
     background-color: #FFF;
   }
 
+  /* stops user avatars from being draggable */
+  .MuiAvatar-img {
+    -webkit-user-drag: none;
+  }
+
 }
 
 /* CSS for Square Sized post content within the Square container */

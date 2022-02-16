@@ -48,7 +48,8 @@
   display: flex;
   min-height: 29em;
   max-height: 29em;
-  max-width: 29em;
+  min-width: 29em;
+  max-width: 29em !important;
   border-radius: 0.75em;
 }
 

@@ -50,6 +50,25 @@
   box-shadow: 0 5px 10px dimgrey;
 }
 
+/* gives some font styles for the popover title */
+.popoverTitle {
+  font-weight: bolder !important;
+  font-size: 1em !important;
+  text-decoration: underline;
+}
+
+/* popover text separation */
+.popoverOptions {
+  margin-top: 0.75em !important;
+}
+
+/* create canvas button styling */
+.createCanvas {
+  margin-top: 1em !important;
+  background-color: #858585 !important;
+  color: #ffffff !important;
+}
+
 /* smaller mobile view CSS */
 @media (max-width: 600px) {
 
@@ -60,9 +79,10 @@
     bottom: 0.5em;
   }
 
-  /* same idea as above CSS */
+  /* hides create button when in mobile view */
   .createButton {
-    left: 0.25em;
-    bottom: 0.5em;
+    // left: 0.25em;
+    // bottom: 0.5em;
+    display: none !important;
   }
 }

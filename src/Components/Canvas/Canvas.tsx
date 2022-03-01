@@ -13,7 +13,7 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import { getUserAsObject } from '../../Util/handleResponse';
+import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
 
 type canvasProps = {
     room: string
@@ -21,8 +21,13 @@ type canvasProps = {
 
 const fetchedData = getUserAsObject();
 const User: user = fetchedData;
+const at = getAccessToken();
 
-const socket = io('http://localhost:8081');     // connect to socket io server
+const socket = io('http://localhost:8081', {
+    extraHeaders : {
+        Authorization : `Bearer ${at}`
+    }
+});     // connect to socket io server
 
 function Canvas(props: canvasProps) {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);

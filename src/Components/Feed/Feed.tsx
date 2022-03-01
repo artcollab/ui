@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Feed.scss'
 import { Button, CircularProgress, IconButton } from '@mui/material';
 import smoothscroll from 'smoothscroll-polyfill';
@@ -8,15 +8,15 @@ import { post } from "../../Types/Post";
 import { useNavigate } from "react-router-dom";
 import { v1 } from "uuid";
 import { getAccessToken } from "../../Util/handleResponse";
+import Post from "../Post/Post";
 
 const at = getAccessToken();
 
 /* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
-const FeedPost = lazy(() => { return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post")) })
+// const FeedPost = lazy(() => { return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post")) })
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
-
 
 function Feed() {
     const navigate = useNavigate();
@@ -33,7 +33,9 @@ function Feed() {
         req.onreadystatechange = () => {
             if (req.readyState === 4 && req.status === 200) {
                 //console.log(JSON.parse(req.response));
-                setPosts(JSON.parse(req.response) as unknown as Array<post>);
+                if (req.response) {
+                    setPosts(JSON.parse(req.response) as unknown as Array<post>);
+                }
             }
         };
         req.send();
@@ -82,19 +84,18 @@ function Feed() {
             {/* divider for the feed of posts */}
             <div>
 
-                {/* Suspense tag, on fallback will display a loading circle icon to depict the loading of the feed component*/}
-                <Suspense
-                    fallback={<div className={"loadingIcon"}><CircularProgress size={125} sx={{ color: "#ffccac" }} />
-                    </div>}>
+                {!posts.length && (
+                    <div className={"loadingIcon"}>
+                        <CircularProgress size={125} sx={{ color: "#ffccac" }} />
+                    </div>
+                )}
 
-                    {/* uses a nested map to fetch and display the posts */}
-                    {posts.length > 0 && posts.map((value, ind) => {
-                        return (ind < index && (
-                            <FeedPost key={v1()} Post={value} />
-                        ))
-                    })}
-
-                </Suspense>
+                {/* uses a nested map to fetch and display the posts */}
+                {posts.length > 0 && posts.map((value, ind) => {
+                    return (ind < index && (
+                        <Post key={v1()} Post={value} />
+                    ))
+                })}
 
                 {/* div for the loading button, is centered & is offset from the post a little bit */}
                 <div style={{ textAlign: 'center', height: 50 }}>

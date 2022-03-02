@@ -1,7 +1,10 @@
+import { getUserAsObject } from "../Util/handleResponse";
+
+const user = getUserAsObject();
 
 export function handlePost(content : string, caption: string): void{
     const Post = {
-        user_id: "1019c099-4df1-470f-9b7b-1b6a35566801",
+        user_id: user.id,
         title: caption,
         content: content,
     }

@@ -8,7 +8,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CreateIcon from '@mui/icons-material/Create';
-import {post} from "../../Types/Post";
+import { post } from "../../Types/Post";
 import { useNavigate } from "react-router-dom";
 
 /* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
@@ -182,7 +182,7 @@ function Feed() {
                     </Typography>
 
                     {/* create canvas button which navigates the user to the canvas menu */}
-                    <Button className={"createCanvas"} onClick={() => navigate("/canvas")}>CREATE &nbsp;
+                    <Button className={"createCanvas"} onClick={() => navigate("/canvas", { state: { room: roomID }})}>CREATE &nbsp;
                         <CreateIcon/>
                     </Button>
                 </Container>

@@ -105,6 +105,7 @@ function Canvas() {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvas, room]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page

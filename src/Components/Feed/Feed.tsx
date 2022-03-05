@@ -45,6 +45,8 @@ let roomID = '';
 
 function Feed() {
 
+    const [canvasSize, setCanvasSize] = useState("Square");
+
     /* for react routing to other pages */
     const navigate = useNavigate();
 
@@ -166,10 +168,10 @@ function Feed() {
                         <Typography>Canvas Size: </Typography>
 
                         {/* radio group detailing each of the canvas options available to the user (square, portrait, rectangle) */}
-                        <RadioGroup style={{marginTop: 10, marginLeft: 15}} row defaultValue="Square">
-                            <FormControlLabel value="Square" control={<Radio />} label="Square" />
-                            <FormControlLabel value="Portrait" control={<Radio />} label="Portrait" />
-                            <FormControlLabel value="Rectangle" control={<Radio />} label="Rectangle" />
+                        <RadioGroup style={{marginTop: 10, marginLeft: 15}} row value={canvasSize}>
+                            <FormControlLabel value="Square" onClick={() => setCanvasSize("Square")} control={<Radio />} label="Square" />
+                            <FormControlLabel value="Portrait" onClick={() => setCanvasSize("Portrait")}  control={<Radio />} label="Portrait" />
+                            <FormControlLabel value="Rectangle" onClick={() => setCanvasSize("Rectangle")}  control={<Radio />} label="Rectangle" />
                         </RadioGroup>
                     </FormControl>
 
@@ -182,7 +184,7 @@ function Feed() {
                     </Typography>
 
                     {/* create canvas button which navigates the user to the canvas menu */}
-                    <Button className={"createCanvas"} onClick={() => navigate("/canvas", { state: { room: roomID }})}>CREATE &nbsp;
+                    <Button className={"createCanvas"} onClick={() => navigate("/canvas", { state: { room: roomID, size: canvasSize }})}>CREATE &nbsp;
                         <CreateIcon/>
                     </Button>
                 </Container>

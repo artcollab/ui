@@ -15,6 +15,7 @@ import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
 import { getUserAsObject } from '../../Util/handleResponse';
 import { useLocation } from 'react-router-dom';
+import { sizeMap } from '../../Util/canvasResolutions';
 
 const tempUser: user = {
     id: '',
@@ -33,9 +34,8 @@ const socket = io('http://localhost:8081');     // connect to socket io server
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const { state } = useLocation();
-    let { room } = state as unknown as { room: string };
+    let { room, size } = state as unknown as { room: string, size: string };
     const [admin, setAdmin] = useState(false);
-    console.log(admin);
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -78,8 +78,8 @@ function Canvas() {
     function initCanvas(): fabric.Canvas {
         return (
             new fabric.Canvas("canvas", {
-                height: 600,
-                width: 600,
+                height: sizeMap.get(size)?.y,
+                width: sizeMap.get(size)?.x,
                 backgroundColor: 'white',
             })
         );

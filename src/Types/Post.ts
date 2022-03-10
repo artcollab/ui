@@ -7,5 +7,6 @@ export type post = {
     image: any,
     caption: string, /* Text */
     likes: Array<user>,
-    comments: Array<comment>
+    comments: Array<comment>,
+    size: string
 }

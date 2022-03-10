@@ -16,8 +16,10 @@ type postProps = {
 
     /* Post element for when DB is available */
     Post : post
-
 }
+
+/* temporary postSize variable, this will eventually be pulled from the database to determine the container type to render */
+const postSize = "square";
 
 const postcaption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus eros quis neque aliquet, vel molestie sapien volutpat. Vestibulum at maximus nunc, ut maximus lacus. Donec et ante gravida, viverra felis id, pulvinar sapien. Curabitur vel vestibulum leo. Proin quis mauris sit amet purus congue pellentesque id ut nisl."
 const fetchUser = getUserAsObject();
@@ -103,14 +105,13 @@ function Post(props : postProps) {
         /* container which holds all components relevant to this Post component */
         <Container>
 
-            {/* Paper component for the square post container */}
-            <Paper className="squareContainer" data-testid="container-test">
+            {/* Paper component for a post container */}
+            <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={"squarePostContent"} src={"../art2.jpeg"} alt={"Error..."}/>
+                <img draggable={"false"} className={`${postSize}PostContent`} src={"../art2.jpeg"} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
-
                 <Modal className={"commentModal"} open={open} onClose={() => setOpen(false)}>
                     <>{commentSection}</>
                 </Modal>
@@ -120,8 +121,8 @@ function Post(props : postProps) {
                     <>{commentSection}</>
                 </div>
 
-                {/* postHeader divider, holds all components related to the header of a post */}
-                <div className="postHeader" data-testid="post-header-test">
+                {/* post header divider, holds all components related to the header of a post */}
+                <div className={`${postSize}PostHeader`} data-testid="post-header-test">
 
                     {/* Grid container created to hold the components of this header, they will be aligned with each-other  */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
@@ -154,7 +155,7 @@ function Post(props : postProps) {
                             <div className={'postCaptionMobile'}>
 
                                 {/* more text can be displayed in mobile view but it has a character limit of 50 */}
-                                <PostCaption captionText = {post.caption} characterLimit = {50}/>
+                                <PostCaption captionText = {postcaption} characterLimit = {50}/>
 
                             </div>
 
@@ -163,7 +164,7 @@ function Post(props : postProps) {
                 </div>
 
                 {/* divider for handling desktop post interaction e.g. likes */}
-                <div className={"desktopPostInteraction"}>
+                <div className={`${postSize}DesktopPostInteraction`}>
 
                     {/* Grid container used here to easily align these components horizontally */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap">

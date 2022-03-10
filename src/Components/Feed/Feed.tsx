@@ -31,7 +31,8 @@ const tempPost : post = {
         surname: "",
         password: "",
         following: undefined
-    }
+    },
+    size: " "
 }
 
 function Feed() {

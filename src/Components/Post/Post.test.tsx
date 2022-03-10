@@ -16,7 +16,8 @@ const tempPost : post = {
     image: " ",
     caption: " ",
     likes: [],
-    comments: []
+    comments: [],
+    size: " "
 }
 
 it("appears on the screen", () => {

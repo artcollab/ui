@@ -20,6 +20,8 @@ const tempPost : post = {
     users: []
 }
 
+global.URL.createObjectURL = jest.fn();
+
 it("appears on the screen", () => {
     render(<Post Post={tempPost}/>);
 

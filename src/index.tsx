@@ -17,6 +17,7 @@ ReactDOM.render(
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
+          <Route path="/canvas" element={<Canvas room="exampleRoom"/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />
           <Route path="/canvas" element={<Canvas room="example" />} />

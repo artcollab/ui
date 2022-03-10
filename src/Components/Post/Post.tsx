@@ -8,7 +8,6 @@ import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
 
-
 /* postProps type defined */
 type postProps = {
 

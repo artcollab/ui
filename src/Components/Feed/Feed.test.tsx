@@ -8,6 +8,13 @@ export {}
 global.scroll = jest.fn()
 global.scrollTo = jest.fn()
 
+const mockedUsedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom') as any,
+  useNavigate: () => mockedUsedNavigate,
+}));
+
 /* tests the Feed's scroll button */
 it("scroll button display test", () => {
 

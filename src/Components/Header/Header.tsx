@@ -4,7 +4,6 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
@@ -14,14 +13,17 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import './Header.scss'
-import { Switch } from '@mui/material';
+import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
 import { logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
+const users = ["James Beach", "Cade Brown", "Cameron Tyrrell", "Omar Ahmed", "Oli Radlett", "Yoav Levi"]
 
 // event function used to switch from light mode to dark mode
-function toggleTheme() { 
+function toggleTheme() {
     var currentTheme = document.documentElement.getAttribute("data-theme");
     var targetTheme = "default";
 
@@ -51,29 +53,6 @@ const Search = styled('div')(({ theme }) => ({
     },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
 ///////////////////////////////////////////////////////////////
 
 export default function Header() {
@@ -82,6 +61,8 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
+    const [searchValue, setSearchValue] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -104,7 +85,7 @@ export default function Header() {
     };
 
     const menuId = 'primary-search-account-menu';
-    
+
     // menu appears upon clicking the profile icon
     const renderMenu = (
         <Menu
@@ -124,7 +105,7 @@ export default function Header() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={() => {logOut(); navigate("/home")}}>Log Out</MenuItem>
+            <MenuItem onClick={() => { logOut(); navigate("/home") }}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>
         </Menu>
     );
@@ -182,23 +163,43 @@ export default function Header() {
     );
 
     return (
-        <Box sx={{flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")}/>
-                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")}/>
-                    <Search style={{marginLeft: "15%"}}>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
+                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
+                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
+                    <Search style={{ marginLeft: "15%" }}>
+                        <Autocomplete
+                            id="combo-box-demo"
+                            options={searchValue.length > 2 ? users : []}
+                            disableClearable
+                            forcePopupIcon={false}
+                            renderInput={params => {
+                                return (
+                                    <TextField
+                                        {...params}
+                                        label="Search..."
+                                        fullWidth
+                                        sx={{width: "15rem"}}
+                                        size="small"
+                                        value={searchValue}
+                                        onChange={(e) => setSearchValue(e.target.value)}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{paddingRight: "25%"}}>
-                        <MessagesMenu/>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
+                        <MessagesMenu />
                         <NotificationsMenu />
                         <IconButton
                             size="large"

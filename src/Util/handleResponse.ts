@@ -20,7 +20,7 @@ export function setRefreshToken(token: JSON) {
     localStorage.setItem('rt', JSON.stringify(token));
 }
 
-export function getAccessToken(): string | null {
+export function getAccessToken(): string {
     const res = localStorage.getItem('at');
 
     return res ? res : "";

@@ -24,7 +24,7 @@ function Register() {
         // converting formdata to a JSON object that can be ingested by the db
         const body = JSON.stringify(Object.fromEntries(data.entries())); 
 
-        const prod_url = "https://api.operce.net/auth/register";
+        const prod_url = "http://localhost:8080/auth/register";
         const req = new XMLHttpRequest();
         
         // open async http post request

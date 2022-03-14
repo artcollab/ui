@@ -16,11 +16,12 @@ import './Header.scss'
 import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
-import { logOut } from '../../Util/handleResponse';
+import { getAccessToken, logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { user } from '../../Types/User';
 
-const users = ["James Beach", "Cade Brown", "Cameron Tyrrell", "Omar Ahmed", "Oli Radlett", "Yoav Levi"]
+const at = getAccessToken();
 
 // event function used to switch from light mode to dark mode
 function toggleTheme() {
@@ -58,11 +59,36 @@ const Search = styled('div')(({ theme }) => ({
 export default function Header() {
     const navigate = useNavigate();
     document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') ?? "default")
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
     const [searchValue, setSearchValue] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState<Array<user>>([]);
+
+    function fetchSearch(value : string): void {
+        const query = {
+            query: value,
+        }
+        const body = JSON.stringify(query);
+        const url = "http://localhost:8080/users/search";
+        const req = new XMLHttpRequest();
+        // open async http post request
+        req.open("GET", url, true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.setRequestHeader("Authorization", `Bearer ${JSON.parse(at)}`)
+        req.onreadystatechange = () => {
+            if (req.status === 200) {
+                // on successful register, add response to localstorage
+                console.log(JSON.parse(req.response));
+            }
+            else {
+                console.log(`value = ${value}`);
+            }
+        };
+        req.send(body);
+
+    }
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -168,35 +194,42 @@ export default function Header() {
                 <Toolbar>
                     <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
                     <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
-                    <Search style={{ marginLeft: "15%" }}>
-                        <Autocomplete
-                            id="combo-box-demo"
-                            options={searchValue.length > 2 ? users : []}
-                            disableClearable
-                            forcePopupIcon={false}
-                            renderInput={params => {
-                                return (
-                                    <TextField
-                                        {...params}
-                                        label="Search..."
-                                        fullWidth
-                                        sx={{width: "15rem"}}
-                                        size="small"
-                                        value={searchValue}
-                                        onChange={(e) => setSearchValue(e.target.value)}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                    </Search>
+                    {at &&
+                        <Search style={{ marginLeft: "15%" }}>
+                            <Autocomplete
+                                id="combo-box-demo"
+                                options={searchResults}
+                                getOptionLabel={option => `${option.name} ${option.surname}`}
+                                disableClearable
+                                forcePopupIcon={false}
+                                renderInput={params => {
+                                    return (
+                                        <TextField
+                                            {...params}
+                                            label="Search..."
+                                            fullWidth
+                                            sx={{ width: "15rem" }}
+                                            size="small"
+                                            value={searchValue}
+                                            onChange={(e) => {
+                                                setSearchValue(e.target.value);
+                                                if (e.target.value.length > 3) fetchSearch(e.target.value)
+                                            }
+                                            }
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    );
+                                }}
+                            />
+                        </Search>
+                    }
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
                         <MessagesMenu />

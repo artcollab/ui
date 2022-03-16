@@ -29,7 +29,10 @@ const tempUser: user = {
 const fetchedData = getUserAsObject();
 const User: user = fetchedData ? fetchedData : tempUser;
 
-const socket = io('http://localhost:8081');     // connect to socket io server
+
+const socket = io('http://localhost:8081', {
+    query: { secret: at }
+});     // connect to socket io server
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
@@ -116,7 +119,27 @@ function Canvas() {
     // listens for new status messages, also added to the message list and page is re-rendered
     socket.on("addStatus", (message: string) => {
         setMessageList([...messageList, message]);
-    })
+    });
+
+    // the listener below has a tendency to submit dupe requests which causes lag therefore each request is checked against the last before executing its block
+    let lastInstance = '';
+    // when the server requests the canvas from this user, the canvas is sent to the server
+    socket.on('requestCanvas', ({id, instance}) => {
+        if (lastInstance !== instance) {
+            const data = canvas?.toJSON();
+            socket.emit('sendCanvas', ({ data, id }));
+            socket.off('requestCanvas');
+        }
+        lastInstance = instance;
+    });
+
+    // after requesting the canvas of another user, it is loaded into the canvas
+    socket.on('fillCanvas', (data) => {
+        if (data && canvas?.getObjects().length === 0) {
+            canvas?.loadFromJSON(JSON.stringify(data), () => canvas.renderAll());
+            socket.off('fillCanvas');
+        }
+    });
 
     // For each change in the canvas, new changes are emitted to the socket server
     useEffect(() => {
@@ -323,7 +346,9 @@ function Canvas() {
                 </Grid>
                 <Grid item className="chatContainer">
                     <ChatBox messageList={messageList} postMessage={(value: string) => { postMessage(value) }} user={User} />
+
                     {admin && <Button variant='outlined' className="submitButton" onClick={() => { setOpen(true) }}>Submit Post</Button>}
+
                     {canvas && (
                         <Modal open={open} onClose={() => { setOpen(false) }}>
                             <PostSubmission image={canvas.toSVG().toString()} />

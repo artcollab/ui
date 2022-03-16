@@ -13,11 +13,9 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
-
-type canvasProps = {
-    room: string
-}
+import {getAccessToken, getUserAsObject} from '../../Util/handleResponse';
+import { useLocation } from 'react-router-dom';
+import { sizeMap } from '../../Util/canvasResolutions';
 
 const fetchedData = getUserAsObject();
 const User: user = fetchedData;
@@ -27,9 +25,11 @@ const socket = io('http://localhost:8081', {
     query: { secret: at }
 });     // connect to socket io server
 
-function Canvas(props: canvasProps) {
+function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
-    let room = props.room;
+    const { state } = useLocation();
+    let { room, size } = state as unknown as { room: string, size: string };
+    const [admin, setAdmin] = useState(false);
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -72,8 +72,8 @@ function Canvas(props: canvasProps) {
     function initCanvas(): fabric.Canvas {
         return (
             new fabric.Canvas("canvas", {
-                height: 600,
-                width: 600,
+                height: sizeMap.get(size)?.y,
+                width: sizeMap.get(size)?.x,
                 backgroundColor: 'white',
             })
         );
@@ -99,6 +99,7 @@ function Canvas(props: canvasProps) {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvas, room]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
@@ -214,6 +215,9 @@ function Canvas(props: canvasProps) {
             })
 
         });
+
+        socket.on('adminCheck', (admin: boolean) => { setAdmin(admin) });
+
     }, [canvas]);
 
     const addObject = (e: any) => {
@@ -333,10 +337,13 @@ function Canvas(props: canvasProps) {
                 </Grid>
                 <Grid item className="chatContainer">
                     <ChatBox messageList={messageList} postMessage={(value: string) => { postMessage(value) }} user={User} />
-                    <Button variant='outlined' className="submitButton" onClick={() => { setOpen(true) }}>Submit Post</Button>
+
+                    {admin && <Button variant='outlined' className="submitButton" onClick={() => { setOpen(true) }}>Submit Post</Button>}
+
                     {canvas && (
                         <Modal open={open} onClose={() => { setOpen(false) }}>
-                            <PostSubmission image={canvas.toSVG().toString()} />
+                            <PostSubmission image={canvas.toSVG().toString()} canvasSize={size}/>
+
                         </Modal>
                     )}
                 </Grid>

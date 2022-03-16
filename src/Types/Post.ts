@@ -8,4 +8,5 @@ export type post = {
     likes: number;
     created: number;
     users: Array<user>;
+    size: string
 }

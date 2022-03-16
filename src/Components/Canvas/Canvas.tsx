@@ -32,7 +32,7 @@ const fetchedData = getUserAsObject();
 const User: user = fetchedData ? fetchedData : tempUser;
 const at = getAccessToken();
 
-const socket = io('https://api.operce.net:8081', {
+const socket = io('http://localhost:8081', {
     query: { secret: at }
 });     // connect to socket io server
 

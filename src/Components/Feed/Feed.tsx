@@ -89,14 +89,17 @@ function Feed() {
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
             <IconButton size={"small"} className={'createButton'}
-                        data-testid="create-button-test" onClick={() => navigate('/canvas')}><GestureOutlinedIcon /></IconButton>
+
+            data-testid="create-button-test" onClick={() => navigate('/canvas')}><GestureOutlinedIcon />
+            
+            </IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
-            (<span>
+              (<span>
                     <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
                                 onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
-                </span>)}
+              </span>)}
 
         </>
 

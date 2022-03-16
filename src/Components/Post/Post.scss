@@ -19,37 +19,83 @@
 
 /* desktop CSS specifications */
 
-/* Container for Square Sized posts (464 x 480) */
-.squareContainer {
+/* General Container Sizing */
+.squareContainer, .portraitContainer, .rectangleContainer {
   margin-left: auto;
   margin-right: auto;
   margin-block-end: 1em;
   min-height: 29em;
   max-height: 29em;
-  max-width: 43em;
   padding: 0.625em;
   background-color: var(--post-background) !important;
   margin-top: 5em;
+}
 
-  /* Changes the TextField background to pure white */
-  .MuiInputBase-root {
-    background-color: #FFF;
-  }
+/* Container width for Square Sized posts (688 x 464) */
+.squareContainer {
+  max-width: 43em;
+}
 
+/* Container width for Portrait Sized posts (560 x 464) */
+.portraitContainer {
+  max-width: 35em;
+}
+
+/* Container width for Rectangle Sized posts (736 x 464) */
+.rectangleContainer {
+  max-width: 46em;
+}
+
+/* Changes the TextField background to pure white */
+.MuiInputBase-root {
+  background-color: #FFF;
+}
+
+/* stops user avatars from being draggable */
+.MuiAvatar-img {
+  -webkit-user-drag: none;
+}
+
+.squarePostContent, .portraitPostContent, .rectanglePostContent {
+  display: flex;
+  min-height: 29em;
+  max-height: 29em;
+  border-radius: 0.75em;
 }
 
 /* CSS for Square Sized post content within the Square container */
 .squarePostContent {
-  display: flex;
-  min-height: 29em;
-  max-height: 29em;
-  max-width: 29em;
-  border-radius: 0.75em;
+  min-width: 29em;
+  max-width: 29em !important;
 }
 
-/* CSS for the Header of the post (avatar, username & caption) */
-.postHeader {
-  margin-left: 29.5em;
+/* CSS for Portrait Sized post content within the Portrait container */
+.portraitPostContent {
+  min-width: 21.25em;
+  max-width: 21.25em !important;
+}
+
+/* CSS for Portrait Sized post content within the Portrait container */
+.rectanglePostContent {
+  min-width: 32.5em;
+  max-width: 32.5em !important;
+}
+
+/* CSS for the Header of a square sized post (avatar, username & caption) */
+.squarePostHeader {
+  margin-left: 29.8em;
+  margin-top: -30em;
+}
+
+/* CSS for the Header of a portrait sized post (avatar, username & caption) */
+.portraitPostHeader {
+  margin-left: 22em;
+  margin-top: -30em;
+}
+
+/* CSS for the Header of a rectangle sized post (avatar, username & caption) */
+.rectanglePostHeader {
+  margin-left: 33em;
   margin-top: -30em;
 }
 
@@ -65,9 +111,21 @@
   color: var(--header-text-col) !important;
 }
 
-/* Post interaction CSS (like button, comment button & edit/mashup button) */
-.desktopPostInteraction {
+/* Square Post interaction CSS (like button, comment button & edit/mashup button) */
+.squareDesktopPostInteraction {
   margin-left: 29.8em;
+  margin-top: 1em;
+}
+
+/* Portrait Post interaction CSS (like button, comment button & edit/mashup button) */
+.portraitDesktopPostInteraction {
+  margin-left: 22em;
+  margin-top: 1em;
+}
+
+/* Rectangle Post interaction CSS (like button, comment button & edit/mashup button) */
+.rectangleDesktopPostInteraction {
+  margin-left: 33em;
   margin-top: 1em;
 }
 
@@ -107,22 +165,44 @@
 /* mobile styles for the main component at 800px width */
 @media (max-width: 800px) {
 
-  /* Resizing & tweaking square container for when in mobile view */
-  .squareContainer {
+  /* css for all containers to follow when in mobile view */
+  .squareContainer, .portraitContainer, .rectangleContainer {
     min-height: 6em;
-    max-width: 29em;
     margin-top: 7rem;
     max-height: fit-content
   }
 
-  /* When in mobile view the post should be centered on the screen */
+  /* Resizing & tweaking square container for when in mobile view */
+  .squareContainer {
+    max-width: 29em;
+  }
+
+  /* When in mobile view the square post should be centered on the screen */
   .squarePostContent {
     width: 100%;
     min-height: 50%;
   }
 
+  /* Resizing & tweaking portrait container width for when in mobile view */
+  .portraitContainer {
+    max-width: 21.25em;
+  }
+
+  /* Resizing & tweaking rectangle container width for when in mobile view */
+  .rectangleContainer {
+    max-width: 32.5em;
+  }
+
+  /* When in mobile view the rectangle post should be centered on the screen */
+  .rectanglePostContent {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: 50%;
+  }
+
+
   /* CSS for the Header of the post (avatar, username & caption) */
-  .postHeader {
+  .squarePostHeader {
     margin-right: auto;
     margin-left: auto;
     margin-top: 0.75em;
@@ -161,7 +241,7 @@
   }
 
   /* hides some desktop components while in mobile view */
-  .postCaptionDesktop, .desktopPostInteraction, .desktopComment {
+  .postCaptionDesktop, .squareDesktopPostInteraction, .desktopComment {
     display: none
   }
 

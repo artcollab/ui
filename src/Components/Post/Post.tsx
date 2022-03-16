@@ -27,7 +27,12 @@ type caption = {
 }
 
 function Post(props : postProps) {
+    
+    /* obtains the actual post from the backend */
     const post = props.Post;
+
+    /* postSize variable, this will pull from the database to determine the container type to render */
+    const postSize = props.Post.size;
 
     const svg = post.content;
     const blob = new Blob([svg], { type: 'image/svg+xml' });
@@ -92,11 +97,11 @@ function Post(props : postProps) {
         /* container which holds all components relevant to this Post component */
         <Container>
 
-            {/* Paper component for the square post container */}
-            <Paper className="squareContainer" data-testid="container-test">
+            {/* Paper component for a post container */}
+            <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={"squarePostContent"} src={image.src} alt={"Error..."}/>
+                <img draggable={"false"} className={`${postSize}Container`} src={image.src} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 
@@ -110,7 +115,7 @@ function Post(props : postProps) {
                 </div>
 
                 {/* postHeader divider, holds all components related to the header of a post */}
-                <div className="postHeader" data-testid="post-header-test">
+                <div className={`${postSize}PostHeader`} data-testid="post-header-test">
 
                     {/* Grid container created to hold the components of this header, they will be aligned with each-other  */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1.5}>
@@ -152,7 +157,7 @@ function Post(props : postProps) {
                 </div>
 
                 {/* divider for handling desktop post interaction e.g. likes */}
-                <div className={"desktopPostInteraction"}>
+                <div className={`${postSize}DesktopPostInteraction`}>
 
                     {/* Grid container used here to easily align these components horizontally */}
                     <Grid direction="row" alignItems="center" container wrap="nowrap">

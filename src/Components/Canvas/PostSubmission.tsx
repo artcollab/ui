@@ -5,8 +5,10 @@ import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import "./Canvas.scss";
 
+
 type PostSubmissionProps = {
     image: string,
+    canvasSize: string
 }
 
 const user = getUserAsObject();
@@ -16,6 +18,7 @@ const at = getAccessToken();
 export default function PostSubmission(props: PostSubmissionProps) {
     const navigate = useNavigate();
     const svg = props.image;
+    const size = props.canvasSize;
 
     // converting the image string to an ingestible format
     const blob = new Blob([svg], { type: 'image/svg+xml' });
@@ -36,7 +39,9 @@ export default function PostSubmission(props: PostSubmissionProps) {
                     value={captionText}
                     onChange={(e) => {setCaptionText(e.target.value)}}
                 />
-                <Button variant="outlined" onClick={() => {sendHTTPRequest("POST", "/posts", JSON.stringify({author: user, title: captionText, content: svg}), JSON.parse(at!)); navigate("/home")}} sx={{marginTop: "2%"}}>Submit</Button>
+
+                <Button variant="outlined" onClick={() => {sendHTTPRequest("POST", "/posts", JSON.stringify({author: user, title: captionText, content: svg, canvasSize: size}), JSON.parse(at!)); navigate("/home")}} sx={{marginTop: "2%"}}>Submit</Button>
+
             </Box>
         </Paper>
     )

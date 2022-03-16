@@ -13,43 +13,33 @@ import Container from '@mui/material/Container';
 import './Login.scss';
 import { useNavigate } from 'react-router-dom';
 import { handleResponse } from '../../Util/handleResponse';
+import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 
 function Login() {
     const navigate = useNavigate();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         setErrorText("");
         event.preventDefault();
+
         // extracting form data
         const data = new FormData(event.currentTarget);
-        const body = JSON.stringify(Object.fromEntries(data.entries())); // converting formdata to a JSON object that can be ingested by the db
+        const body = JSON.stringify(Object.fromEntries(data.entries()));
 
-        const url = "https://api.operce.net/auth/login"
-        const req = new XMLHttpRequest();
-        
-        req.open("POST", url, true); // open async http post request
-        req.setRequestHeader("Content-Type", "application/json");
-        req.onreadystatechange = () => {
-            if(req.readyState === 4 && req.status === 200) {
-                // on successful request, handle the response
-                handleResponse(req.response);
-                navigate("/home");
-            }
-            else {
-                if(req.responseText) setErrorText(JSON.parse(req.responseText)['error']);
-            }
-        };
-        req.send(body);
+        sendHTTPRequest("POST", "/auth/login", body).then((responseData) => {
+            handleResponse(responseData as unknown as string);
+            navigate("/home");
+        }).catch((err) => setErrorText(err));
     };
 
     const [emailValid, setEmailValid] = useState(true);
 
-    const validateEmail = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const validateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-        if(regex.test(value) || value === "") setEmailValid(true);
+
+        if (regex.test(value) || value === "") setEmailValid(true);
         else setEmailValid(false);
-        
+
     }
 
     // submission error text

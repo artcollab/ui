@@ -18,9 +18,6 @@ type postProps = {
     Post : post
 }
 
-/* temporary postSize variable, this will eventually be pulled from the database to determine the container type to render */
-const postSize = "square";
-
 const postcaption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus eros quis neque aliquet, vel molestie sapien volutpat. Vestibulum at maximus nunc, ut maximus lacus. Donec et ante gravida, viverra felis id, pulvinar sapien. Curabitur vel vestibulum leo. Proin quis mauris sit amet purus congue pellentesque id ut nisl."
 const fetchUser = getUserAsObject();
 const tempUser: user = {
@@ -45,7 +42,12 @@ type caption = {
 }
 
 function Post(props : postProps) {
+    
+    /* obtains the actual post from the backend */
     const post = props.Post;
+
+    /* postSize variable, this will pull from the database to determine the container type to render */
+    const postSize = props.Post.size;
 
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {

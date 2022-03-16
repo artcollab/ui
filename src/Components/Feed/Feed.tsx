@@ -1,8 +1,10 @@
-import React, {lazy, Suspense, useState} from "react";
+import React, { useEffect, useState } from "react";
 import './Feed.scss'
-import {Button, CircularProgress, IconButton, Switch, Container,
-        Typography, Popover, Radio, RadioGroup, FormControlLabel,
-        FormControl} from '@mui/material';
+import {
+    Button, CircularProgress, IconButton, Switch, Container,
+    Typography, Popover, Radio, RadioGroup, FormControlLabel,
+    FormControl
+} from '@mui/material';
 import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
@@ -10,32 +12,15 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CreateIcon from '@mui/icons-material/Create';
 import { post } from "../../Types/Post";
 import { useNavigate } from "react-router-dom";
+import { v1 } from "uuid";
+import { getAccessToken } from "../../Util/handleResponse";
+import Post from "../Post/Post";
+import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 
-/* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
-const FeedPost = lazy(() => {return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post"))})
-
-/* number of posts displayed, initially set to 2 posts on the page */
-let postsDisplayed = 2;
+const at = getAccessToken();
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
-
-const tempPost : post = {
-    id: 0,
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: [],
-    user: {
-        id: "",
-        username: "",
-        email: "",
-        name: "",
-        surname: "",
-        password: "",
-        following: undefined
-    }
-}
 
 /* alphabet constant which includes alphabetical characters from a-z & A-Z */
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -44,23 +29,23 @@ const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 let roomID = '';
 
 function Feed() {
-
     const [canvasSize, setCanvasSize] = useState("Square");
 
     /* for react routing to other pages */
     const navigate = useNavigate();
+    let [posts, setPosts] = useState<Array<post>>([]);
+    const [index, setIndex] = useState(2);
 
-    /* React hook for the array of posts, used for generating and keeping track of how many posts are displayed */
-    const [displayPosts, setDisplayPosts] = useState(Array.from(Array(postsDisplayed).keys()))
+    useEffect(() => {
+        console.log(at);
+        if (posts.length === 0) {
+            sendHTTPRequest("GET", "/posts", undefined, JSON.parse(at)).then((responseData) => { setPosts(JSON.parse(responseData as unknown as string)) });
+        }
+    }, [posts.length]);
 
     /* loadPost function which loads a post into the feed when called */
     function loadPost() {
-
-        /* increases the amount of now displayed posts on the feed by 1 */
-        postsDisplayed = postsDisplayed + 2;
-
-        /* a new post is fetched & displayed onto the feed for the user */
-        setDisplayPosts(Array.from(Array(postsDisplayed).keys()));
+        setIndex(index + 2);
     }
 
     /* React hook for handling the canvas creation popover */
@@ -109,9 +94,8 @@ function Feed() {
 
     /* when called this will scroll the window to the top of the page */
     function scrollToTop() {
-
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */
-        window.scroll({top: 0, behavior: 'smooth'});
+        window.scroll({ top: 0, behavior: 'smooth' });
     }
 
     return (
@@ -120,18 +104,21 @@ function Feed() {
             {/* divider for the feed of posts */}
             <div>
 
-                {/* Suspense tag, on fallback will display a loading circle icon to depict the loading of the feed component*/}
-                <Suspense
-                    fallback={<div className={"loadingIcon"}><CircularProgress className={"loadingGraphic"} size={125}/>
-                    </div>}>
+                {!posts.length && (
+                    <div className={"loadingIcon"}>
+                        <CircularProgress size={125} sx={{ color: "#ffccac" }} />
+                    </div>
+                )}
 
-                    {/* uses a nested map to fetch and display the posts */}
-                    {displayPosts.map((i) => [tempPost].map((tempPost) => <FeedPost key={i} Post={tempPost}/>))}
-
-                </Suspense>
+                {/* uses a nested map to fetch and display the posts */}
+                {posts.length > 0 && posts.map((value, ind) => {
+                    return (ind < index && (
+                        <Post key={v1()} Post={value} />
+                    ))
+                })}
 
                 {/* div for the loading button, is centered & is offset from the post a little bit */}
-                <div style={{textAlign: 'center', height: 50}}>
+                <div style={{ textAlign: 'center', height: 50 }}>
 
                     {/* simple button which will load more posts onto the feed when clicked */}
                     <Button className={'loadingButton'} onClick={loadPost}>LOAD</Button>
@@ -142,18 +129,18 @@ function Feed() {
 
             {/* IconButton for the create functionality, on click this will show a popover which will provide canvas options */}
             <IconButton onClick={handlePopover} size={"small"} className={'createButton'} data-testid="create-button-test">
-                <GestureOutlinedIcon/>
+                <GestureOutlinedIcon />
             </IconButton>
 
 
             {/* Popover component which allows for canvas customisation */}
             <Popover open={popover} onClose={handlePopoverClose}
-                     anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
-                     style={{marginLeft: 40, textAlign: "center"}}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                style={{ marginLeft: 40, textAlign: "center" }}
             >
 
                 {/* container for the canvas options included in the popover menu */}
-                <Container sx={{p: 1}}>
+                <Container sx={{ p: 1 }}>
 
                     {/* canvas creation title*/}
                     <Typography className={"popoverTitle"}>Canvas Creation</Typography>
@@ -168,34 +155,35 @@ function Feed() {
                         <Typography>Canvas Size: </Typography>
 
                         {/* radio group detailing each of the canvas options available to the user (square, portrait, rectangle) */}
-                        <RadioGroup style={{marginTop: 10, marginLeft: 15}} row value={canvasSize}>
+                        <RadioGroup style={{ marginTop: 10, marginLeft: 15 }} row value={canvasSize}>
                             <FormControlLabel value="Square" onClick={() => setCanvasSize("Square")} control={<Radio />} label="Square" />
-                            <FormControlLabel value="Portrait" onClick={() => setCanvasSize("Portrait")}  control={<Radio />} label="Portrait" />
-                            <FormControlLabel value="Rectangle" onClick={() => setCanvasSize("Rectangle")}  control={<Radio />} label="Rectangle" />
+                            <FormControlLabel value="Portrait" onClick={() => setCanvasSize("Portrait")} control={<Radio />} label="Portrait" />
+                            <FormControlLabel value="Rectangle" onClick={() => setCanvasSize("Rectangle")} control={<Radio />} label="Rectangle" />
                         </RadioGroup>
                     </FormControl>
 
                     {/* private option switch, only host can invite people */}
-                    <Typography className={"popoverOptions"}>Private: <Switch/></Typography>
+                    <Typography className={"popoverOptions"}>Private: <Switch /></Typography>
 
                     {/* invitation option, includes clickable button which will be used to invite collaborators */}
                     <Typography className={"popoverOptions"}>Invite:
-                        <IconButton style={{color: "#42342c"}} size={"small"}><PersonAddIcon/></IconButton>
+                        <IconButton style={{ color: "#42342c" }} size={"small"}><PersonAddIcon /></IconButton>
                     </Typography>
 
                     {/* create canvas button which navigates the user to the canvas menu */}
-                    <Button className={"createCanvas"} onClick={() => navigate("/canvas", { state: { room: roomID, size: canvasSize }})}>CREATE &nbsp;
-                        <CreateIcon/>
+                    <Button className={"createCanvas"} onClick={() => navigate("/canvas", { state: { room: roomID, size: canvasSize } })}>CREATE &nbsp;
+                        <CreateIcon />
                     </Button>
                 </Container>
             </Popover>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
-            (<span>
-                <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
-                            onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
-            </span>)}
+                (<span>
+                    <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
+                        onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
+                </span>)
+            }
         </>
     )
 

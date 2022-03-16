@@ -29,7 +29,7 @@ export default function ChatBox({ messageList, postMessage, user }: ChatBoxProps
                                 <div className="messageContainer" key={id}>
                                     {message.user.id !== user.id ?
                                         <div className="messageName">
-                                            {message.user.name}
+                                            {message.user.username}
                                         </div>
                                         :
                                         ""

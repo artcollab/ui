@@ -20,6 +20,7 @@ ReactDOM.render(
           <Route path="/canvas" element={<Canvas/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />
+          <Route path="/canvas" element={<Canvas/>} />
         </Routes>
     </Router>
   </React.StrictMode>,

@@ -17,17 +17,8 @@ import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
 import { useLocation } from 'react-router-dom';
 import { sizeMap } from '../../Util/canvasResolutions';
 
-const tempUser: user = {
-    id: '',
-    username: '',
-    email: '',
-    name: '',
-    surname: '',
-    password: ''
-};
-
 const fetchedData = getUserAsObject();
-const User: user = fetchedData ? fetchedData : tempUser;
+const User: user = fetchedData;
 const at = getAccessToken();
 
 const socket = io('http://localhost:8081', {

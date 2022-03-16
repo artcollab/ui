@@ -15,6 +15,7 @@ import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
 import {getAccessToken, getUserAsObject} from '../../Util/handleResponse';
 import { useLocation } from 'react-router-dom';
+import { sizeMap } from '../../Util/canvasResolutions';
 
 const tempUser: user = {
     id: '',

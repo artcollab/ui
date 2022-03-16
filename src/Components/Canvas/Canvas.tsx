@@ -19,17 +19,8 @@ type canvasProps = {
     room: string
 }
 
-const tempUser: user = {
-    id: '',
-    username: '',
-    email: '',
-    name: '',
-    surname: '',
-    password: ''
-};
-
 const fetchedData = getUserAsObject();
-const User: user = fetchedData ? fetchedData : tempUser;
+const User: user = fetchedData;
 const at = getAccessToken();
 
 const socket = io('http://localhost:8081', {

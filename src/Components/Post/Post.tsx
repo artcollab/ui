@@ -97,7 +97,7 @@ function Post(props : postProps) {
         /* container which holds all components relevant to this Post component */
         <Container>
 
-            {/* Paper component for the square post container */}
+            {/* Paper component for a post container */}
             <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}

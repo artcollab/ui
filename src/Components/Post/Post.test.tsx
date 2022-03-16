@@ -3,8 +3,8 @@ import Post from "./Post";
 import {post} from "../../Types/Post";
 
 const tempPost : post = {
-    id: 0,
-    user: {
+    id: "",
+    author: {
         id: "",
         username: "",
         email: "",
@@ -13,12 +13,15 @@ const tempPost : post = {
         password: "",
         following: undefined
     },
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: [],
-    size: " "
+    title: "",
+    content: "",
+    likes: 0,
+    created: 0,
+    users: [],
+    size: ""
 }
+
+global.URL.createObjectURL = jest.fn();
 
 it("appears on the screen", () => {
     render(<Post Post={tempPost}/>);

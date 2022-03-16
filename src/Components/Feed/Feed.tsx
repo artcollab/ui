@@ -9,11 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { v1 } from "uuid";
 import { getAccessToken } from "../../Util/handleResponse";
 import Post from "../Post/Post";
+import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 
 const at = getAccessToken();
-
-/* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
-// const FeedPost = lazy(() => { return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post")) })
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
@@ -23,27 +21,9 @@ function Feed() {
     let [posts, setPosts] = useState<Array<post>>([]);
     const [index, setIndex] = useState(2);
 
-    function fetchPosts() {
-        const url = "http://localhost:8080/posts";
-        const req = new XMLHttpRequest();
-        // open async http post request
-        req.open("GET", url, true);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.setRequestHeader('Authorization', "Bearer " + JSON.parse(at));
-        req.onreadystatechange = () => {
-            if (req.readyState === 4 && req.status === 200) {
-                //console.log(JSON.parse(req.response));
-                if (req.response) {
-                    setPosts(JSON.parse(req.response) as unknown as Array<post>);
-                }
-            }
-        };
-        req.send();
-    }
-
     useEffect(() => {
         if (posts.length === 0) {
-            fetchPosts();
+            sendHTTPRequest("GET", "/posts",undefined,JSON.parse(at)).then((responseData) => {setPosts(JSON.parse(responseData as unknown as string))});
         }
     }, [posts.length]);
 

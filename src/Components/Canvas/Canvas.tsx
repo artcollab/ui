@@ -13,7 +13,7 @@ import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import { getUserAsObject } from '../../Util/handleResponse';
+import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
 import { useLocation } from 'react-router-dom';
 import { sizeMap } from '../../Util/canvasResolutions';
 
@@ -28,7 +28,7 @@ const tempUser: user = {
 
 const fetchedData = getUserAsObject();
 const User: user = fetchedData ? fetchedData : tempUser;
-
+const at = getAccessToken();
 
 const socket = io('http://localhost:8081', {
     query: { secret: at }

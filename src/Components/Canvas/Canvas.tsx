@@ -352,6 +352,7 @@ function Canvas() {
                     {canvas && (
                         <Modal open={open} onClose={() => { setOpen(false) }}>
                             <PostSubmission image={canvas.toSVG().toString()} canvasSize={size}/>
+
                         </Modal>
                     )}
                 </Grid>

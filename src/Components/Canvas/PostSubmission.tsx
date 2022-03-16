@@ -39,7 +39,9 @@ export default function PostSubmission(props: PostSubmissionProps) {
                     value={captionText}
                     onChange={(e) => {setCaptionText(e.target.value)}}
                 />
+
                 <Button variant="outlined" onClick={() => {sendHTTPRequest("POST", "/posts", JSON.stringify({author: user, title: captionText, content: svg, canvasSize: size}), JSON.parse(at!)); navigate("/home")}} sx={{marginTop: "2%"}}>Submit</Button>
+
             </Box>
         </Paper>
     )

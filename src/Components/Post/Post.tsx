@@ -110,7 +110,7 @@ function Post(props : postProps) {
                 </Modal>
 
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
-                <div className={"desktopComment"}>
+                <div className={`${postSize}DesktopComment`}>
                     <>{commentSection}</>
                 </div>
 

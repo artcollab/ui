@@ -10,5 +10,5 @@ export type post = {
     created: number;
     users: Array<user>;
     size: string;
-    comments?: Array<comment>;
+    comments: Array<comment>;
 }

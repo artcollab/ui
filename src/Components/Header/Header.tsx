@@ -20,6 +20,7 @@ import { getAccessToken, logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { user } from '../../Types/User';
+import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 
 const at = getAccessToken();
 
@@ -67,27 +68,8 @@ export default function Header() {
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
     function fetchSearch(value : string): void {
-        const query = {
-            query: value,
-        }
-        const body = JSON.stringify(query);
-        const url = "http://localhost:8080/users/search";
-        const req = new XMLHttpRequest();
-        // open async http post request
-        req.open("GET", url, true);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.setRequestHeader("Authorization", `Bearer ${JSON.parse(at)}`)
-        req.onreadystatechange = () => {
-            if (req.status === 200) {
-                // on successful register, add response to localstorage
-                console.log(JSON.parse(req.response));
-            }
-            else {
-                console.log(`value = ${value}`);
-            }
-        };
-        req.send(body);
-
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
+        .catch((err) => console.log(err));
     }
 
     const isMenuOpen = Boolean(anchorEl);

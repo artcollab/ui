@@ -1,54 +1,35 @@
-import React, {lazy, Suspense, useState} from "react";
+import React, { useEffect, useState } from "react";
 import './Feed.scss'
-import {Button, CircularProgress, IconButton} from '@mui/material';
+import { Button, CircularProgress, IconButton } from '@mui/material';
 import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
-import {post} from "../../Types/Post";
+import { post } from "../../Types/Post";
 import { useNavigate } from "react-router-dom";
+import { v1 } from "uuid";
+import { getAccessToken } from "../../Util/handleResponse";
+import Post from "../Post/Post";
+import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 
-/* Lazily loads the Post component, currently has a 2 second loading time when opening the feed */
-const FeedPost = lazy(() => {return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import("../Post/Post"))})
-
-/* number of posts displayed, initially set to 2 posts on the page */
-let postsDisplayed = 2;
+const at = getAccessToken();
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
 
-
-const tempPost : post = {
-    id: 0,
-    image: " ",
-    caption: " ",
-    likes: [],
-    comments: [],
-    user: {
-        id: "",
-        username: "",
-        email: "",
-        name: "",
-        surname: "",
-        password: "",
-        following: undefined
-    }
-}
-
 function Feed() {
     const navigate = useNavigate();
+    let [posts, setPosts] = useState<Array<post>>([]);
+    const [index, setIndex] = useState(2);
 
-    /* React hook for the array of posts, used for generating and keeping track of how many posts are displayed */
-    const [displayPosts, setDisplayPosts] = useState(Array.from(Array(postsDisplayed).keys()))
+    useEffect(() => {
+        if (posts.length === 0) {
+            sendHTTPRequest("GET", "/posts",undefined,JSON.parse(at)).then((responseData) => {setPosts(JSON.parse(responseData as unknown as string))});
+        }
+    }, [posts.length]);
 
     /* loadPost function which loads a post into the feed when called */
     function loadPost() {
-
-        /* increases the amount of now displayed posts on the feed by 1 */
-        postsDisplayed = postsDisplayed + 2;
-
-        /* a new post is fetched & displayed onto the feed for the user */
-        setDisplayPosts(Array.from(Array(postsDisplayed).keys()));
-
+        setIndex(index + 2);
     }
 
     /* React hook to handle when the up arrow is shown/hidden  */
@@ -73,7 +54,7 @@ function Feed() {
     function scrollToTop() {
 
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */
-        window.scroll({top: 0, behavior: 'smooth'});
+        window.scroll({ top: 0, behavior: 'smooth' });
 
     }
 
@@ -83,18 +64,21 @@ function Feed() {
             {/* divider for the feed of posts */}
             <div>
 
-                {/* Suspense tag, on fallback will display a loading circle icon to depict the loading of the feed component*/}
-                <Suspense
-                    fallback={<div className={"loadingIcon"}><CircularProgress size={125} sx={{color: "#ffccac"}}/>
-                    </div>}>
+                {!posts.length && (
+                    <div className={"loadingIcon"}>
+                        <CircularProgress size={125} sx={{ color: "#ffccac" }} />
+                    </div>
+                )}
 
-                    {/* uses a nested map to fetch and display the posts */}
-                    {displayPosts.map((i) => [tempPost].map((tempPost) => <FeedPost key={i} Post={tempPost}/>))}
-
-                </Suspense>
+                {/* uses a nested map to fetch and display the posts */}
+                {posts.length > 0 && posts.map((value, ind) => {
+                    return (ind < index && (
+                        <Post key={v1()} Post={value} />
+                    ))
+                })}
 
                 {/* div for the loading button, is centered & is offset from the post a little bit */}
-                <div style={{textAlign: 'center', height: 50}}>
+                <div style={{ textAlign: 'center', height: 50 }}>
 
                     {/* simple button which will load more posts onto the feed when clicked */}
                     <Button className={'loadingButton'} onClick={loadPost}>LOAD</Button>
@@ -104,15 +88,18 @@ function Feed() {
             </div>
 
             {/* IconButton for the create functionality, this should generate a modal which allows for canvas options */}
-            <IconButton onClick={() => navigate("/canvas")} size={"small"} className={'createButton'}
-                        data-testid="create-button-test"><GestureOutlinedIcon/></IconButton>
+            <IconButton size={"small"} className={'createButton'}
+
+            data-testid="create-button-test" onClick={() => navigate('/canvas')}><GestureOutlinedIcon />
+            
+            </IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
-            (<span>
-                <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
-                            onClick={scrollToTop}><ArrowUpwardIcon/></IconButton>
-            </span>)}
+              (<span>
+                    <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
+                                onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
+              </span>)}
 
         </>
 

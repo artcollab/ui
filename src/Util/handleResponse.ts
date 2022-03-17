@@ -10,7 +10,7 @@ export function handleResponse(response: string) {
     }
 }
 
-export function getRefreshToken(): string | null {
+export function getRefreshToken(): string {
     const res = localStorage.getItem('rt');
 
     return res ? res : "";
@@ -23,7 +23,7 @@ export function setRefreshToken(token: JSON) {
 export function getAccessToken(): string {
     const res = localStorage.getItem('at');
 
-    return res ? res : "";
+    return res ? res : '{"test":true}';
 }
 
 export function setAccessToken(token: JSON) {

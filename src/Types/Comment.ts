@@ -13,4 +13,4 @@ export type comment = {
     created?: number;
     isOnOwnPost?: boolean;
     post_id?: string;
-} 
+}

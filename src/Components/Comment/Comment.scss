@@ -30,6 +30,11 @@
   border-color: #d4d4d4 !important;
 }
 
+/* stops user avatars from being draggable */
+.MuiAvatar-img {
+  -webkit-user-drag: none;
+}
+
 /* CSS Specifications for the comment box container within mobile view */
 @media (max-width: 800px) {
 

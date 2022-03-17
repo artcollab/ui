@@ -17,7 +17,8 @@ const tempPost : post = {
     content: "",
     likes: 0,
     created: 0,
-    users: []
+    users: [],
+    size: ""
 }
 
 global.URL.createObjectURL = jest.fn();

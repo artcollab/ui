@@ -37,7 +37,6 @@ function Feed() {
     const [index, setIndex] = useState(2);
 
     useEffect(() => {
-        console.log(at);
         if (posts.length === 0) {
             sendHTTPRequest("GET", "/posts", undefined, JSON.parse(at)).then((responseData) => { setPosts(JSON.parse(responseData as unknown as string)) });
         }
@@ -127,11 +126,6 @@ function Feed() {
 
             </div>
 
-            {/* IconButton for the create functionality, on click this will show a popover which will provide canvas options */}
-            <IconButton onClick={handlePopover} size={"small"} className={'createButton'} data-testid="create-button-test">
-                <GestureOutlinedIcon />
-            </IconButton>
-
 
             {/* Popover component which allows for canvas customisation */}
             <Popover open={popover} onClose={handlePopoverClose}
@@ -176,6 +170,11 @@ function Feed() {
                     </Button>
                 </Container>
             </Popover>
+
+            {/* IconButton for the create functionality, on click this will show a popover which will provide canvas options */}
+            <IconButton onClick={handlePopover} size={"small"} className={'createButton'} data-testid="create-button-test">
+                <GestureOutlinedIcon />
+            </IconButton>
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&

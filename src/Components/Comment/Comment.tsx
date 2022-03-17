@@ -44,10 +44,8 @@ function Comment({commentsList, focused=false, setFocused} : commentProps) {
 
         /* userComment structure (temp values currently) */
         const userComment: comment = {
-
-            user: User,
-            text: textValue
-
+            author: User,
+            content: textValue,
         };
 
         /* creates a comment array containing the comments within the commentList */
@@ -99,7 +97,7 @@ function Comment({commentsList, focused=false, setFocused} : commentProps) {
 
                         {/* displays the comment text below the user avatar & name */}
                         <span style={{fontSize: 13}}>
-                            {c.text}
+                            {c.content}
                         </span>
 
                     </Paper>

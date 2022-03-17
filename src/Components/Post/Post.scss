@@ -23,12 +23,10 @@
 .SquareContainer, .PortraitContainer, .RectangleContainer {
   margin-left: auto;
   margin-right: auto;
-  margin-block-end: 1em;
   min-height: 29em;
-  max-height: 29em;
+  max-height: fit-content;
   padding: 0.625em;
   background-color: var(--post-background) !important;
-  //margin-top: 5em;
 }
 
 /* Container width for Square Sized posts (688 x 464) */
@@ -48,7 +46,7 @@
 
 /* Container width for Rectangle Sized posts (736 x 464) */
 .RectangleContainer {
-  max-width: 46em;
+  max-width: 51em;
 }
 
 /* Changes the TextField background to pure white */

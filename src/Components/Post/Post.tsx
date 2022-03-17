@@ -101,7 +101,7 @@ function Post(props : postProps) {
             <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={`${postSize}Container`} src={image.src} alt={"Error..."}/>
+                <img draggable={"false"} src={image.src} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 

@@ -117,7 +117,7 @@ function Feed() {
                 })}
 
                 {/* div for the loading button, is centered & is offset from the post a little bit */}
-                <div style={{ textAlign: 'center', height: 50 }}>
+                <div style={{ marginTop: 80, textAlign: 'center', height: 50 }}>
 
                     {/* simple button which will load more posts onto the feed when clicked */}
                     <Button className={'loadingButton'} onClick={loadPost}>LOAD</Button>

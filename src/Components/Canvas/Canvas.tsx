@@ -6,7 +6,7 @@ import { ToolBarItem } from '../../Types/ToolbarItems';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
-import { comment } from '../../Types/Comment';
+import { chatBoxComment } from '../../Types/Comment';
 import { user } from '../../Types/User';
 import ChatBox from './ChatBox';
 import PostSubmission from './PostSubmission';
@@ -40,7 +40,7 @@ function Canvas() {
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
 
     // Chat box elements to display
-    const [messageList, setMessageList] = useState<Array<comment | string>>([]);
+    const [messageList, setMessageList] = useState<Array<chatBoxComment | string>>([]);
 
     // Modal settings
     const [open, setOpen] = useState(false);
@@ -59,7 +59,7 @@ function Canvas() {
 
     // upon sending posting a message to the chat box, the message list is updated and page is re-rendered
     const postMessage = (message: string) => {
-        let newMessage: comment = {
+        let newMessage: chatBoxComment = {
             user: User,
             text: message
         }
@@ -103,7 +103,7 @@ function Canvas() {
     }, [canvas, room]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
-    socket.on("addMessage", (message: comment) => {
+    socket.on("addMessage", (message: chatBoxComment) => {
         setMessageList([...messageList, message]);
     });
 

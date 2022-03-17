@@ -90,7 +90,7 @@ function Post(props : postProps) {
     const [open, setOpen] = useState(false);
 
     /* comment component initialised */
-    const commentSection = <Comment commentsList={[]} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
+    const commentSection = <Comment commentsList={post.comments} post_id={post.id} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
 
     return (
 

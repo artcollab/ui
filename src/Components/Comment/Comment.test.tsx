@@ -7,7 +7,7 @@ export{}
 it("comment section tests", () => {
 
     /* initialises & renders the comment component */
-    render(<Comment commentsList={[]} setFocused={(value: boolean) => (value)}/>);
+    render(<Comment commentsList={[]} setFocused={(value: boolean) => (value)} post_id={""}/>);
 
     /* Test that the TextField contains the correct placeholder text */
     const textFieldPlaceholder = screen.queryByPlaceholderText(/...../i);

@@ -68,7 +68,11 @@ export default function Header() {
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
     function fetchSearch(value : string): void {
-        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at))
+        .then((responseData) => {
+            console.log(JSON.parse(responseData as unknown as string) as Array<user>);
+            setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>);
+        })
         .catch((err) => console.log(err));
     }
 

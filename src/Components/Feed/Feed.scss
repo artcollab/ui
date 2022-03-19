@@ -1,10 +1,29 @@
+/* determines the initial theme state */
+:root {
+  --loading-color: #ffccac
+}
+
+/* sets the theme whenever the data-theme is toggled back to default */
+[data-theme = "default"] {
+  --loading-color: #ffccac;
+}
+
+/* sets the theme when the data-theme is toggled to dark mode */
+[data-theme = "dark"] {
+  --loading-color: #1c1c1c;
+}
+
+/* loading graphic color is different depending on the currently activated theme */
+.loadingGraphic {
+  color: var(--loading-color) !important;
+}
 
 /* CSS for the loading icon when loading/reloading the feed */
 .loadingIcon {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
 
 /* loadingButton CSS for colors */
@@ -31,6 +50,36 @@
   box-shadow: 0 5px 10px dimgrey;
 }
 
+/* gives some font styles for the popover title */
+.popoverTitle {
+  font-weight: bolder !important;
+  font-size: 1em !important;
+  text-decoration: underline;
+}
+
+/* popover text separation */
+.popoverOptions {
+  margin-top: 0.75em !important;
+}
+
+/* create canvas button styling */
+.createCanvas {
+  margin-top: 1em !important;
+  background-color: #858585 !important;
+  color: #ffffff !important;
+}
+
+/* mobile view CSS */
+@media (max-width: 800px) {
+
+  /* hides create button when in mobile view */
+  .createButton {
+    // left: 0.25em;
+    // bottom: 0.5em;
+    display: none !important;
+  }
+}
+
 /* smaller mobile view CSS */
 @media (max-width: 600px) {
 
@@ -38,12 +87,6 @@
   it will still overlap other elements but this way its more legible */
   .scrollButton {
     right: 0.25em;
-    bottom: 0.5em;
-  }
-
-  /* same idea as above CSS */
-  .createButton {
-    left: 0.25em;
     bottom: 0.5em;
   }
 }

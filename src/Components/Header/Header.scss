@@ -36,6 +36,15 @@
     background-color: var(--theme-header) !important;
 }
 
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+    color: var(--theme-icons) !important;
+    border-color: var(--theme-icons) !important;
+}
+
+.searchIcon svg{
+    color: var(--theme-icons);
+}
+
 /* mobile styles, functional for most mobile sizes, some resizing issues still occur at certain resolutions */
 @media (max-width: 800px) {
     .DrawDojo__logo {

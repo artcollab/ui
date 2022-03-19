@@ -1,3 +1,4 @@
+import { comment } from "./Comment";
 import { user } from "./User";
 
 export type post = {
@@ -8,5 +9,6 @@ export type post = {
     likes: number;
     created: number;
     users: Array<user>;
-    size: string
+    size: string;
+    comments: Array<comment>;
 }

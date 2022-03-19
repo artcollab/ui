@@ -23,9 +23,9 @@ export default function PostSubmission(props: PostSubmissionProps) {
     // converting the image string to an ingestible format
     const blob = new Blob([svg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
-    const image = document.createElement('img'); image.addEventListener('load', () => {URL.revokeObjectURL(url)}, { once: true }); image.src = url;
+    const image = document.createElement('img'); image.addEventListener('load', () => { URL.revokeObjectURL(url) }, { once: true }); image.src = url;
 
-    const [captionText, setCaptionText] = useState("");
+    const [captionText, setCaptionText] = useState(" ");
 
     return (
         <Paper className="modalContainer">
@@ -37,10 +37,10 @@ export default function PostSubmission(props: PostSubmissionProps) {
                     label="Image Caption"
                     placeholder="Enter a caption here"
                     value={captionText}
-                    onChange={(e) => {setCaptionText(e.target.value)}}
+                    onChange={(e) => { setCaptionText(e.target.value) }}
                 />
 
-                <Button variant="outlined" onClick={() => {sendHTTPRequest("POST", "/posts", JSON.stringify({author: user, title: captionText, content: svg, canvasSize: size}), JSON.parse(at!)); navigate("/home")}} sx={{marginTop: "2%"}}>Submit</Button>
+                <Button variant="outlined" onClick={() => { sendHTTPRequest("POST", "/posts", JSON.stringify({ author: user, title: captionText, content: svg, size: size }), JSON.parse(at!)); navigate("/home") }} sx={{ marginTop: "2%" }}>Submit</Button>
 
             </Box>
         </Paper>

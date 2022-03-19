@@ -11,5 +11,4 @@ jest.mock('react-router-dom', () => ({
 it("appears on the screen", () => {
     render(<Header />);
     expect(screen.getByTestId("header-test")).toBeTruthy();
-    expect(screen.getByPlaceholderText("Search…")).toBeTruthy();
 });

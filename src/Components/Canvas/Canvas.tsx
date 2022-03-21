@@ -21,9 +21,15 @@ const fetchedData = getUserAsObject();
 const User: user = fetchedData;
 const at = getAccessToken();
 
-const socket = io('http://localhost:8081', {
-    query: { secret: at }
-});     // connect to socket io server
+const socket = io('http://localhost:8080', {
+    transportOptions: {
+        polling: {
+            extraHeaders: {
+                'Authorization': `Bearer ${JSON.parse(at)}`,
+            },
+        },
+    },
+});
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
@@ -99,7 +105,7 @@ function Canvas() {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvas, room]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
@@ -115,7 +121,7 @@ function Canvas() {
     // the listener below has a tendency to submit dupe requests which causes lag therefore each request is checked against the last before executing its block
     let lastInstance = '';
     // when the server requests the canvas from this user, the canvas is sent to the server
-    socket.on('requestCanvas', ({id, instance}) => {
+    socket.on('requestCanvas', ({ id, instance }) => {
         if (lastInstance !== instance) {
             const data = canvas?.toJSON();
             socket.emit('sendCanvas', ({ data, id }));
@@ -342,7 +348,7 @@ function Canvas() {
 
                     {canvas && (
                         <Modal open={open} onClose={() => { setOpen(false) }}>
-                            <PostSubmission image={canvas.toSVG().toString()} canvasSize={size}/>
+                            <PostSubmission image={canvas.toSVG().toString()} canvasSize={size} />
 
                         </Modal>
                     )}

@@ -4,6 +4,6 @@ export type user = {
     email: string;
     name: string;
     surname: string;
-    password: string;
+    password?: string;
     following?: Array<string>;
 }

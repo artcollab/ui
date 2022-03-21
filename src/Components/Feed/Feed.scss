@@ -69,6 +69,17 @@
   color: #ffffff !important;
 }
 
+/* mobile view CSS */
+@media (max-width: 800px) {
+
+  /* hides create button when in mobile view */
+  .createButton {
+    // left: 0.25em;
+    // bottom: 0.5em;
+    display: none !important;
+  }
+}
+
 /* smaller mobile view CSS */
 @media (max-width: 600px) {
 
@@ -77,12 +88,5 @@
   .scrollButton {
     right: 0.25em;
     bottom: 0.5em;
-  }
-
-  /* hides create button when in mobile view */
-  .createButton {
-    // left: 0.25em;
-    // bottom: 0.5em;
-    display: none !important;
   }
 }

@@ -19,43 +19,84 @@
 
 /* desktop CSS specifications */
 
-/* Container for Square Sized posts (464 x 480) */
-.squareContainer {
+/* General Container Sizing */
+.SquareContainer, .PortraitContainer, .RectangleContainer {
   margin-left: auto;
   margin-right: auto;
-  margin-block-end: 1em;
+  margin-block-end: -3em;
   min-height: 29em;
   max-height: 29em;
-  max-width: 43em;
   padding: 0.625em;
   background-color: var(--post-background) !important;
   margin-top: 5em;
-
-  /* Changes the TextField background to pure white */
-  .MuiInputBase-root {
-    background-color: #FFF;
-  }
-
-  /* stops user avatars from being draggable */
-  .MuiAvatar-img {
-    -webkit-user-drag: none;
-  }
-
 }
 
-/* CSS for Square Sized post content within the Square container */
-.squarePostContent {
+/* Container width for Square Sized posts (688 x 464) */
+.SquareContainer {
+  max-width: 43em;
+}
+
+/* Container width for Portrait Sized posts (560 x 464) */
+.PortraitContainer {
+  max-width: 35em;
+}
+
+/* Container width for Rectangle Sized posts (736 x 464) */
+.RectangleContainer {
+  max-width: 46em;
+}
+
+/* Changes the TextField background to pure white */
+.MuiInputBase-root {
+  background-color: #FFF;
+}
+
+/* stops user avatars from being draggable */
+.MuiAvatar-img {
+  -webkit-user-drag: none;
+}
+
+.SquarePostContent, .PortraitPostContent, .RectanglePostContent {
   display: flex;
   min-height: 29em;
   max-height: 29em;
-  min-width: 29em;
-  max-width: 29em !important;
   border-radius: 0.75em;
+
 }
 
-/* CSS for the Header of the post (avatar, username & caption) */
-.postHeader {
-  margin-left: 29.5em;
+/* CSS for Square Sized post content within the Square container (464 x 464) */
+.SquarePostContent {
+  min-width: 29em;
+  max-width: 29em !important;
+}
+
+/* CSS for Portrait Sized post content within the Portrait container (340 x 464) */
+.PortraitPostContent {
+  min-width: 21.25em;
+  max-width: 21.25em !important;
+}
+
+/* CSS for Portrait Sized post content within the Rectangle container (520 x 464) */
+.RectanglePostContent {
+  min-width: 32.5em;
+  max-width: 32.5em !important;
+}
+
+/* CSS for the Header of a Square sized post (avatar, username & caption) */
+.SquarePostHeader {
+  margin-left: 29.8em;
+  margin-top: -30em;
+}
+
+/* CSS for the Header of a Portrait sized post (avatar, username & caption) */
+.PortraitPostHeader {
+  margin-left: 22em;
+  margin-top: -30em;
+}
+
+/* CSS for the Header of a Rectangle sized post (avatar, username & caption) */
+.RectanglePostHeader {
+  margin-left: 33em;
   margin-top: -30em;
 }
 
@@ -71,9 +112,21 @@
   color: var(--header-text-col) !important;
 }
 
-/* Post interaction CSS (like button, comment button & edit/mashup button) */
-.desktopPostInteraction {
+/* Square Post interaction CSS (like button, comment button & edit/mashup button) */
+.SquareDesktopPostInteraction {
   margin-left: 29.8em;
+  margin-top: 1em;
+}
+
+/* Portrait Post interaction CSS (like button, comment button & edit/mashup button) */
+.PortraitDesktopPostInteraction {
+  margin-left: 22em;
+  margin-top: 1em;
+}
+
+/* Rectangle Post interaction CSS (like button, comment button & edit/mashup button) */
+.RectangleDesktopPostInteraction {
+  margin-left: 33em;
   margin-top: 1em;
 }
 
@@ -84,10 +137,20 @@
 }
 
 /* comment section for desktop CSS specs */
-.desktopComment {
+.SquareDesktopComment, .PortraitDesktopComment, .RectangleDesktopComment {
   display: flex;
   margin-top: -20.25em;
   justify-content: flex-end;
+}
+
+/* comment section for Portrait container CSS */
+.PortraitDesktopComment {
+  margin-left: -7em;
+}
+
+/* comment section for Rectangle container CSS */
+.RectangleDesktopComment {
+  margin-left: 6em;
 }
 
 /* CSS color for the like button having not been clicked */
@@ -113,22 +176,38 @@
 /* mobile styles for the main component at 800px width */
 @media (max-width: 800px) {
 
-  /* Resizing & tweaking square container for when in mobile view */
-  .squareContainer {
+  /* css for all containers to follow when in mobile view */
+  .SquareContainer, .PortraitContainer, .RectangleContainer {
     min-height: 6em;
-    max-width: 29em;
     margin-top: 7rem;
     max-height: fit-content
   }
 
-  /* When in mobile view the post should be centered on the screen */
-  .squarePostContent {
-    width: 100%;
+  /* Resizing & tweaking Square container for when in mobile view */
+  .SquareContainer {
+    max-width: 29em;
+  }
+
+  /* Resizing & tweaking Portrait container width for when in mobile view */
+  .PortraitContainer {
+    max-width: 21.25em;
+  }
+
+  /* Resizing & tweaking Rectangle container width for when in mobile view */
+  .RectangleContainer {
+    max-width: 32.5em;
+  }
+
+  /* When in mobile view the post content should be centered on the screen */
+  .SquarePostContent, .PortraitPostContent, .RectanglePostContent {
+    min-width: 100% !important;
+    max-width: 100% !important;
     min-height: 50%;
   }
 
-  /* CSS for the Header of the post (avatar, username & caption) */
-  .postHeader {
+
+  /* CSS for the Header of a post (avatar, username & caption) */
+  .SquarePostHeader, .PortraitPostHeader, .RectanglePostHeader {
     margin-right: auto;
     margin-left: auto;
     margin-top: 0.75em;
@@ -153,6 +232,8 @@
   /* Post interaction CSS (like button, comment button & edit/mashup button) */
   .mobilePostInteraction {
     display: flex;
+    margin-top: 4em;
+    margin-block-end: -5em;
   }
 
   /* comment modal when selected will show up in the center of the current screen view */
@@ -166,19 +247,10 @@
     }
   }
 
-  /* hides some desktop components while in mobile view */
-  .postCaptionDesktop, .desktopPostInteraction, .desktopComment {
+  /* hides desktop components while in mobile view */
+  .postCaptionDesktop, .SquareDesktopPostInteraction, .PortraitDesktopPostInteraction, .RectangleDesktopPostInteraction,
+  .SquareDesktopComment, .PortraitDesktopComment, .RectangleDesktopComment {
     display: none
-  }
-
-}
-
-/* mobile styles for the main component at 600px width */
-@media (max-width: 600px) {
-
-  /* changes square containers margin from the top to 6em */
-  .squareContainer {
-    margin-top: 6em;
   }
 
 }
@@ -186,13 +258,10 @@
 /* mobile styles for the main component at 450px width */
 @media (max-width: 450px) {
 
-  /* changes square containers margin from the top to 4.5em */
-  .squareContainer {
-    margin-top: 4.5em;
-  }
-
   /* changes post interaction margin from the top to 0.5em */
   .mobilePostInteraction {
-    margin-top: 0.5em;
+    margin-top: 3em;
+    margin-block-end: -3em;
   }
+
 }

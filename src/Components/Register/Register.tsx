@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import './Register.scss';
 import { handleResponse } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
+import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 
 function Register() {
     const navigate = useNavigate();
@@ -19,30 +20,13 @@ function Register() {
         // reset error text upon every submit
         setErrorText("");
 
-        // extracting form data
-        const data = new FormData(event.currentTarget);
-        // converting formdata to a JSON object that can be ingested by the db
-        const body = JSON.stringify(Object.fromEntries(data.entries())); 
+        const body = new FormData(event.currentTarget);
+        const data = JSON.stringify(Object.fromEntries(body.entries()));
 
-        const prod_url = "https://api.operce.net/auth/register";
-        const req = new XMLHttpRequest();
-        
-        // open async http post request
-        req.open("POST", prod_url, true); 
-        req.setRequestHeader("Content-Type", "application/json");
-        req.onreadystatechange = () => {
-            if(req.readyState === 4 && req.status === 201) {
-                // on successful register, add response to localstorage
-                handleResponse(req.response);
-                // return to homepage
-                navigate("/home");
-            }
-            else{
-                // else display error message
-                if(req.responseText) setErrorText(JSON.parse(req.responseText)['error']);
-            }
-        };
-        req.send(body);
+        sendHTTPRequest("POST", "/auth/register", data).then((responseData) => {
+            handleResponse(responseData as unknown as string);
+            navigate("/home");
+        }).catch((err) => setErrorText(err));
     };
 
     // email field validation

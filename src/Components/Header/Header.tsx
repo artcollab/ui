@@ -12,16 +12,17 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Palette, PeopleAlt } from '@mui/icons-material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import './Header.scss'
-import { Autocomplete, Button, CircularProgress, Container, Divider, Grid, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Popover, Switch, TextField, Typography } from '@mui/material';
-import { getAccessToken, logOut } from '../../Util/handleResponse';
+import { Autocomplete, CircularProgress, Container, Divider, Grid, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Popover, Switch, TextField, Typography } from '@mui/material';
+import { getAccessToken, getUserAsObject, logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 import { FriendRequest } from '../../Types/FriendRequest';
 import LetterAvatar from '../LetterAvatar/LetterAvatar';
 
 const at = getAccessToken();
+const User = getUserAsObject();
 
 // event function used to switch from light mode to dark mode
 function toggleTheme() {
@@ -80,7 +81,7 @@ export default function Header() {
         setAnchorCanvas(event.currentTarget);
     }
     const canvasOpen = Boolean(anchorCanvas);
-    const [canvasRequests, setCanvasRequests] = useState([]);
+    const [canvasRequests, setCanvasRequests] = useState<any>([]);
 
 
     const [anchorFriends, setAnchorFriends] = useState<null | HTMLElement>(null);
@@ -111,6 +112,35 @@ export default function Header() {
     }
     const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([exampleRequest, exampleRequest2, exampleRequest3]);
 
+    function handleRequestResponse(response: string, type: string, requestID: string) {
+        sendHTTPRequest("POST", `/users/friends/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
+            fetchAllRequests();
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchFriendRequests() {
+        sendHTTPRequest("GET", `/users/friends/${User.username}/requests/to`, undefined, JSON.parse(at)).then((responseData) => {
+            setFriendRequests(responseData as unknown as Array<FriendRequest>);
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchCanvasRequests() {
+        sendHTTPRequest("GET", `TBA`, undefined, JSON.parse(at)).then((responseData) => {
+            setCanvasRequests(responseData as unknown /* as Array<FriendRequest> */);
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchAllRequests() {
+        if(at && User) {
+            fetchFriendRequests();
+            fetchCanvasRequests();
+        }
+    }
+
+    useEffect(() => {
+        fetchAllRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -180,8 +210,8 @@ export default function Header() {
                                         <Grid container>
                                             <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user.split(' ')[0]} surname={request.from_user.split(' ')[1]} /></ListItemAvatar></Grid>
                                             <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id)}  sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
                                         </Grid>
                                     </ListItem>
                                     <Divider />

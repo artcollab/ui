@@ -9,18 +9,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Palette, PeopleAlt } from '@mui/icons-material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import './Header.scss'
-import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
-import MessagesMenu from '../Messages/Messages';
-import NotificationsMenu from '../Notifications/Notifications';
+import { Autocomplete, Button, CircularProgress, Container, Divider, Grid, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Popover, Switch, TextField, Typography } from '@mui/material';
 import { getAccessToken, logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
+import { FriendRequest } from '../../Types/FriendRequest';
+import LetterAvatar from '../LetterAvatar/LetterAvatar';
 
 const at = getAccessToken();
 
@@ -64,13 +63,54 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
+
     const [searchValue, setSearchValue] = useState("");
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
-    function fetchSearch(value : string): void {
+    function fetchSearch(value: string): void {
         sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
-        .catch((err) => console.log(err));
+            .catch((err) => console.log(err));
     }
+
+    const [anchorCanvas, setAnchorCanvas] = useState<null | HTMLElement>(null);
+    const handleCanvasClose = () => {
+        setAnchorCanvas(null);
+    }
+    const handleCanvasClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorCanvas(event.currentTarget);
+    }
+    const canvasOpen = Boolean(anchorCanvas);
+    const [canvasRequests, setCanvasRequests] = useState([]);
+
+
+    const [anchorFriends, setAnchorFriends] = useState<null | HTMLElement>(null);
+    const handleFriendsClose = () => {
+        setAnchorFriends(null);
+    }
+    const handleFriendsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorFriends(event.currentTarget);
+    }
+    const friendsOpen = Boolean(anchorFriends);
+    const exampleRequest: FriendRequest = {
+        request_id: 'dawdwad',
+        to_user: 'wadwad',
+        from_user: 'James Beach',
+        status: 'Pending'
+    }
+    const exampleRequest2: FriendRequest = {
+        request_id: 'dawdwad',
+        to_user: 'wadwad',
+        from_user: 'Cade Brown',
+        status: 'Pending'
+    }
+    const exampleRequest3: FriendRequest = {
+        request_id: 'dawdwad',
+        to_user: 'wadwad',
+        from_user: 'Oli Radlett',
+        status: 'Pending'
+    }
+    const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([exampleRequest, exampleRequest2, exampleRequest3]);
+
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -92,6 +132,68 @@ export default function Header() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const renderCanvasRequests = (
+        <Popover
+            keepMounted
+            anchorEl={anchorCanvas}
+            open={canvasOpen}
+            onClose={handleCanvasClose}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left"
+            }}
+        >
+            <Container sx={{ maxWidth: "20rem", width: "20rem" }}>
+                <Typography sx={{ p: 1 }}>Canvas Requests</Typography>
+                <Divider />
+                {canvasRequests.length === 0 ? (
+                    <Typography sx={{ p: 1 }}> You have no active canvas requests</Typography>
+                ) :
+                    <></>
+                }
+            </Container>
+        </Popover>
+    );
+
+    const renderFriendRequests = (
+        <Popover
+            keepMounted
+            anchorEl={anchorFriends}
+            open={friendsOpen}
+            onClose={handleFriendsClose}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left"
+            }}
+        >
+            <Container sx={{ width: "fit-content", backgroundColor: "#f9f9f9" }}>
+                <Typography variant='subtitle1' sx={{ p: 1 }}>Friend Requests</Typography>
+                {friendRequests.length === 0 ? (
+                    <Typography sx={{ p: 1 }}> You have no active friend requests</Typography>
+                ) :
+                    <List >
+                        <Divider />
+                        {friendRequests.map((request) => {
+                            return (
+                                <>
+                                    <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
+                                        <Grid container>
+                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user.split(' ')[0]} surname={request.from_user.split(' ')[1]} /></ListItemAvatar></Grid>
+                                            <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    <Divider />
+                                </>
+                            )
+                        })}
+                    </List>
+                }
+            </Container>
+        </Popover >
+    );
+
     const menuId = 'primary-search-account-menu';
 
     // menu appears upon clicking the profile icon
@@ -99,15 +201,11 @@ export default function Header() {
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: 'bottom',
+                horizontal: 'left',
             }}
             id={menuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -136,24 +234,28 @@ export default function Header() {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
+                <IconButton
+                    size="large"
+                    edge="end"
+                    onClick={() => { }}
+                    color="inherit"
+                >
+                    <Badge badgeContent={1} color="error">
+                        <Palette />
                     </Badge>
                 </IconButton>
-                <p>Messages</p>
+                <p>Canvas Requests</p>
             </MenuItem>
             <MenuItem>
                 <IconButton
                     size="large"
-                    aria-label="show 17 new notifications"
                     color="inherit"
                 >
                     <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
+                        <PeopleAlt />
                     </Badge>
                 </IconButton>
-                <p>Notifications</p>
+                <p>Friend Requests</p>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
@@ -214,8 +316,28 @@ export default function Header() {
                     }
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
-                        <MessagesMenu />
-                        <NotificationsMenu />
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            onClick={handleCanvasClick}
+                            color="inherit"
+                            sx={{ paddingInlineEnd: "1rem" }}
+                        >
+                            <Badge badgeContent={canvasRequests.length} color="error">
+                                <Palette />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            color="inherit"
+                            sx={{ paddingInlineEnd: "1rem" }}
+                            onClick={handleFriendsClick}
+                        >
+                            <Badge badgeContent={friendRequests.length} color="error">
+                                <PeopleAlt />
+                            </Badge>
+                        </IconButton>
                         <IconButton
                             size="large"
                             edge="end"
@@ -224,6 +346,7 @@ export default function Header() {
                             aria-haspopup="true"
                             onClick={handleProfileMenuOpen}
                             color="inherit"
+                            sx={{ paddingInlineEnd: "1rem" }}
                         >
                             <AccountCircle />
                         </IconButton>
@@ -242,6 +365,8 @@ export default function Header() {
                     </Box>
                 </Toolbar>
             </AppBar>
+            {renderCanvasRequests}
+            {renderFriendRequests}
             {renderMobileMenu}
             {renderMenu}
         </Box>

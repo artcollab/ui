@@ -35,7 +35,6 @@ function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const { state } = useLocation();
     let { room, size, image } = state as unknown as { room: string, size: string, image: string };
-
     const [admin, setAdmin] = useState(false);
 
     // Brush attributes, colour, size and opacity

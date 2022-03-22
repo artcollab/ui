@@ -174,8 +174,8 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
-                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
+                    <input type="image" src="/logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
+                    <input type="image" src="/mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
                     {at &&
                         <Search style={{ marginLeft: "15%" }}>
                             <Autocomplete

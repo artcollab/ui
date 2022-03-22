@@ -1,5 +1,4 @@
 import React from "react";
-import { profile } from "../../Types/Profile";
 import './Profile.scss';
 import {Avatar, Grid, Box} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
@@ -33,7 +32,7 @@ type bio = {
     bioLimit : number;
 }
 
-function Profile(props : profile) {
+function Profile() {
 
     /* UserBio constant, used for handling the users bio */
     const UserBio : React.FC<bio> = ({bioText, bioLimit}) => {
@@ -68,7 +67,7 @@ function Profile(props : profile) {
                     <Grid item>
 
                         {/* displays the user's Avatar */}
-                        <Avatar src={"../avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
+                        <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
 
                     </Grid>
 

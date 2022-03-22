@@ -16,17 +16,12 @@ import { v1 } from "uuid";
 import { getAccessToken } from "../../Util/handleResponse";
 import Post from "../Post/Post";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
+import { generateRoomID } from "../../Util/generateRoomID";
 
 const at = getAccessToken();
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
-
-/* alphabet constant which includes alphabetical characters from a-z & A-Z */
-const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-/* initial empty string for the roomID */
-let roomID = '';
 
 function Feed() {
     const [canvasSize, setCanvasSize] = useState("Square");
@@ -35,6 +30,7 @@ function Feed() {
     const navigate = useNavigate();
     let [posts, setPosts] = useState<Array<post>>([]);
     const [index, setIndex] = useState(2);
+    const [roomID] = useState(generateRoomID());
 
     useEffect(() => {
         if (posts.length === 0) {
@@ -57,13 +53,7 @@ function Feed() {
         /* button has been clicked so popover can be shown */
         setPopover(true);
 
-        /* sets the roomID to empty string again to avoid a previously generated string appearing again */
-        roomID = ''
 
-        /* generates 6 random alphabetical characters [a-Z] as a string */
-        while (roomID.length < 6) {
-            roomID += alphabet[Math.floor(Math.random() * alphabet.length)]
-        }
     }
 
     /* when the user clicks anywhere else on the screen outside of the popover this will be

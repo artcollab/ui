@@ -1,39 +1,33 @@
-import React from "react";
-import { profile } from "../../Types/Profile";
+import React, {useState} from "react";
 import './Profile.scss';
-import {Avatar, Grid, Box} from "@mui/material";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
+import {getAccessToken, getUserAsObject, handleResponse} from "../../Util/handleResponse";
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
 import {user} from "../../Types/User";
-import {getUserAsObject} from "../../Util/handleResponse";
 
-/* temporary user object */
-const tempUser: user = {
-    id: "",
-    username: "",
-    email: "",
-    name: "",
-    surname: "",
-    password: ""
-}
-
-const fetchUser = getUserAsObject();
-
-const User = fetchUser ? fetchUser : tempUser;
-
-/* temporary user bio for testing purposes */
-const userBio = "wasdwasdwasd wasd wasd wasd wasdwasdwswas"
+const at = getAccessToken();
 
 /* type definitions for the user bio */
 type bio = {
 
     /* bio text string */
-    bioText : string;
+    bioText: string;
 
     /* character limit to restrict the amount of text that is displayed at once for the user bio */
-    bioLimit : number;
+    bioLimit: number;
 }
 
-function Profile(props : profile) {
+function Profile() {
+
+    let [bioText, setBioText] = useState("");
+
+    const [User, setUser] = useState();
+
+    sendHTTPRequest("GET", "/users/id/:id", undefined, JSON.parse(at)).then((responseData) => { setUser(JSON.parse(responseData as unknown as string)); });
+
 
     /* UserBio constant, used for handling the users bio */
     const UserBio : React.FC<bio> = ({bioText, bioLimit}) => {
@@ -55,8 +49,81 @@ function Profile(props : profile) {
 
     }
 
+    /* character limit within the TextField */
+    const charLimit = 75
+
+    /* react hook with constant variables to be used to obtain values from the comment text box */
+    const [textValue, setValue] = useState(bioText)
+
+    /* react hook for changing the state of the modal */
+    const [open, setOpen] = useState(false);
+
+    /* editBio const variable, used for changing the user's bio */
+    const editBio =
+
+        /* TextField component, this will allow users to compose and edit their bio at will */
+        <TextField
+
+            /* sets TextField background color to white */
+            sx={{ color: '#FFF' }}
+
+            /* TextField can expand to multiple lines */
+            multiline
+
+            /* maximum rows before turning into scrollable box */
+            maxRows={3}
+
+            /* TextField fills the full width of the box */
+            fullWidth
+
+            /* placeholder text for when TextField is empty */
+            placeholder={'.....'}
+
+            /* value of TextField set to the value of whatever the user types */
+            value={textValue}
+
+            /* character count below TextField object */
+            helperText={`${textValue.trim().length}/${charLimit}`}
+
+            /* whenever the user types in the TextField the value of the string is saved */
+            onChange={(e) => { setValue(e.target.value) }}
+
+            /* props to be used with the user bio (submit button) */
+            InputProps={{
+
+                /* styles the input props to be fontSize 13 */
+                style: { fontSize: 13 },
+
+                endAdornment: (
+                    <InputAdornment position="end">
+                        <IconButton style={{ width: 24, height: 24, color: 'black' }} onClick={() => {
+
+                            /* bio can be posted if TextField is empty or has under 75 characters */
+                            if (textValue.trim().length >= 0 && textValue.trim().length <= 75) {
+
+                                bioText = textValue;
+                                sendHTTPRequest("POST", "/users/bio", JSON.stringify({bio: bioText, user_id: User.id}), JSON.parse(at!));
+                                {setOpen(false)}
+
+                            }
+
+                            /* alerts user of invalid bio (over 75 chars) */
+                            else if (textValue.trim().length > 75) { alert("No more than 75 characters allowed.") }
+                        }}>
+                            <ArrowForwardIcon style={{ color: 'black' }} />
+                        </IconButton>
+                    </InputAdornment>
+                )
+            }}
+        />
+
     return (
         <>
+
+            {/* Modal popup menu for bio editing */}
+            <Modal className={"bioModal"} open={open} onClose={() => setOpen(false)}>
+                <>{editBio}</>
+            </Modal>
 
             {/* divider which stores the profile header elements */}
             <div className={"profileHeader"}>
@@ -68,16 +135,15 @@ function Profile(props : profile) {
                     <Grid item>
 
                         {/* displays the user's Avatar */}
-                        <Avatar src={"../avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
+                        <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
 
                     </Grid>
-
 
                     {/* second grid object which for the username and bio text*/}
                     <Grid item xs>
 
                         {/* displays the users username */}
-                        <span className={"userName"}>{User.name}</span>
+                        <span className={"userName"}>{User.name}{" "}{User.surname}</span>
 
                         {/* line break to separate the username from the bio */}
                         <br/>
@@ -86,8 +152,13 @@ function Profile(props : profile) {
                          position instead of the end of the page */}
                         <Box className={"bio"}>
 
-                            {/* displays the user's written bio with a limit of 35 characters */}
-                            <UserBio bioText={userBio} bioLimit={35}/>
+                            {/* displays the user's written bio with a limit of 40 characters */}
+                            <UserBio bioText={bioText} bioLimit={40}/>
+
+                            {/* edit button to access the bio editor */}
+                            <IconButton onClick={() => setOpen(true)} size={"small"}>
+                                <EditIcon/>
+                            </IconButton>
 
                         </Box>
 

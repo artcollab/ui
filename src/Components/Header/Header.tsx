@@ -16,13 +16,14 @@ import './Header.scss'
 import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
-import { getAccessToken, logOut } from '../../Util/handleResponse';
+import {getAccessToken, getUserAsObject, logOut} from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 
 const at = getAccessToken();
+const User = getUserAsObject();
 
 // event function used to switch from light mode to dark mode
 function toggleTheme() {
@@ -111,7 +112,7 @@ export default function Header() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={() => {handleMenuClose(); navigate("/profile/:" + User.id)} }>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={() => { logOut(); navigate("/home") }}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>
@@ -174,8 +175,8 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
-                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
+                    <input type="image" src="/logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
+                    <input type="image" src="/mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
                     {at &&
                         <Search style={{ marginLeft: "15%" }}>
                             <Autocomplete

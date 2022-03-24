@@ -32,7 +32,7 @@ function Post(props : postProps) {
     const post = props.Post;
 
     /* postSize variable, this will pull from the database to determine the container type to render */
-    const postSize = props.Post.size;
+    const postSize = post.size;
 
     const svg = post.content;
     const blob = new Blob([svg], { type: 'image/svg+xml' });
@@ -90,18 +90,18 @@ function Post(props : postProps) {
     const [open, setOpen] = useState(false);
 
     /* comment component initialised */
-    const commentSection = <Comment commentsList={[]} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
+    const commentSection = <Comment commentsList={post.comments} post_id={post.id} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
 
     return (
 
         /* container which holds all components relevant to this Post component */
-        <Container>
+        <Container sx={{marginTop: "5rem"}}>
 
             {/* Paper component for a post container */}
             <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} className={`${postSize}Container`} src={image.src} alt={"Error..."}/>
+                <img draggable={"false"} src={image.src} alt={"Error..."}/>
 
                 {/* Modal popup menu for the comment section component */}
 
@@ -110,7 +110,7 @@ function Post(props : postProps) {
                 </Modal>
 
                 {/* divider for the comment section displayed within the main container, on the right (desktop ver) */}
-                <div className={"desktopComment"}>
+                <div className={`${postSize}DesktopComment`}>
                     <>{commentSection}</>
                 </div>
 

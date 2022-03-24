@@ -1,5 +1,5 @@
 import { Box, IconButton, InputBase, Paper } from "@mui/material";
-import { comment } from "../../Types/Comment";
+import { chatBoxComment } from "../../Types/Comment";
 import SendIcon from '@mui/icons-material/Send';
 import { user } from "../../Types/User";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { v1 } from "uuid"
 import "./Canvas.scss"
 
 type ChatBoxProps = {
-    messageList: Array<comment | string>,
+    messageList: Array<chatBoxComment | string>,
     postMessage: any,
     user: user
 }

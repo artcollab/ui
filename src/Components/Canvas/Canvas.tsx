@@ -6,14 +6,14 @@ import { ToolBarItem } from '../../Types/ToolbarItems';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
 import { v1 } from 'uuid';
-import { comment } from '../../Types/Comment';
+import { chatBoxComment } from '../../Types/Comment';
 import { user } from '../../Types/User';
 import ChatBox from './ChatBox';
 import PostSubmission from './PostSubmission';
 import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
-import {getAccessToken, getUserAsObject} from '../../Util/handleResponse';
+import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
 import { useLocation } from 'react-router-dom';
 import { sizeMap } from '../../Util/canvasResolutions';
 
@@ -21,9 +21,15 @@ const fetchedData = getUserAsObject();
 const User: user = fetchedData;
 const at = getAccessToken();
 
-const socket = io('http://localhost:8081', {
-    query: { secret: at }
-});     // connect to socket io server
+const socket = io('http://localhost:8080', {
+    transportOptions: {
+        polling: {
+            extraHeaders: {
+                'Authorization': `Bearer ${JSON.parse(at)}`,
+            },
+        },
+    },
+});
 
 function Canvas() {
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
@@ -40,7 +46,7 @@ function Canvas() {
     const [currentTool, setCurrentTool] = useState<ToolBarItem>("move");
 
     // Chat box elements to display
-    const [messageList, setMessageList] = useState<Array<comment | string>>([]);
+    const [messageList, setMessageList] = useState<Array<chatBoxComment | string>>([]);
 
     // Modal settings
     const [open, setOpen] = useState(false);
@@ -59,7 +65,7 @@ function Canvas() {
 
     // upon sending posting a message to the chat box, the message list is updated and page is re-rendered
     const postMessage = (message: string) => {
-        let newMessage: comment = {
+        let newMessage: chatBoxComment = {
             user: User,
             text: message
         }
@@ -99,11 +105,11 @@ function Canvas() {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvas, room]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
-    socket.on("addMessage", (message: comment) => {
+    socket.on("addMessage", (message: chatBoxComment) => {
         setMessageList([...messageList, message]);
     });
 
@@ -115,7 +121,7 @@ function Canvas() {
     // the listener below has a tendency to submit dupe requests which causes lag therefore each request is checked against the last before executing its block
     let lastInstance = '';
     // when the server requests the canvas from this user, the canvas is sent to the server
-    socket.on('requestCanvas', ({id, instance}) => {
+    socket.on('requestCanvas', ({ id, instance }) => {
         if (lastInstance !== instance) {
             const data = canvas?.toJSON();
             socket.emit('sendCanvas', ({ data, id }));
@@ -342,7 +348,7 @@ function Canvas() {
 
                     {canvas && (
                         <Modal open={open} onClose={() => { setOpen(false) }}>
-                            <PostSubmission image={canvas.toSVG().toString()} canvasSize={size}/>
+                            <PostSubmission image={canvas.toSVG().toString()} canvasSize={size} />
 
                         </Modal>
                     )}

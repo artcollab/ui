@@ -22,6 +22,7 @@
     color: var(--theme-icon) !important;
     background-color: white !important;
   }
+
 }
 
 .MuiButton-outlined {
@@ -148,4 +149,12 @@
 .submitButton {
   width: 100%;
   margin-top: 3% !important;
+}
+
+.noTip * {
+  color: #42342c !important;
+}
+
+.tip * {
+  color: #ffdb58 !important;
 }

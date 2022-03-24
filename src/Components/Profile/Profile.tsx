@@ -5,8 +5,9 @@ import {ColorName} from "../../Util/NameColourGenerator";
 import {getAccessToken, getUserAsObject, handleResponse} from "../../Util/handleResponse";
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
-import {user} from "../../Types/User";
+import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
+import { user } from "../../Types/User";
+import { useParams } from 'react-router-dom'
 
 const at = getAccessToken();
 
@@ -22,12 +23,20 @@ type bio = {
 
 function Profile() {
 
+    /* ignore this need to fix bio after getting users */
     let [bioText, setBioText] = useState("");
 
-    const [User, setUser] = useState();
+    const { userID }  = useParams();
 
-    sendHTTPRequest("GET", "/users/id/:id", undefined, JSON.parse(at)).then((responseData) => { setUser(JSON.parse(responseData as unknown as string)); });
+    const [User, setUser] = useState<user | undefined>(undefined);
 
+    if(typeof(userID) === "string") {
+
+        sendHTTPRequest("GET", "/users/id/" + userID, undefined, JSON.parse(at)).then((responseData) => {
+            setUser(JSON.parse(responseData as unknown as string) as user);
+        });
+
+    }
 
     /* UserBio constant, used for handling the users bio */
     const UserBio : React.FC<bio> = ({bioText, bioLimit}) => {
@@ -102,7 +111,7 @@ function Profile() {
                             if (textValue.trim().length >= 0 && textValue.trim().length <= 75) {
 
                                 bioText = textValue;
-                                sendHTTPRequest("POST", "/users/bio", JSON.stringify({bio: bioText, user_id: User.id}), JSON.parse(at!));
+                                // sendHTTPRequest("POST", "/users/bio", JSON.stringify({bio: bioText, user_id: User.id}), JSON.parse(at!));
                                 {setOpen(false)}
 
                             }
@@ -118,8 +127,8 @@ function Profile() {
         />
 
     return (
-        <>
 
+        <>
             {/* Modal popup menu for bio editing */}
             <Modal className={"bioModal"} open={open} onClose={() => setOpen(false)}>
                 <>{editBio}</>
@@ -135,7 +144,7 @@ function Profile() {
                     <Grid item>
 
                         {/* displays the user's Avatar */}
-                        <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
+                        {/*<Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>*/}
 
                     </Grid>
 
@@ -169,8 +178,8 @@ function Profile() {
 
                 {/* line inserted to separate the header from the posts on the profile page */}
                 <hr className={"headerSeparator"}/>
-
             </div>
+
         </>
     )
 }

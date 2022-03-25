@@ -16,13 +16,14 @@ import './Header.scss'
 import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
 import MessagesMenu from '../Messages/Messages';
 import NotificationsMenu from '../Notifications/Notifications';
-import { getAccessToken, logOut } from '../../Util/handleResponse';
+import {getAccessToken, getUserAsObject, logOut} from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 
 const at = getAccessToken();
+const User = getUserAsObject();
 
 // event function used to switch from light mode to dark mode
 function toggleTheme() {
@@ -111,7 +112,7 @@ export default function Header() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={() => {handleMenuClose(); navigate("/profile/" + User.id)} }>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={() => { logOut(); navigate("/home") }}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>

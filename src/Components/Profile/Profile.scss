@@ -21,8 +21,8 @@
 
 /* sizes and styling for the users avatar within the profile header */
 .userAvatar {
-  min-width: 10em;
-  min-height: 10em;
+  min-width: 8em;
+  min-height: 8em;
   margin-top: 1em;
   border: 0.20em solid var(--profile-header-colour) !important;
 }
@@ -34,7 +34,7 @@
 
 /* username styling, includes dynamic theme changing of text */
 .userName {
-  font-size: 7em;
+  font-size: 4em;
   text-shadow: 0 2px 2px black;
   color: var(--profile-header-colour) !important;
 }
@@ -43,15 +43,26 @@
 .bio {
   word-break: break-word;
   overflow: auto;
-  font-size: 2.5em;
-  margin-left: 0.25em;
+  font-size: 2.15em;
+  margin-left: 0.15em;
 }
 
 /* sizes and positions the header separator */
 .headerSeparator {
   border: 0.25em solid var(--profile-header-colour) !important;
   border-radius: 0.25em;
-  margin-top: 1em;
+  margin-top: 0.5em;
+}
+
+/* comment modal when selected will show up in the center of the current screen view */
+.bioModal {
+  max-width: 20em;
+  max-height: 15em;
+  margin: 22em auto auto !important;
+  /* Changes the TextField background to pure white */
+  .MuiInputBase-root {
+    background-color: #FFF;
+  }
 }
 
 /* mobile styles for the profile component at 800px width */

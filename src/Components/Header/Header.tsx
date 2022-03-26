@@ -20,6 +20,7 @@ import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 import { FriendRequest } from '../../Types/FriendRequest';
 import LetterAvatar from '../LetterAvatar/LetterAvatar';
+import { v1 } from 'uuid';
 
 const at = getAccessToken();
 const User = getUserAsObject();
@@ -115,6 +116,7 @@ export default function Header() {
     function handleRequestResponse(response: string, type: string, requestID: string) {
         sendHTTPRequest("POST", `/users/friends/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
             fetchAllRequests();
+            console.log(type);
         }).catch((err) => console.log(err));
     }
 
@@ -205,7 +207,7 @@ export default function Header() {
                         <Divider />
                         {friendRequests.map((request) => {
                             return (
-                                <>
+                                <div key={v1()}>
                                     <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
                                         <Grid container>
                                             <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user.split(' ')[0]} surname={request.from_user.split(' ')[1]} /></ListItemAvatar></Grid>
@@ -215,7 +217,7 @@ export default function Header() {
                                         </Grid>
                                     </ListItem>
                                     <Divider />
-                                </>
+                                </div>
                             )
                         })}
                     </List>

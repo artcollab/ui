@@ -65,6 +65,26 @@
   }
 }
 
+
+.addFriend {
+  &.MuiChip-colorPrimary {
+    background-color: darkseagreen;
+  }
+  &.MuiChip-colorPrimary:hover {
+    background-color: mediumseagreen;
+  }
+}
+
+.pending {
+  &.MuiChip-colorPrimary {
+    background-color: lightgrey;
+  }
+
+  &.MuiChip-colorPrimary:hover {
+    background-color: grey;
+  }
+
+}
 //.notFriend {
 //  color: chartreuse;
 //}

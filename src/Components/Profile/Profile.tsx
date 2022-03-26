@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './Profile.scss';
-import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress} from "@mui/material";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
 import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
 import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
@@ -9,6 +9,7 @@ import {useParams, useNavigate} from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PendingIcon from '@mui/icons-material/Pending';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 const at = getAccessToken();
@@ -38,6 +39,9 @@ function Profile() {
     /* bioText hook for handling the users bio */
     const [bioText, setBioText] = useState("");
 
+    /* textValue hook for use with the TextField allowing users to edit their bios */
+    const [textValue, setValue] = useState("")
+
     /* obtains the User object through their ID from the backend and sets found information through hooks  */
     useEffect(() => {
         if (typeof (userID) === "string" && !User) {
@@ -45,6 +49,7 @@ function Profile() {
                 let fetchedUser = JSON.parse(responseData as unknown as string) as user;
                 setUser(fetchedUser);
                 setBioText(fetchedUser.bio ?? "");
+                setValue(fetchedUser.bio ?? "");
 
             }).catch((err) => {
                 navigate("/error");
@@ -52,6 +57,53 @@ function Profile() {
             });
         }
     }, [User, navigate, userID])
+
+    // sendHTTPRequest("GET", "/users/friends/" + userID + "/requests/to", undefined, JSON.parse(at)).then((responseData) => {
+    //     setRequestStatus(JSON.parse(responseData as unknown as string));
+    // }).catch((err) => {console.log(err)});;
+
+    /* TODO: The follow hooks have placeholder values currently, need to retrieve the request status from the backend */
+
+    /* requestStatus hook for the chip label text */
+    const [requestStatus, setRequestStatus] = useState("Add Friend");
+
+    /* requestStatusStyle hook for the chip style depending on its state */
+    const [requestStatusStyle, setRequestStatusStyle] = useState("addFriend");
+
+    /* requestStatusIcon hook for the chip's icon depending on request state */
+    const [requestStatusIcon, setRequestStatusIcon] = useState(<PersonAddIcon/>);
+
+
+    /* handles sending of friend requests & removal of friends */
+    function handleRequest() {
+
+        /* can only send a request if the label text is Add Friend */
+        if(requestStatus === "Add Friend") {
+
+            /* changes the request status to pending as the request is processed */
+            setRequestStatus("Pending");
+            setRequestStatusStyle("pending");
+            setRequestStatusIcon(<PendingIcon/>);
+
+            /* TODO: Post request here into backend */
+
+        }
+
+        /* TODO: Ask Oli if backend supports cancellation */
+
+        /* cancels request if it's already pending */
+        if(requestStatus === "Pending") {
+
+            /* changes the request status to add friend as the request has been cancelled */
+            setRequestStatus("Add Friend");
+            setRequestStatusStyle("addFriend");
+            setRequestStatusIcon(<PersonAddIcon/>);
+
+            /* TODO: Post request here into backend */
+
+        }
+
+    }
 
     /* react hook for changing the state of the modal */
     const [open, setOpen] = useState(false);
@@ -78,9 +130,6 @@ function Profile() {
 
     /* character limit within the TextField set to 75 chars */
     const charLimit = 75
-
-    /* textValue hook for use with the TextField allowing users to edit their bios */
-    const [textValue, setValue] = useState(bioText)
 
     /* editBio const variable, used for changing the user's bio */
     const editBio =
@@ -160,7 +209,6 @@ function Profile() {
                 <>{editBio}</>
             </Modal>
 
-
             {User ? (
                     <div className={"profileHeader"}>
 
@@ -176,7 +224,7 @@ function Profile() {
                             </Grid>
 
                             {/* second grid object which for the username and bio text*/}
-                            <Grid alignItems="center" item xs>
+                            <Grid item xs>
 
                                 {/* displays the users username */}
                                 <span className={"userName"}>{User.name}{" "}{User.surname}</span>
@@ -191,19 +239,33 @@ function Profile() {
                                     {/* displays the user's written bio with a limit of 40 characters */}
                                     <UserBio bioText={bioText} bioLimit={40}/>
 
-                                    {/* edit button to access the bio editor */}
-                                    <IconButton onClick={() => setOpen(true)} size={"small"}>
-                                        <EditIcon/>
-                                    </IconButton>
+                                    {/* edit button to access the bio editor, only appears on the users own profile */}
+                                    {userID === getUserAsObject().id &&
+                                        <IconButton onClick={() => setOpen(true)} size={"small"}>
+                                            <EditIcon/>
+                                        </IconButton>
+                                    }
 
                                 </Box>
 
-                            </Grid>
+                                {/* spacing stuff out */}
+                                <br/>
 
+
+                                {/* for final version, using inverse of this for testing purposes currently*/}
+                                {/*{userID != getUserAsObject().id &&*/}
+
+                                {/* request chip button, handles sending friend requests as well as TODO: removing friends */}
+                                {userID === getUserAsObject().id &&
+                                    <Chip className={requestStatusStyle} color="primary" icon={requestStatusIcon} label={requestStatus} onClick={handleRequest}/>
+                                }
+
+                            </Grid>
                         </Grid>
 
                         {/* line inserted to separate the header from the posts on the profile page */}
                         <hr className={"headerSeparator"}/>
+
                     </div>
 
                 ) :

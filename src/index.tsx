@@ -8,6 +8,7 @@ import Error from './Pages/Error';
 import Home from './Pages/Home';
 import Login from './Components/Login/Login';
 import Canvas from './Components/Canvas/Canvas';
+import Search from './Components/Search/Search';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.render(
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
           <Route path="/canvas" element={<Canvas/>}/>
+          <Route path="/search" element={<Search/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />
         </Routes>

@@ -67,13 +67,13 @@ export default function Header() {
     const [searchValue, setSearchValue] = useState("");
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
-    function fetchSearch(value : string): void {
+    function fetchSearch(value: string): void {
         sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at))
-        .then((responseData) => {
-            console.log(JSON.parse(responseData as unknown as string) as Array<user>);
-            setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>);
-        })
-        .catch((err) => console.log(err));
+            .then((responseData) => {
+                console.log(JSON.parse(responseData as unknown as string) as Array<user>);
+                setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>);
+            })
+            .catch((err) => console.log(err));
     }
 
     const isMenuOpen = Boolean(anchorEl);
@@ -185,7 +185,7 @@ export default function Header() {
                             <Autocomplete
                                 id="combo-box-demo"
                                 options={searchResults}
-                                getOptionLabel={option => `${option.name} ${option.surname}`}
+                                getOptionLabel={option => option.username}
                                 disableClearable
                                 forcePopupIcon={false}
                                 renderInput={params => {
@@ -206,7 +206,17 @@ export default function Header() {
                                                 ...params.InputProps,
                                                 endAdornment: (
                                                     <InputAdornment position="end">
-                                                        {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
+                                                        {searchResults.length === 0 && searchValue !== "" ?
+                                                            <CircularProgress className="searchIcon" size="1.5rem" />
+                                                            :
+                                                            <IconButton onClick={() => {
+                                                                if (searchValue.length > 3) {
+                                                                    navigate("/search", { state: { query: searchValue } })
+                                                                }
+                                                            }}>
+                                                                <SearchIcon className="searchIcon" />
+                                                            </IconButton>
+                                                        }
                                                     </InputAdornment>
                                                 )
                                             }}

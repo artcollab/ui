@@ -7,6 +7,8 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
+import { useNavigate } from "react-router-dom";
+import { generateRoomID } from "../../Util/generateRoomID";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 
@@ -32,6 +34,8 @@ const user = getUserAsObject();
 const at = getAccessToken();
 
 function Post(props: postProps) {
+
+    const navigate = useNavigate();
 
     /* obtains the actual post from the backend */
     const post = props.Post;
@@ -195,13 +199,10 @@ function Post(props: postProps) {
                         </IconButton>
 
                         {/* button for the edit component, not implemented yet */}
-                        <IconButton>
-
+                        <IconButton onClick={() => navigate("/canvas", { state: { room: generateRoomID(), size: post.size, image: svg } })}>
                             {/* uses a pencil icon depicting where desktop users can access the edit feature */}
                             <CreateIcon className={'staticButtons'} />
-
                         </IconButton>
-
                     </Grid>
                 </div>
 
@@ -209,19 +210,17 @@ function Post(props: postProps) {
 
             {/* divider for handling desktop post interaction e.g. likes */}
             <div className={"mobilePostInteraction"}>
-
                 {/* Grid container used here to easily align these components horizontally */}
                 <Grid direction="row" alignItems="center" container wrap="nowrap">
+                    {/* button for the like component */}
+                    <IconButton className={likeStyle} onClick={() => { toggleLike() }}>
+
+                        {/* uses a smiley face showing where mobile users can like the post */}
+                        <EmojiEmotionsIcon sx={{ fontSize: '3rem' }} />
+                        
+                    </IconButton>
 
                     <Grid marginLeft="auto" marginRight="auto" item>
-
-                        {/* button for the like component */}
-                        <IconButton className={likeStyle} onClick={() => { toggleLike() }}>
-
-                            {/* uses a smiley face showing where mobile users can like the post */}
-                            <EmojiEmotionsIcon sx={{ fontSize: '3rem' }} />
-
-                        </IconButton>
 
                         {/* button component which can be pressed to display the comment section in a Modal */}
                         <IconButton sx={{ marginLeft: '2em' }} onClick={() => setOpen(true)}>
@@ -242,10 +241,10 @@ function Post(props: postProps) {
                         {/* like counter for when in mobile view, tooltip wont work since no cursor on mobile */}
                         <div style={{ marginLeft: '1.15em' }}>{likes}</div>
 
-                    </Grid>
-                </Grid>
-            </div>
-        </Container>
+                    </Grid >
+                </Grid >
+            </div >
+        </Container >
     )
 }
 

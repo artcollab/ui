@@ -38,7 +38,7 @@ function Canvas() {
 
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const { state } = useLocation();
-    let { room, size } = state as unknown as { room: string, size: string } ?? "";
+    let { room, size, image } = state as unknown as { room: string, size: string, image: string } ?? "";
     const [admin, setAdmin] = useState(false);
 
     useEffect(() => {
@@ -131,8 +131,15 @@ function Canvas() {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
+        if (image) {
+            fabric.loadSVGFromString(image, function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                canvas!.add(obj).centerObject(obj).renderAll();
+                obj.setCoords();
+            });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [canvas, room]);
+    }, [canvas, room, image]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
     socket.on("addMessage", (message: chatBoxComment) => {

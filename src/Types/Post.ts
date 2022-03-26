@@ -6,7 +6,7 @@ export type post = {
     author: user;
     title: string;
     content: string;
-    likes: number;
+    likes?: Array<string>;
     created: number;
     users: Array<user>;
     size: string;

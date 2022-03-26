@@ -14,7 +14,7 @@ import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
 import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { sizeMap } from '../../Util/canvasResolutions';
 
 const fetchedData = getUserAsObject();
@@ -26,10 +26,18 @@ const socket = io('http://localhost:8081', {
 });     // connect to socket io server
 
 function Canvas() {
+    const navigate = useNavigate();
+
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const { state } = useLocation();
-    let { room, size } = state as unknown as { room: string, size: string };
+    let { room, size } = state as unknown as { room: string, size: string } ?? "";
     const [admin, setAdmin] = useState(false);
+
+    useEffect(() => {
+        if(!state){
+            navigate("/error");
+        }
+    }, [navigate, state])
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");

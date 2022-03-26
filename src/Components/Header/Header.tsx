@@ -70,10 +70,9 @@ export default function Header() {
     function fetchSearch(value: string): void {
         sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at))
             .then((responseData) => {
-                console.log(JSON.parse(responseData as unknown as string) as Array<user>);
                 setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => { console.log(err) });
     }
 
     const isMenuOpen = Boolean(anchorEl);
@@ -185,7 +184,7 @@ export default function Header() {
                             <Autocomplete
                                 id="combo-box-demo"
                                 options={searchResults}
-                                getOptionLabel={option => option.username}
+                                getOptionLabel={option => { return option.username}}
                                 disableClearable
                                 forcePopupIcon={false}
                                 renderInput={params => {

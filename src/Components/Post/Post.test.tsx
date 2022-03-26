@@ -15,7 +15,6 @@ const tempPost : post = {
     },
     title: "",
     content: "",
-    likes: 0,
     created: 0,
     users: [],
     size: "",

@@ -1,6 +1,7 @@
 import { Card, Divider, Grid, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { v1 } from "uuid";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 import { user } from "../../Types/User";
 import { getAccessToken } from "../../Util/handleResponse";
@@ -40,7 +41,7 @@ function Search() {
                             <Divider />
                             {results.map((user) => {
                                 return (
-                                    <>
+                                    <div key={v1()}>
                                         <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
                                             <Grid container>
                                                 <Grid item xs={3} sx={{ margin: "auto" }}>
@@ -60,7 +61,7 @@ function Search() {
                                             </Grid>
                                         </ListItem>
                                         <Divider />
-                                    </>
+                                    </div>
                                 )
                             })}
                         </List>

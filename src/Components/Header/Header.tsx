@@ -184,7 +184,7 @@ export default function Header() {
                             <Autocomplete
                                 id="combo-box-demo"
                                 options={searchResults}
-                                getOptionLabel={option => `${option.name} ${option.surname}`}
+                                getOptionLabel={option => { return option.username}}
                                 disableClearable
                                 forcePopupIcon={false}
                                 renderInput={params => {
@@ -205,7 +205,17 @@ export default function Header() {
                                                 ...params.InputProps,
                                                 endAdornment: (
                                                     <InputAdornment position="end">
-                                                        {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
+                                                        {searchResults.length === 0 && searchValue !== "" ?
+                                                            <CircularProgress className="searchIcon" size="1.5rem" />
+                                                            :
+                                                            <IconButton onClick={() => {
+                                                                if (searchValue.length > 3) {
+                                                                    navigate("/search", { state: { query: searchValue } })
+                                                                }
+                                                            }}>
+                                                                <SearchIcon className="searchIcon" />
+                                                            </IconButton>
+                                                        }
                                                     </InputAdornment>
                                                 )
                                             }}

@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import './Profile.scss';
-import { Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress } from "@mui/material";
-import { ColorName } from "../../Util/NameColourGenerator";
-import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress} from "@mui/material";
+import {ColorName} from "../../Util/NameColourGenerator";
+import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
+import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
+import {user} from "../../Types/User";
+import {useParams, useNavigate} from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
-import { user } from "../../Types/User";
-import { useParams, useNavigate } from 'react-router-dom'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import Chip from '@mui/material/Chip';
 
 const at = getAccessToken();
 
@@ -26,39 +25,39 @@ type bio = {
 
 function Profile() {
 
+    /* navigate const for moving to error page on bad fetch of user */
     const navigate = useNavigate();
 
-    const { userID } = useParams();
+    /* obtains the userID from the current URL */
+    const {userID} = useParams();
 
+    /* User React hook for handling the retrieved user object from the backend,
+    * this can be undefined during the fetch process */
     const [User, setUser] = useState<user | undefined>(undefined);
 
-    /* ignore this need to fix bio after getting users */
+    /* bioText hook for handling the users bio */
     const [bioText, setBioText] = useState("");
 
+    /* obtains the User object through their ID from the backend and sets found information through hooks  */
     useEffect(() => {
-        if (typeof (userID) === "string") {
-
+        if (typeof (userID) === "string" && !User) {
             sendHTTPRequest("GET", "/users/id/" + userID, undefined, JSON.parse(at)).then((responseData) => {
-                setUser(JSON.parse(responseData as unknown as string) as user);
-            }).catch((err) => {navigate("/error"); console.log(err)});
+                let fetchedUser = JSON.parse(responseData as unknown as string) as user;
+                setUser(fetchedUser);
+                setBioText(fetchedUser.bio ?? "");
+
+            }).catch((err) => {
+                navigate("/error");
+                console.log(err)
+            });
         }
+    }, [User, navigate, userID])
 
-        if(User) {
-            setBioText(User.bio ?? "");
-            console.log(User.bio);
-        }
-    }, [userID])
-
-
-    if(User) {
-        console.log(User.bio);
-    }
+    /* react hook for changing the state of the modal */
+    const [open, setOpen] = useState(false);
 
     /* UserBio constant, used for handling the users bio */
-    const UserBio: React.FC<bio>  = ({bioText, bioLimit}) => {
-
-        /* if called, an alert will be displayed showing the users full bio */
-        const showText = () => alert(bioText);
+    const UserBio: React.FC<bio> = ({bioText, bioLimit}) => {
 
         /* if the bio is of an acceptable length then the bio can be shown in full */
         if (bioText.length <= bioLimit) {
@@ -69,19 +68,19 @@ function Profile() {
          * to the defined character limit and will append 3 period characters afterwards */
         const show = bioText.substring(0, bioLimit) + " ..."
 
+        /* if called, an alert will be displayed showing the users full bio */
+        const showText = () => alert(bioText);
+
         /* clicking on the text when it has been partially hidden will show the full bio in an alert box */
         return <span onClick={showText}>{show}</span>
 
     }
 
-    /* character limit within the TextField */
+    /* character limit within the TextField set to 75 chars */
     const charLimit = 75
 
-    /* react hook with constant variables to be used to obtain values from the comment text box */
+    /* textValue hook for use with the TextField allowing users to edit their bios */
     const [textValue, setValue] = useState(bioText)
-
-    /* react hook for changing the state of the modal */
-    const [open, setOpen] = useState(false);
 
     /* editBio const variable, used for changing the user's bio */
     const editBio =
@@ -90,7 +89,7 @@ function Profile() {
         <TextField
 
             /* sets TextField background color to white */
-            sx={{ color: '#FFF' }}
+            sx={{color: '#FFF'}}
 
             /* TextField can expand to multiple lines */
             multiline
@@ -111,30 +110,42 @@ function Profile() {
             helperText={`${textValue.trim().length}/${charLimit}`}
 
             /* whenever the user types in the TextField the value of the string is saved */
-            onChange={(e) => { setValue(e.target.value) }}
+            onChange={(e) => {
+                setValue(e.target.value)
+            }}
 
             /* props to be used with the user bio (submit button) */
             InputProps={{
 
                 /* styles the input props to be fontSize 13 */
-                style: { fontSize: 13 },
+                style: {fontSize: 13},
 
                 endAdornment: (
                     <InputAdornment position="end">
-                        <IconButton style={{ width: 24, height: 24, color: 'black' }} onClick={() => {
+                        <IconButton style={{width: 24, height: 24, color: 'black'}} onClick={() => {
 
                             /* bio can be posted if TextField is empty or has under 75 characters */
-                            if (textValue.trim().length >= 0 && textValue.trim().length <= 75) {
+                            if (textValue.trim().length >= 0 && textValue.trim().length <= charLimit) {
 
-                                sendHTTPRequest("POST", "/users/bio", JSON.stringify({ bio: textValue, user_id: userID }),
-                                    JSON.parse(at!)).then(() => {setBioText(textValue)}).catch((err) => {console.log(err)});
+                                /* Posts the users edited bio to the backend so it can be stashed */
+                                sendHTTPRequest("POST", "/users/bio", JSON.stringify({bio: textValue, user_id: userID}),
+                                    JSON.parse(at!)).then(() => {
+                                    setBioText(textValue)
+                                }).catch((err) => {
+                                    console.log(err)
+                                });
+
+                                /* on submission of edited bio the modal will close */
                                 setOpen(false)
                             }
 
                             /* alerts user of invalid bio (over 75 chars) */
-                            else if (textValue.trim().length > 75) { alert("No more than 75 characters allowed.") }
+                            else if (textValue.trim().length > 75) {
+                                alert("No more than 75 characters allowed.")
+                            }
+
                         }}>
-                            <ArrowForwardIcon style={{ color: 'black' }} />
+                            <ArrowForwardIcon style={{color: 'black'}}/>
                         </IconButton>
                     </InputAdornment>
                 )
@@ -149,66 +160,57 @@ function Profile() {
                 <>{editBio}</>
             </Modal>
 
+
             {User ? (
-                < div className={"profileHeader"}>
+                    <div className={"profileHeader"}>
 
-                    {/* Grid container used to nicely place the child elements together */}
-                    <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1}>
+                        {/* Grid container used to nicely place the child elements together */}
+                        <Grid direction="row" alignItems="center" container wrap="nowrap" spacing={1}>
 
-                        {/* first grid object for the user Avatar */}
-                        <Grid item>
+                            {/* first grid object for the user Avatar */}
+                            <Grid item>
 
-                            {/* displays the user's Avatar */}
-                            <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{ bgcolor: ColorName(User.name) }} />
+                                {/* displays the user's Avatar */}
+                                <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
 
-                        </Grid>
+                            </Grid>
 
-                        {/* second grid object which for the username and bio text*/}
-                        <Grid alignItems="center"  item xs>
+                            {/* second grid object which for the username and bio text*/}
+                            <Grid alignItems="center" item xs>
 
-                            {/* displays the users username */}
-                            <span className={"userName"}>{User.name}{" "}{User.surname}</span>
+                                {/* displays the users username */}
+                                <span className={"userName"}>{User.name}{" "}{User.surname}</span>
 
-                            {/* for final version */}
-                            {/*{userID != getUserAsObject().id &&*/}
+                                {/* line break to separate the username from the bio */}
+                                <br/>
 
-                            {userID == getUserAsObject().id &&
-                                <span style={{marginLeft: 10}}>
-                                    {/*<Chip className={requestStatus} icon={<PersonAddIcon/>} label="Add friend" onClick={handleRequest}/>*/}
-                                </span>
-                            }
+                                {/* box element which contains the user's bio, this is in a box to break words at a certain
+                                 position instead of the end of the page */}
+                                <Box className={"bio"}>
 
-                            {/*<Chip icon={<PersonRemoveIcon />} label="Remove friend" />*/}
+                                    {/* displays the user's written bio with a limit of 40 characters */}
+                                    <UserBio bioText={bioText} bioLimit={40}/>
 
+                                    {/* edit button to access the bio editor */}
+                                    <IconButton onClick={() => setOpen(true)} size={"small"}>
+                                        <EditIcon/>
+                                    </IconButton>
 
-                            {/* line break to separate the username from the bio */}
-                            <br />
+                                </Box>
 
-                            {/* box element which contains the user's bio, this is in a box to break words at a certain
-                             position instead of the end of the page */}
-                            <Box className={"bio"}>
-
-                                {/* displays the user's written bio with a limit of 40 characters */}
-                                <UserBio bioText={bioText} bioLimit={40} />
-
-                                {/* edit button to access the bio editor */}
-                                <IconButton onClick={() => setOpen(true)} size={"small"}>
-                                    <EditIcon />
-                                </IconButton>
-
-                            </Box>
+                            </Grid>
 
                         </Grid>
 
-                    </Grid>
+                        {/* line inserted to separate the header from the posts on the profile page */}
+                        <hr className={"headerSeparator"}/>
+                    </div>
 
+                ) :
 
-                    {/* line inserted to separate the header from the posts on the profile page */}
-                    <hr className={"headerSeparator"} />
-                </div>
-            ) :
+                /* loading icon displayed when the User object is undefined (being fetched) */
                 <div className={"loadingIcon"}>
-                    <CircularProgress size={125} sx={{ color: "#ffccac" }} />
+                    <CircularProgress size={125} sx={{color: "#ffccac"}}/>
                 </div>
             }
         </>

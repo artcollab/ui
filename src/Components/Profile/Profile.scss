@@ -65,6 +65,18 @@
   }
 }
 
+//.notFriend {
+//  color: chartreuse;
+//}
+
+/* CSS for the loading icon when loading/reloading the feed */
+.loadingIcon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* mobile styles for the profile component at 800px width */
 @media (max-width: 800px) {
 

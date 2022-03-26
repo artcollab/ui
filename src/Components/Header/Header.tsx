@@ -162,7 +162,7 @@ export default function Header() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const renderCanvasRequests = () => {
+    const renderCanvasRequests = (
         <Popover
             keepMounted
             anchorEl={anchorCanvas}
@@ -173,17 +173,17 @@ export default function Header() {
                 horizontal: "left"
             }}
         >
-            <Container sx={{maxWidth: "20rem", width: "20rem"}}>
-                <Typography sx={{p: 1}}>Canvas Requests</Typography>
-                <Divider/>
+            <Container sx={{ maxWidth: "20rem", width: "20rem" }}>
+                <Typography sx={{ p: 1 }}>Canvas Requests</Typography>
+                <Divider />
                 {canvasRequests.length === 0 ? (
-                        <Typography sx={{p: 1}}> You have no active canvas requests</Typography>
-                    ) :
+                    <Typography sx={{ p: 1 }}> You have no active canvas requests</Typography>
+                ) :
                     <></>
                 }
             </Container>
         </Popover>
-    };
+    );
 
     const renderFriendRequests = (
         <Popover

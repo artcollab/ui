@@ -21,7 +21,7 @@ const fetchedData = getUserAsObject();
 const User: user = fetchedData;
 const at = getAccessToken();
 
-const socket = io('http://localhost:8080', {
+const socket = io('https://api.operce.net', {
     transportOptions: {
         polling: {
             extraHeaders: {

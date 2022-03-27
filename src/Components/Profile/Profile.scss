@@ -1,1 +1,82 @@
+/* Theme CSS declarations for the Profile component */
+:root {
+  --profile-header-colour: #ffccac;
+}
+
+[data-theme = "default"] {
+  --profile-header-colour: #919191;
+}
+
+[data-theme = "dark"] {
+  --profile-header-colour: dimgrey;
+}
+
+/* CSS positioning of the profile header */
+.profileHeader {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 7em;
+  max-width: 40em;
+}
+
+/* sizes and styling for the users avatar within the profile header */
+.userAvatar {
+  min-width: 10em;
+  min-height: 10em;
+  margin-top: 1em;
+  border: 0.20em solid var(--profile-header-colour) !important;
+}
+
+/* overrides the MUI avatar component to stop dragging of the avatar */
+.MuiAvatar-img {
+  -webkit-user-drag: none;
+}
+
+/* username styling, includes dynamic theme changing of text */
+.userName {
+  font-size: 7em;
+  text-shadow: 0 2px 2px black;
+  color: var(--profile-header-colour) !important;
+}
+
+/* profile bio styles */
+.bio {
+  word-break: break-word;
+  overflow: auto;
+  font-size: 2.5em;
+  margin-left: 0.25em;
+}
+
+/* sizes and positions the header separator */
+.headerSeparator {
+  border: 0.25em solid var(--profile-header-colour) !important;
+  border-radius: 0.25em;
+  margin-top: 1em;
+}
+
+/* mobile styles for the profile component at 800px width */
+@media (max-width: 800px) {
+
+  /* resizing & tweaking the profile header for when in mobile view */
+  .profileHeader {
+    max-width: 28em;
+    margin-top: 7rem;
+  }
+
+  /* resizes the user avatar to be a bit smaller */
+  .userAvatar {
+    min-width: 6.5em;
+    min-height: 6.5em;
+  }
+
+  /* resizes the bio text to have a smaller font size */
+  .bio {
+    font-size: 1.85em;
+  }
+
+  /* resizes the username displayed text to be smaller */
+  .userName {
+    font-size: 4em;
+  }
+}
 

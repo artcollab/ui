@@ -21,6 +21,7 @@ import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
 import { FriendRequest } from '../../Types/FriendRequest';
 import LetterAvatar from '../LetterAvatar/LetterAvatar';
 import { v1 } from 'uuid';
+import { CanvasRequest } from '../../Types/CanvasRequest';
 
 const at = getAccessToken();
 const User = getUserAsObject();
@@ -82,7 +83,8 @@ export default function Header() {
         setAnchorCanvas(event.currentTarget);
     }
     const canvasOpen = Boolean(anchorCanvas);
-    const [canvasRequests, setCanvasRequests] = useState<any>([]);
+
+    const [canvasRequests, setCanvasRequests] = useState<Array<CanvasRequest>>([]);
 
 
     const [anchorFriends, setAnchorFriends] = useState<null | HTMLElement>(null);
@@ -93,47 +95,29 @@ export default function Header() {
         setAnchorFriends(event.currentTarget);
     }
     const friendsOpen = Boolean(anchorFriends);
-    const exampleRequest: FriendRequest = {
-        request_id: 'dawdwad',
-        to_user: 'wadwad',
-        from_user: 'James Beach',
-        status: 'Pending'
-    }
-    const exampleRequest2: FriendRequest = {
-        request_id: 'dawdwad',
-        to_user: 'wadwad',
-        from_user: 'Cade Brown',
-        status: 'Pending'
-    }
-    const exampleRequest3: FriendRequest = {
-        request_id: 'dawdwad',
-        to_user: 'wadwad',
-        from_user: 'Oli Radlett',
-        status: 'Pending'
-    }
-    const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([exampleRequest, exampleRequest2, exampleRequest3]);
 
-    function handleRequestResponse(response: string, type: string, requestID: string) {
-        sendHTTPRequest("POST", `/users/friends/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
+    const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([]);
+
+    function handleRequestResponse(response: string, type: string, requestID: string, request: CanvasRequest | FriendRequest) {
+        sendHTTPRequest("POST", `/users/${type}/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
             fetchAllRequests();
-            console.log(type);
         }).catch((err) => console.log(err));
     }
 
     function fetchFriendRequests() {
         sendHTTPRequest("GET", `/users/friends/${User.username}/requests/to`, undefined, JSON.parse(at)).then((responseData) => {
-            setFriendRequests(responseData as unknown as Array<FriendRequest>);
+            setFriendRequests(JSON.parse(responseData as unknown as string) as Array<FriendRequest>);
         }).catch((err) => console.log(err));
     }
 
     function fetchCanvasRequests() {
-        sendHTTPRequest("GET", `TBA`, undefined, JSON.parse(at)).then((responseData) => {
-            setCanvasRequests(responseData as unknown /* as Array<FriendRequest> */);
+        sendHTTPRequest("GET", `/users/canvas/${User.username}/request/to`, undefined, JSON.parse(at)).then((responseData) => {
+            setCanvasRequests(JSON.parse(responseData as unknown as string) as Array<CanvasRequest>);
         }).catch((err) => console.log(err));
     }
 
     function fetchAllRequests() {
-        if(at && User) {
+        if (at && User) {
             fetchFriendRequests();
             fetchCanvasRequests();
         }
@@ -141,7 +125,7 @@ export default function Header() {
 
     useEffect(() => {
         fetchAllRequests();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const isMenuOpen = Boolean(anchorEl);
@@ -175,13 +159,30 @@ export default function Header() {
                 horizontal: "left"
             }}
         >
-            <Container sx={{ maxWidth: "20rem", width: "20rem" }}>
-                <Typography sx={{ p: 1 }}>Canvas Requests</Typography>
+            <Container sx={{ width: "25rem", backgroundColor: "#f9f9f9" }}>
+                <Typography variant='subtitle1' sx={{ p: 1 }}>Canvas Requests</Typography>
                 <Divider />
-                {canvasRequests.length === 0 ? (
+                {canvasRequests.length === 0 || !canvasRequests ? (
                     <Typography sx={{ p: 1 }}> You have no active canvas requests</Typography>
                 ) :
-                    <></>
+                    <List >
+                        <Divider />
+                        {canvasRequests.map((request) => {
+                            return (
+                                <div key={v1()}>
+                                    <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
+                                        <Grid container>
+                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname={`${request.from_user.at(1)} `} /></ListItemAvatar></Grid>
+                                            <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => {handleRequestResponse("accept", "canvas", request.request_id, request); navigate("/canvas", { state: { room: request.roomID, size: request.size } })}} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "canvas", request.request_id, request)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    <Divider />
+                                </div>
+                            )
+                        })}
+                    </List>
                 }
             </Container>
         </Popover>
@@ -198,9 +199,9 @@ export default function Header() {
                 horizontal: "left"
             }}
         >
-            <Container sx={{ width: "fit-content", backgroundColor: "#f9f9f9" }}>
+            <Container sx={{ width: "25rem", backgroundColor: "#f9f9f9" }}>
                 <Typography variant='subtitle1' sx={{ p: 1 }}>Friend Requests</Typography>
-                {friendRequests.length === 0 ? (
+                {friendRequests.length === 0 || !friendRequests ? (
                     <Typography sx={{ p: 1 }}> You have no active friend requests</Typography>
                 ) :
                     <List >
@@ -210,10 +211,10 @@ export default function Header() {
                                 <div key={v1()}>
                                     <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
                                         <Grid container>
-                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user.split(' ')[0]} surname={request.from_user.split(' ')[1]} /></ListItemAvatar></Grid>
+                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname="example" /></ListItemAvatar></Grid>
                                             <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id)}  sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id, request)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id, request)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
                                         </Grid>
                                     </ListItem>
                                     <Divider />
@@ -310,91 +311,94 @@ export default function Header() {
                 <Toolbar>
                     <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
                     <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
-                    {at &&
-                        <Search style={{ marginLeft: "15%" }}>
-                            <Autocomplete
-                                id="combo-box-demo"
-                                options={searchResults}
-                                getOptionLabel={option => `${option.name} ${option.surname}`}
-                                disableClearable
-                                forcePopupIcon={false}
-                                renderInput={params => {
-                                    return (
-                                        <TextField
-                                            {...params}
-                                            label="Search..."
-                                            fullWidth
-                                            sx={{ width: "15rem" }}
-                                            size="small"
-                                            value={searchValue}
-                                            onChange={(e) => {
-                                                setSearchValue(e.target.value);
-                                                if (e.target.value.length > 3) fetchSearch(e.target.value)
-                                            }
-                                            }
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                    );
-                                }}
-                            />
-                        </Search>
-                    }
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            onClick={handleCanvasClick}
-                            color="inherit"
-                            sx={{ paddingInlineEnd: "1rem" }}
-                        >
-                            <Badge badgeContent={canvasRequests.length} color="error">
-                                <Palette />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            color="inherit"
-                            sx={{ paddingInlineEnd: "1rem" }}
-                            onClick={handleFriendsClick}
-                        >
-                            <Badge badgeContent={friendRequests.length} color="error">
-                                <PeopleAlt />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                            sx={{ paddingInlineEnd: "1rem" }}
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
+                    {at !== `{"test":true}` ?
+                        <>
+                            <Search style={{ marginLeft: "15%" }}>
+                                <Autocomplete
+                                    id="combo-box-demo"
+                                    options={searchResults}
+                                    getOptionLabel={option => `${option.name} ${option.surname}`}
+                                    disableClearable
+                                    forcePopupIcon={false}
+                                    renderInput={params => {
+                                        return (
+                                            <TextField
+                                                {...params}
+                                                label="Search..."
+                                                fullWidth
+                                                sx={{ width: "15rem" }}
+                                                size="small"
+                                                value={searchValue}
+                                                onChange={(e) => {
+                                                    setSearchValue(e.target.value);
+                                                    if (e.target.value.length > 3) fetchSearch(e.target.value)
+                                                }
+                                                }
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
+                                                        </InputAdornment>
+                                                    )
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                />
+                            </Search>
+
+                            <Box sx={{ flexGrow: 1 }} />
+                            <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
+                                <IconButton
+                                    size="large"
+                                    edge="end"
+                                    onClick={handleCanvasClick}
+                                    color="inherit"
+                                    sx={{ paddingInlineEnd: "1rem" }}
+                                >
+                                    <Badge badgeContent={canvasRequests.length} color="error">
+                                        <Palette />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton
+                                    size="large"
+                                    edge="end"
+                                    color="inherit"
+                                    sx={{ paddingInlineEnd: "1rem" }}
+                                    onClick={handleFriendsClick}
+                                >
+                                    <Badge badgeContent={friendRequests.length} color="error">
+                                        <PeopleAlt />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton
+                                    size="large"
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleProfileMenuOpen}
+                                    color="inherit"
+                                    sx={{ paddingInlineEnd: "1rem" }}
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Box>
+                            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="show more"
+                                    aria-controls={mobileMenuId}
+                                    aria-haspopup="true"
+                                    onClick={handleMobileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <MoreIcon />
+                                </IconButton>
+                            </Box>
+                        </>
+                    : <></>}
                 </Toolbar>
             </AppBar>
             {renderCanvasRequests}

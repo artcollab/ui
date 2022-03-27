@@ -8,6 +8,7 @@ import Error from './Pages/Error';
 import Home from './Pages/Home';
 import Login from './Components/Login/Login';
 import Canvas from './Components/Canvas/Canvas';
+import Feed from './Components/Feed/Feed';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.render(
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
+          <Route path="/feed" element={<Feed />}/>
           <Route path="/canvas" element={<Canvas/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />

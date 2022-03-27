@@ -20,18 +20,13 @@ import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import Post from "../Post/Post";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
 import { user } from "../../Types/User";
+import { generateRoomID } from "../../Util/generateRoomID";
 
 const at = getAccessToken();
 const User = getUserAsObject();
 
 /* initialises the smoothscroll package, this is required for smooth scrolling on browsers such as Safari */
 smoothscroll.polyfill();
-
-/* alphabet constant which includes alphabetical characters from a-z & A-Z */
-const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-/* initial empty string for the roomID */
-let roomID = '';
 
 function Feed() {
     const [canvasSize, setCanvasSize] = useState("Square");
@@ -42,6 +37,7 @@ function Feed() {
 
     let [posts, setPosts] = useState<Array<post>>([]);
     const [index, setIndex] = useState(2);
+    const [roomID] = useState(generateRoomID());
 
     const [users, setUsers] = useState<Array<string>>([]);
 
@@ -76,13 +72,7 @@ function Feed() {
         /* button has been clicked so popover can be shown */
         setPopover(true);
 
-        /* sets the roomID to empty string again to avoid a previously generated string appearing again */
-        roomID = ''
 
-        /* generates 6 random alphabetical characters [a-Z] as a string */
-        while (roomID.length < 6) {
-            roomID += alphabet[Math.floor(Math.random() * alphabet.length)]
-        }
     }
 
     /* when the user clicks anywhere else on the screen outside of the popover this will be
@@ -198,8 +188,8 @@ function Feed() {
 
             {/* Popover component which allows for canvas customisation */}
             <Popover open={popover} onClose={handlePopoverClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                style={{ marginLeft: 40, textAlign: "center" }}
+                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                     style={{ marginLeft: 40, textAlign: "center" }}
             >
 
                 {/* container for the canvas options included in the popover menu */}
@@ -246,9 +236,9 @@ function Feed() {
 
             {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
             {showUpArrow &&
-                (<span>
+            (<span>
                     <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
-                        onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
+                                onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
                 </span>)
             }
         </>

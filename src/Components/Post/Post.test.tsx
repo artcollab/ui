@@ -15,12 +15,18 @@ const tempPost : post = {
     },
     title: "",
     content: "",
-    likes: 0,
     created: 0,
     users: [],
     size: "",
     comments: []
 }
+
+const mockedUsedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom') as any,
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 global.URL.createObjectURL = jest.fn();
 

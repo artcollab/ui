@@ -12,4 +12,4 @@ function LetterAvatar(props : letterAvatarProps) {
     )
 }
 
-export default LetterAvatar;
+export default LetterAvatar; 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import "./Canvas.scss";
-import { Button, ButtonGroup, Grid, Input, Modal, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Grid, Input, Modal, Paper, ToggleButton, ToggleButtonGroup, IconButton, Zoom } from '@mui/material';
 import { ToolBarItem } from '../../Types/ToolbarItems';
 import { hexToRgb } from '../../Util/HexToRGB';
 import { io } from 'socket.io-client';
@@ -14,8 +14,10 @@ import { FaMousePointer, FaSquareFull, FaCircle } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsBrushFill } from "react-icons/bs";
 import { getAccessToken, getUserAsObject } from '../../Util/handleResponse';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { sizeMap } from '../../Util/canvasResolutions';
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import Tooltip from '@mui/material/Tooltip';
 
 const fetchedData = getUserAsObject();
 const User: user = fetchedData;
@@ -32,10 +34,18 @@ const socket = io('https://api.operce.net', {
 });
 
 function Canvas() {
+    const navigate = useNavigate();
+
     const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(undefined);
     const { state } = useLocation();
-    let { room, size } = state as unknown as { room: string, size: string };
+    let { room, size, image } = state as unknown as { room: string, size: string, image: string } ?? "";
     const [admin, setAdmin] = useState(false);
+
+    useEffect(() => {
+        if(!state){
+            navigate("/error");
+        }
+    }, [navigate, state])
 
     // Brush attributes, colour, size and opacity
     const [colour, setColour] = useState("#000000");
@@ -50,6 +60,22 @@ function Canvas() {
 
     // Modal settings
     const [open, setOpen] = useState(false);
+
+    /* recommendation/tip system status */
+    const [tips, setTips] = useState(false);
+
+    /* recommendation/tip button style */
+    const [tipStyle, setTipStyle] = useState("noTip");
+
+    /* handles the Reccomendation/Tip system */
+    function toggleTips() {
+
+        /* sets the tip status to whatever the opposite of tips currently is */
+        setTips(!tips)
+
+        /* sets the tip button's style depending on its current status */
+        setTipStyle(tipStyle === "tip" ? "noTip" : "tip")
+    }
 
     // To help prevent feedback loops, we store the last received object received through socket io
     const receivedObject = useRef<fabric.Object>();
@@ -105,8 +131,15 @@ function Canvas() {
             setCanvas(initCanvas());
             socket.emit("joinRoom", { username, room });
         }
+        if (image) {
+            fabric.loadSVGFromString(image, function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                canvas!.add(obj).centerObject(obj).renderAll();
+                obj.setCoords();
+            });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [canvas, room]);
+    }, [canvas, room, image]);
 
     // listens for new messages being sent, adds them to the message list and re-renders the page
     socket.on("addMessage", (message: chatBoxComment) => {
@@ -277,63 +310,102 @@ function Canvas() {
             <Grid container sx={{ marginTop: "10rem" }}>
                 <Grid item className="brushToolContainer">
                     <ButtonGroup>
-                        <Button type='button' name='clear' onClick={() => { socket.emit('requestCanvasClear') }}>Clear</Button>
-                        <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => { setColour(e.target.value) }} disableUnderline />Colour</Button>
-                        <Button >
-                            <Input
-                                value={brushSize}
-                                onChange={(e: any) => { setBrushSize(parseInt(e.target.value, 10) || 1) }}
-                                size="small"
-                                disableUnderline
-                                inputProps={{
-                                    step: 1,
-                                    min: 1,
-                                    max: 100,
-                                    type: "number"
-                                }}
-                                sx={{ width: "3rem", marginRight: "0.5rem" }}
-                            />
-                            Brush Size
-                        </Button>
-                        <Button >
-                            <Input
-                                value={opacity}
-                                onChange={(e: any) => { setOpacity(parseInt(e.target.value, 10) || 1) }}
-                                size="small"
-                                disableUnderline
-                                inputProps={{
-                                    step: 1,
-                                    min: 0,
-                                    max: 100,
-                                    type: "number"
-                                }}
-                                sx={{ width: "3rem", marginRight: "0.5rem" }}
-                            />
-                            Opacity
-                        </Button>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Get some space with the Clear Button!">
+                            <Button type='button' name='clear' onClick={() => { socket.emit('requestCanvasClear') }}>Clear</Button>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Taste the rainbow with the Color Selector!">
+                            <Button><Input type="color" className="colorInput" value={colour} onChange={(e) => { setColour(e.target.value) }} disableUnderline />Colour</Button>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Make your drawing larger than life with the Brush Size Editor!">
+                            <Button >
+                                <Input
+                                    value={brushSize}
+                                    onChange={(e: any) => { setBrushSize(parseInt(e.target.value, 10) || 1) }}
+                                    size="small"
+                                    disableUnderline
+                                    inputProps={{
+                                        step: 1,
+                                        min: 1,
+                                        max: 100,
+                                        type: "number"
+                                    }}
+                                    sx={{ width: "3rem", marginRight: "0.5rem" }}
+                                />
+                                Brush Size
+                            </Button>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Lighten up with the Opacity Editor!">
+                            <Button >
+                                <Input
+                                    value={opacity}
+                                    onChange={(e: any) => { setOpacity(parseInt(e.target.value, 10) || 1) }}
+                                    size="small"
+                                    disableUnderline
+                                    inputProps={{
+                                        step: 1,
+                                        min: 0,
+                                        max: 100,
+                                        type: "number"
+                                    }}
+                                    sx={{ width: "3rem", marginRight: "0.5rem" }}
+                                />
+                                Opacity
+                            </Button>
+                        </Tooltip>
                     </ButtonGroup>
                 </Grid>
             </Grid>
             <Grid container spacing={2} className="gridContainer">
-                <Grid item >
+                <Grid item>
+
                     <ToggleButtonGroup exclusive value={currentTool} onChange={ToggleTool} orientation='vertical'>
-                        <ToggleButton value="move">
-                            <FaMousePointer />
-                        </ToggleButton>
-                        <ToggleButton value="paint">
-                            <BsBrushFill />
-                        </ToggleButton>
-                        <ToggleButton value="square">
-                            <FaSquareFull />
-                        </ToggleButton>
-                        <ToggleButton value="triangle">
-                            <IoTriangle />
-                        </ToggleButton>
-                        <ToggleButton value="ellipse">
-                            <FaCircle />
-                        </ToggleButton>
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Move & manipulate your drawings with the Cursor Tool!">
+                            <ToggleButton value="move">
+                                <FaMousePointer />
+                            </ToggleButton>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Draw to your heart's content with the Brush Tool!">
+                            <ToggleButton value="paint">
+                                <BsBrushFill />
+                            </ToggleButton>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Take square when creating shapes with the Square tool!">
+                            <ToggleButton value="square">
+                                <FaSquareFull />
+                            </ToggleButton>
+                        </Tooltip>
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="Get straight to the point with the Triangle tool!">
+                            <ToggleButton value="triangle">
+                                <IoTriangle />
+                            </ToggleButton>
+                        </Tooltip>
+
+
+                        <Tooltip followCursor disableHoverListener={!tips} TransitionComponent={Zoom} title="There's nothing pointless about the Circle Tool!">
+                            <ToggleButton value="ellipse">
+                                <FaCircle />
+                            </ToggleButton>
+                        </Tooltip>
+
+                        {/* Outside of the normal button group although needed to be below it for neatness */}
+                        <span style={{marginTop: 10 }}>
+                            <Tooltip followCursor TransitionComponent={Zoom} title="Tip activation">
+                                <IconButton className={tipStyle} onClick={() => {toggleTips()}}>
+                                    <TipsAndUpdatesIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </span>
+
                     </ToggleButtonGroup>
                 </Grid>
+
                 <Grid item>
                     <Paper>
                         <div onClick={currentTool !== "paint" && currentTool !== "move" && currentTool ? addObject : () => { }} >

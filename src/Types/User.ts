@@ -6,4 +6,5 @@ export type user = {
     surname: string;
     password?: string;
     following?: Array<string>;
+    friends?: Array<string>;
 }

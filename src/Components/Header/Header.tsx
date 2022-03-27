@@ -71,7 +71,7 @@ export default function Header() {
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
     function fetchSearch(value: string): void {
-        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>))
             .catch((err) => console.log(err));
     }
 
@@ -174,7 +174,7 @@ export default function Header() {
                                         <Grid container>
                                             <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname={`${request.from_user.at(1)} `} /></ListItemAvatar></Grid>
                                             <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => {handleRequestResponse("accept", "canvas", request.request_id); navigate("/canvas", { state: { room: request.roomID, size: request.size } })}} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => { handleRequestResponse("accept", "canvas", request.request_id); navigate("/canvas", { state: { room: request.roomID, size: request.size } }) }} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
                                             <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "canvas", request.request_id)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
                                         </Grid>
                                     </ListItem>
@@ -309,102 +309,114 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" color='inherit' className="DrawDojo__icons" data-testid="header-test">
                 <Toolbar>
-                    <input type="image" src="logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
-                    <input type="image" src="mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
-                    {at !== `{"test":true}` ?
-                        <>
-                            <Search style={{ marginLeft: "15%" }}>
-                                <Autocomplete
-                                    id="combo-box-demo"
-                                    options={searchResults}
-                                    getOptionLabel={option => `${option.name} ${option.surname}`}
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    renderInput={params => {
-                                        return (
-                                            <TextField
-                                                {...params}
-                                                label="Search..."
-                                                fullWidth
-                                                sx={{ width: "15rem" }}
-                                                size="small"
-                                                value={searchValue}
-                                                onChange={(e) => {
-                                                    setSearchValue(e.target.value);
-                                                    if (e.target.value.length > 3) fetchSearch(e.target.value)
-                                                }
-                                                }
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
-                                                        </InputAdornment>
-                                                    )
-                                                }}
-                                            />
-                                        );
-                                    }}
-                                />
-                            </Search>
+                    <input type="image" src="/logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
+                    <input type="image" src="/mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
+                    {
+                        at !== `{"test":true}` ?
+                            <>
+                                <Search style={{ marginLeft: "15%" }}>
+                                    <Autocomplete
+                                        id="combo-box-demo"
+                                        options={searchResults}
+                                        getOptionLabel={option => { return option.username }}
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        renderInput={params => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    label="Search..."
+                                                    fullWidth
+                                                    sx={{ width: "15rem" }}
+                                                    size="small"
+                                                    value={searchValue}
+                                                    onChange={(e) => {
+                                                        setSearchValue(e.target.value);
+                                                        if (e.target.value.length > 3) fetchSearch(e.target.value)
+                                                    }
+                                                    }
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                {searchResults.length === 0 && searchValue !== "" ?
+                                                                    <CircularProgress className="searchIcon" size="1.5rem" />
+                                                                    :
+                                                                    <IconButton onClick={() => {
+                                                                        if (searchValue.length > 3) {
+                                                                            navigate("/search", { state: { query: searchValue } })
+                                                                        }
+                                                                    }}>
+                                                                        <SearchIcon className="searchIcon" />
+                                                                    </IconButton>
+                                                                }
+                                                            </InputAdornment>
+                                                        )
+                                                    }}
+                                                />
+                                            );
+                                        }}
+                                    />
+                                </Search>
 
-                            <Box sx={{ flexGrow: 1 }} />
-                            <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
-                                <IconButton
-                                    size="large"
-                                    edge="end"
-                                    onClick={handleCanvasClick}
-                                    color="inherit"
-                                    sx={{ paddingInlineEnd: "1rem" }}
-                                >
-                                    <Badge badgeContent={canvasRequests.length} color="error">
-                                        <Palette />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
-                                    size="large"
-                                    edge="end"
-                                    color="inherit"
-                                    sx={{ paddingInlineEnd: "1rem" }}
-                                    onClick={handleFriendsClick}
-                                >
-                                    <Badge badgeContent={friendRequests.length} color="error">
-                                        <PeopleAlt />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
-                                    size="large"
-                                    edge="end"
-                                    aria-label="account of current user"
-                                    aria-controls={menuId}
-                                    aria-haspopup="true"
-                                    onClick={handleProfileMenuOpen}
-                                    color="inherit"
-                                    sx={{ paddingInlineEnd: "1rem" }}
-                                >
-                                    <AccountCircle />
-                                </IconButton>
-                            </Box>
-                            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="show more"
-                                    aria-controls={mobileMenuId}
-                                    aria-haspopup="true"
-                                    onClick={handleMobileMenuOpen}
-                                    color="inherit"
-                                >
-                                    <MoreIcon />
-                                </IconButton>
-                            </Box>
-                        </>
-                    : <></>}
-                </Toolbar>
-            </AppBar>
+                                <Box sx={{ flexGrow: 1 }} />
+                                <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        onClick={handleCanvasClick}
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                    >
+                                        <Badge badgeContent={canvasRequests.length} color="error">
+                                            <Palette />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                        onClick={handleFriendsClick}
+                                    >
+                                        <Badge badgeContent={friendRequests.length} color="error">
+                                            <PeopleAlt />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        aria-label="account of current user"
+                                        aria-controls={menuId}
+                                        aria-haspopup="true"
+                                        onClick={handleProfileMenuOpen}
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                    >
+                                        <AccountCircle />
+                                    </IconButton>
+                                </Box>
+                                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="show more"
+                                        aria-controls={mobileMenuId}
+                                        aria-haspopup="true"
+                                        onClick={handleMobileMenuOpen}
+                                        color="inherit"
+                                    >
+                                        <MoreIcon />
+                                    </IconButton>
+                                </Box>
+                            </>
+                            : <></>
+                    }
+                </Toolbar >
+            </AppBar >
             {renderCanvasRequests}
             {renderFriendRequests}
             {renderMobileMenu}
             {renderMenu}
-        </Box>
+        </Box >
     );
 }

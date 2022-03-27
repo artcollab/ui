@@ -98,7 +98,7 @@ export default function Header() {
 
     const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([]);
 
-    function handleRequestResponse(response: string, type: string, requestID: string, request: CanvasRequest | FriendRequest) {
+    function handleRequestResponse(response: string, type: string, requestID: string) {
         sendHTTPRequest("POST", `/users/${type}/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
             fetchAllRequests();
         }).catch((err) => console.log(err));
@@ -174,8 +174,8 @@ export default function Header() {
                                         <Grid container>
                                             <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname={`${request.from_user.at(1)} `} /></ListItemAvatar></Grid>
                                             <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => {handleRequestResponse("accept", "canvas", request.request_id, request); navigate("/canvas", { state: { room: request.roomID, size: request.size } })}} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "canvas", request.request_id, request)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => {handleRequestResponse("accept", "canvas", request.request_id); navigate("/canvas", { state: { room: request.roomID, size: request.size } })}} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "canvas", request.request_id)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
                                         </Grid>
                                     </ListItem>
                                     <Divider />
@@ -213,8 +213,8 @@ export default function Header() {
                                         <Grid container>
                                             <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname="example" /></ListItemAvatar></Grid>
                                             <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id, request)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
-                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id, request)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
                                         </Grid>
                                     </ListItem>
                                     <Divider />

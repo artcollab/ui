@@ -65,6 +65,12 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
             /* pushes/adds the new userComment into this comment array */
             commentArr.push(userComment);
 
+            /* creates a comment array containing the comments within the commentList */
+            const commentArr: Array<comment> = [...commentList];
+
+            /* pushes/adds the new userComment into this comment array */
+            commentArr.push(userComment);
+
             /* adds this array & all the values within it into setCommentList */
             setCommentList(commentArr);
         });

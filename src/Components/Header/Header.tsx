@@ -9,18 +9,20 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Palette, PeopleAlt } from '@mui/icons-material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import './Header.scss'
-import { Autocomplete, CircularProgress, InputAdornment, Switch, TextField } from '@mui/material';
-import MessagesMenu from '../Messages/Messages';
-import NotificationsMenu from '../Notifications/Notifications';
-import {getAccessToken, getUserAsObject, logOut} from '../../Util/handleResponse';
+import { Autocomplete, CircularProgress, Container, Divider, Grid, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Popover, Switch, TextField, Typography } from '@mui/material';
+import { getAccessToken, getUserAsObject, logOut } from '../../Util/handleResponse';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { user } from '../../Types/User';
 import { sendHTTPRequest } from '../../Actions/SendHTTPRequest';
+import { FriendRequest } from '../../Types/FriendRequest';
+import LetterAvatar from '../LetterAvatar/LetterAvatar';
+import { v1 } from 'uuid';
+import { CanvasRequest } from '../../Types/CanvasRequest';
+
 
 const at = getAccessToken();
 const User = getUserAsObject();
@@ -73,6 +75,67 @@ export default function Header() {
         .catch((err) => console.log(err));
     }
 
+    const [searchValue, setSearchValue] = useState("");
+    const [searchResults, setSearchResults] = useState<Array<user>>([]);
+
+    function fetchSearch(value: string): void {
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>))
+            .catch((err) => console.log(err));
+    }
+
+    const [anchorCanvas, setAnchorCanvas] = useState<null | HTMLElement>(null);
+    const handleCanvasClose = () => {
+        setAnchorCanvas(null);
+    }
+    const handleCanvasClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorCanvas(event.currentTarget);
+    }
+    const canvasOpen = Boolean(anchorCanvas);
+
+    const [canvasRequests, setCanvasRequests] = useState<Array<CanvasRequest>>([]);
+
+
+    const [anchorFriends, setAnchorFriends] = useState<null | HTMLElement>(null);
+    const handleFriendsClose = () => {
+        setAnchorFriends(null);
+    }
+    const handleFriendsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorFriends(event.currentTarget);
+    }
+    const friendsOpen = Boolean(anchorFriends);
+
+    const [friendRequests, setFriendRequests] = useState<Array<FriendRequest>>([]);
+
+    function handleRequestResponse(response: string, type: string, requestID: string) {
+        sendHTTPRequest("POST", `/users/${type}/request/${response}/${requestID}`, undefined, JSON.parse(at)).then((responseData) => {
+            fetchAllRequests();
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchFriendRequests() {
+        sendHTTPRequest("GET", `/users/friends/${User.username}/requests/to`, undefined, JSON.parse(at)).then((responseData) => {
+            setFriendRequests(JSON.parse(responseData as unknown as string) as Array<FriendRequest>);
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchCanvasRequests() {
+        sendHTTPRequest("GET", `/users/canvas/${User.username}/request/to`, undefined, JSON.parse(at)).then((responseData) => {
+            setCanvasRequests(JSON.parse(responseData as unknown as string) as Array<CanvasRequest>);
+        }).catch((err) => console.log(err));
+    }
+
+    function fetchAllRequests() {
+        if (at && User) {
+            fetchFriendRequests();
+            fetchCanvasRequests();
+        }
+    }
+
+    useEffect(() => {
+        fetchAllRequests();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -93,6 +156,85 @@ export default function Header() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const renderCanvasRequests = (
+        <Popover
+            keepMounted
+            anchorEl={anchorCanvas}
+            open={canvasOpen}
+            onClose={handleCanvasClose}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left"
+            }}
+        >
+            <Container sx={{ width: "25rem", backgroundColor: "#f9f9f9" }}>
+                <Typography variant='subtitle1' sx={{ p: 1 }}>Canvas Requests</Typography>
+                <Divider />
+                {canvasRequests.length === 0 || !canvasRequests ? (
+                    <Typography sx={{ p: 1 }}> You have no active canvas requests</Typography>
+                ) :
+                    <List >
+                        <Divider />
+                        {canvasRequests.map((request) => {
+                            return (
+                                <div key={v1()}>
+                                    <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
+                                        <Grid container>
+                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname={`${request.from_user.at(1)} `} /></ListItemAvatar></Grid>
+                                            <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => { handleRequestResponse("accept", "canvas", request.request_id); navigate("/canvas", { state: { room: request.roomID, size: request.size } }) }} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "canvas", request.request_id)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    <Divider />
+                                </div>
+                            )
+                        })}
+                    </List>
+                }
+            </Container>
+        </Popover>
+    );
+
+    const renderFriendRequests = (
+        <Popover
+            keepMounted
+            anchorEl={anchorFriends}
+            open={friendsOpen}
+            onClose={handleFriendsClose}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left"
+            }}
+        >
+            <Container sx={{ width: "25rem", backgroundColor: "#f9f9f9" }}>
+                <Typography variant='subtitle1' sx={{ p: 1 }}>Friend Requests</Typography>
+                {friendRequests.length === 0 || !friendRequests ? (
+                    <Typography sx={{ p: 1 }}> You have no active friend requests</Typography>
+                ) :
+                    <List >
+                        <Divider />
+                        {friendRequests.map((request) => {
+                            return (
+                                <div key={v1()}>
+                                    <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
+                                        <Grid container>
+                                            <Grid item xs={2} sx={{ margin: "auto" }}><ListItemAvatar sx={{ margin: "auto" }}><LetterAvatar firstName={request.from_user} surname="example" /></ListItemAvatar></Grid>
+                                            <Grid item xs={4} sx={{ margin: "auto" }}><ListItemText>{request.from_user}</ListItemText></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("accept", "friends", request.request_id)} sx={{ backgroundColor: "#b7ffbb" }}>Accept</ListItemButton></Grid>
+                                            <Grid item xs={3} sx={{ margin: "auto" }}><ListItemButton onClick={() => handleRequestResponse("cancel", "friends", request.request_id)} sx={{ backgroundColor: "#ffbbc2" }}>Decline</ListItemButton></Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    <Divider />
+                                </div>
+                            )
+                        })}
+                    </List>
+                }
+            </Container>
+        </Popover >
+    );
+
     const menuId = 'primary-search-account-menu';
 
     // menu appears upon clicking the profile icon
@@ -100,15 +242,11 @@ export default function Header() {
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: 'bottom',
+                horizontal: 'left',
             }}
             id={menuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -137,24 +275,28 @@ export default function Header() {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
+                <IconButton
+                    size="large"
+                    edge="end"
+                    onClick={() => { }}
+                    color="inherit"
+                >
+                    <Badge badgeContent={1} color="error">
+                        <Palette />
                     </Badge>
                 </IconButton>
-                <p>Messages</p>
+                <p>Canvas Requests</p>
             </MenuItem>
             <MenuItem>
                 <IconButton
                     size="large"
-                    aria-label="show 17 new notifications"
                     color="inherit"
                 >
                     <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
+                        <PeopleAlt />
                     </Badge>
                 </IconButton>
-                <p>Notifications</p>
+                <p>Friend Requests</p>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
@@ -177,74 +319,112 @@ export default function Header() {
                 <Toolbar>
                     <input type="image" src="/logo2.PNG" alt="DrawDojo Logo - Desktop" className='DrawDojo__logo' onClick={() => navigate("/home")} />
                     <input type="image" src="/mobileIcon.PNG" alt="DrawDojo Logo - Mobile" className='DrawDojo__icon' onClick={() => navigate("/home")} />
-                    {at &&
-                        <Search style={{ marginLeft: "15%" }}>
-                            <Autocomplete
-                                id="combo-box-demo"
-                                options={searchResults}
-                                getOptionLabel={option => `${option.name} ${option.surname}`}
-                                disableClearable
-                                forcePopupIcon={false}
-                                renderInput={params => {
-                                    return (
-                                        <TextField
-                                            {...params}
-                                            label="Search..."
-                                            fullWidth
-                                            sx={{ width: "15rem" }}
-                                            size="small"
-                                            value={searchValue}
-                                            onChange={(e) => {
-                                                setSearchValue(e.target.value);
-                                                if (e.target.value.length > 3) fetchSearch(e.target.value)
-                                            }
-                                            }
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        {searchResults.length === 0 && searchValue !== "" ? <CircularProgress className="searchIcon" size="1.5rem" /> : <SearchIcon className="searchIcon" />}
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                    );
-                                }}
-                            />
-                        </Search>
+                    {
+                        at !== `{"test":true}` ?
+                            <>
+                                <Search style={{ marginLeft: "15%" }}>
+                                    <Autocomplete
+                                        id="combo-box-demo"
+                                        options={searchResults}
+                                        getOptionLabel={option => { return option.username }}
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        renderInput={params => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    label="Search..."
+                                                    fullWidth
+                                                    sx={{ width: "15rem" }}
+                                                    size="small"
+                                                    value={searchValue}
+                                                    onChange={(e) => {
+                                                        setSearchValue(e.target.value);
+                                                        if (e.target.value.length > 3) fetchSearch(e.target.value)
+                                                    }
+                                                    }
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                {searchResults.length === 0 && searchValue !== "" ?
+                                                                    <CircularProgress className="searchIcon" size="1.5rem" />
+                                                                    :
+                                                                    <IconButton onClick={() => {
+                                                                        if (searchValue.length > 3) {
+                                                                            navigate("/search", { state: { query: searchValue } })
+                                                                        }
+                                                                    }}>
+                                                                        <SearchIcon className="searchIcon" />
+                                                                    </IconButton>
+                                                                }
+                                                            </InputAdornment>
+                                                        )
+                                                    }}
+                                                />
+                                            );
+                                        }}
+                                    />
+                                </Search>
+
+                                <Box sx={{ flexGrow: 1 }} />
+                                <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        onClick={handleCanvasClick}
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                    >
+                                        <Badge badgeContent={canvasRequests.length} color="error">
+                                            <Palette />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                        onClick={handleFriendsClick}
+                                    >
+                                        <Badge badgeContent={friendRequests.length} color="error">
+                                            <PeopleAlt />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        size="large"
+                                        edge="end"
+                                        aria-label="account of current user"
+                                        aria-controls={menuId}
+                                        aria-haspopup="true"
+                                        onClick={handleProfileMenuOpen}
+                                        color="inherit"
+                                        sx={{ paddingInlineEnd: "1rem" }}
+                                    >
+                                        <AccountCircle />
+                                    </IconButton>
+                                </Box>
+                                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="show more"
+                                        aria-controls={mobileMenuId}
+                                        aria-haspopup="true"
+                                        onClick={handleMobileMenuOpen}
+                                        color="inherit"
+                                    >
+                                        <MoreIcon />
+                                    </IconButton>
+                                </Box>
+                            </>
+                            : <></>
                     }
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ paddingRight: "25%" }}>
-                        <MessagesMenu />
-                        <NotificationsMenu />
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
+                </Toolbar >
+            </AppBar >
+            {renderCanvasRequests}
+            {renderFriendRequests}
             {renderMobileMenu}
             {renderMenu}
-        </Box>
+        </Box >
     );
 }

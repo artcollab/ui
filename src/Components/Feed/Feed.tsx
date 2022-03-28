@@ -64,7 +64,7 @@ function Feed() {
             const userArr = (JSON.parse(responseData as unknown as string) as Array<user>).map((user) => user.username);
             const index = userArr.findIndex((ele) => {return ele === User.username});
             if(index > -1){
-                userArr.splice(index);
+                userArr.splice(index, 1);
             }
 
             setUsers(userArr);
@@ -97,7 +97,7 @@ function Feed() {
         else {
             const arr = [...usersSelected];
             const index = arr.findIndex((ele) => { return ele === event.target.name });
-            arr.splice(index);
+            arr.splice(index, 1);
             setUsersSelected(arr);
         }
     };

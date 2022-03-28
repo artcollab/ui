@@ -218,13 +218,12 @@ function Feed() {
                 <GestureOutlinedIcon />
             </IconButton>
 
-            {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
-            {showUpArrow &&
-            (<span>
+            {/* scroll to top button */}
+            <span>
                     <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
                                 onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
-                </span>)
-            }
+            </span>
+
         </>
     )
 

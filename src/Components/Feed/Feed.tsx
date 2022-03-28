@@ -83,9 +83,6 @@ function Feed() {
         setPopover(false);
     }
 
-    /* React hook to handle when the up arrow is shown/hidden  */
-    const [showUpArrow, setUpArrow] = useState(true);
-
     /* when called this will scroll the window to the top of the page */
     function scrollToTop() {
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */

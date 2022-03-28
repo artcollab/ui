@@ -124,7 +124,6 @@ function Post(props : postProps) {
                         <Grid item>
 
                             {/* displays the avatar of the post author */}
-                            {/*<Avatar src={"../cat.jpg"} sx={{width: 56, height: 56}}/>*/}
                             {<Avatar sx={{ fontSize: 30, width: 56, height: 56, bgcolor: ColorName(`${post.author.name} ${post.author.surname}`) }}>
                                 {post.author.name.charAt(0)}{post.author.surname.charAt(0)}
                             </Avatar>}

@@ -54,6 +54,7 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
         }
 
         sendHTTPRequest("POST", "/posts/comment", JSON.stringify(userComment), JSON.parse(at!)).then(() => {
+
             /* creates a comment array containing the comments within the commentList */
             const commentArr: Array<comment> = [...commentList];
 

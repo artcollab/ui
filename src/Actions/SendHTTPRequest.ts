@@ -3,7 +3,7 @@ export function sendHTTPRequest(method: string, url: string, data?: string, at :
         let expStatus = method === "POST" ? 201 : 200;
         if(url === "/auth/login") expStatus = 200; // kinda ugly but afaik this is the only exception
 
-        const completeURL = `http://localhost:8080${url}`;
+        const completeURL = `https://api.operce.net/${url}`;
         const req = new XMLHttpRequest();
 
         req.open(method, completeURL, true);

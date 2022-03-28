@@ -8,6 +8,7 @@ import Error from './Pages/Error';
 import Home from './Pages/Home';
 import Login from './Components/Login/Login';
 import Canvas from './Components/Canvas/Canvas';
+import Feed from './Components/Feed/Feed';
 import Search from './Components/Search/Search';
 import Profile from './Components/Profile/Profile';
 
@@ -19,6 +20,7 @@ ReactDOM.render(
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
+          <Route path="/feed" element={<Feed />}/>
           <Route path="/canvas" element={<Canvas/>}/>
           <Route path="/profile/:userID" element={<Profile/>}/>
           <Route path="/search" element={<Search/>}/>

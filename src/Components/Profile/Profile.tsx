@@ -1,16 +1,21 @@
 import React, {useEffect, useState} from "react";
 import './Profile.scss';
-import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip} from "@mui/material";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem, ImageListItemBar} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
 import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
 import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
 import {user} from "../../Types/User";
+import {profile} from "../../Types/Profile";
 import {useParams, useNavigate} from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import CreateIcon from '@mui/icons-material/Create';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import { post } from "../../Types/Post";
 
 const at = getAccessToken();
 
@@ -26,15 +31,15 @@ type bio = {
 
 function Profile() {
 
-    /* navigate const for moving to error page on bad fetch of user */
+    /* navigate const for moving to error page on bad fetch of profiel */
     const navigate = useNavigate();
 
-    /* obtains the userID from the current URL */
-    const {userID} = useParams();
+    /* obtains the profileID from the current URL */
+    const {profileID} = useParams();
 
-    /* User React hook for handling the retrieved user object from the backend,
+    /* Profile React hook for handling the retrieved profile object from the backend,
     * this can be undefined during the fetch process */
-    const [User, setUser] = useState<user | undefined>(undefined);
+    const [Profile, setProfile] = useState<profile | undefined>(undefined);
 
     /* bioText hook for handling the users bio */
     const [bioText, setBioText] = useState("");
@@ -42,25 +47,39 @@ function Profile() {
     /* textValue hook for use with the TextField allowing users to edit their bios */
     const [textValue, setValue] = useState("")
 
-    /* obtains the User object through their ID from the backend and sets found information through hooks  */
+    const [posts, setPosts] = useState<Array<post>>([]);
+
+    /* obtains the profile object through it's ID from the backend and sets found information through hooks  */
     useEffect(() => {
-        if (typeof (userID) === "string" && !User) {
-            sendHTTPRequest("GET", "/users/id/" + userID, undefined, JSON.parse(at)).then((responseData) => {
-                let fetchedUser = JSON.parse(responseData as unknown as string) as user;
-                setUser(fetchedUser);
-                setBioText(fetchedUser.bio ?? "");
-                setValue(fetchedUser.bio ?? "");
+        if (typeof (profileID) === "string" && !Profile) {
+            sendHTTPRequest("GET", "/users/profile/" + profileID, undefined, JSON.parse(at)).then((responseData) => {
+                let fetchedProfile = JSON.parse(responseData as unknown as string) as profile;
+                setProfile(fetchedProfile);
+                setBioText(fetchedProfile.user.bio ?? "");
+                setValue(fetchedProfile.user.bio ?? "");
+                setPosts(fetchedProfile.posts ?? "");
 
             }).catch((err) => {
                 navigate("/error");
                 console.log(err)
             });
         }
-    }, [User, navigate, userID])
+    }, [Profile, navigate, profileID, posts])
 
     // sendHTTPRequest("GET", "/users/friends/" + userID + "/requests/to", undefined, JSON.parse(at)).then((responseData) => {
     //     setRequestStatus(JSON.parse(responseData as unknown as string));
     // }).catch((err) => {console.log(err)});;
+
+
+    function contentHandler(content : string) {
+
+        let blob = new Blob([content], { type: 'image/svg+xml' });
+        let url = URL.createObjectURL(blob);
+        let image = document.createElement('img'); image.addEventListener('load', () => {URL.revokeObjectURL(url)}, { once: true }); image.src = url;
+        return image.src;
+
+    }
+
 
     /* TODO: The follow hooks have placeholder values currently, need to retrieve the request status from the backend */
 
@@ -72,7 +91,6 @@ function Profile() {
 
     /* requestStatusIcon hook for the chip's icon depending on request state */
     const [requestStatusIcon, setRequestStatusIcon] = useState(<PersonAddIcon/>);
-
 
     /* handles sending of friend requests & removal of friends */
     function handleRequest() {
@@ -100,9 +118,7 @@ function Profile() {
             setRequestStatusIcon(<PersonAddIcon/>);
 
             /* TODO: Post request here into backend */
-
         }
-
     }
 
     /* react hook for changing the state of the modal */
@@ -177,12 +193,17 @@ function Profile() {
                             if (textValue.trim().length >= 0 && textValue.trim().length <= charLimit) {
 
                                 /* Posts the users edited bio to the backend so it can be stashed */
-                                sendHTTPRequest("POST", "/users/bio", JSON.stringify({bio: textValue, user_id: userID}),
-                                    JSON.parse(at!)).then(() => {
-                                    setBioText(textValue)
-                                }).catch((err) => {
-                                    console.log(err)
-                                });
+                                if (Profile) {
+                                    sendHTTPRequest("POST", "/users/bio", JSON.stringify({
+                                            bio: textValue,
+                                            user_id: Profile.user.id
+                                        }),
+                                        JSON.parse(at!)).then(() => {
+                                        setBioText(textValue)
+                                    }).catch((err) => {
+                                        console.log(err)
+                                    });
+                                }
 
                                 /* on submission of edited bio the modal will close */
                                 setOpen(false)
@@ -209,7 +230,7 @@ function Profile() {
                 <>{editBio}</>
             </Modal>
 
-            {User ? (
+            {Profile ? (
                     <div className={"profileHeader"}>
 
                         {/* Grid container used to nicely place the child elements together */}
@@ -219,8 +240,8 @@ function Profile() {
                             <Grid item>
 
                                 {/* displays the user's Avatar */}
-                                <Avatar className={"userAvatar"} sx={{ bgcolor: ColorName(`${User.name} ${User.surname}`)}}>
-                                    <div style={{fontSize: 100}}>{User.name.charAt(0)}{User.surname.charAt(0)}</div>
+                                <Avatar className={"userAvatar"} sx={{ bgcolor: ColorName(`${Profile.user.name} ${Profile.user.surname}`)}}>
+                                    <div style={{fontSize: 100}}>{Profile.user.name.charAt(0)}{Profile.user.surname.charAt(0)}</div>
                                 </Avatar>
 
                             </Grid>
@@ -229,7 +250,7 @@ function Profile() {
                             <Grid item xs>
 
                                 {/* displays the users username */}
-                                <span className={"userName"}>{User.name}{" "}{User.surname}</span>
+                                <span className={"userName"}>{Profile.user.name}{" "}{Profile.user.surname}</span>
 
                                 {/* line break to separate the username from the bio */}
                                 <br/>
@@ -242,7 +263,7 @@ function Profile() {
                                     <UserBio bioText={bioText} bioLimit={40}/>
 
                                     {/* edit button to access the bio editor, only appears on the users own profile */}
-                                    {userID === getUserAsObject().id &&
+                                    {profileID === Profile.user.profileID &&
                                         <IconButton onClick={() => setOpen(true)} size={"small"}>
                                             <EditIcon/>
                                         </IconButton>
@@ -258,7 +279,7 @@ function Profile() {
                                 {/*{userID != getUserAsObject().id &&*/}
 
                                 {/* request chip button, handles sending friend requests as well as TODO: removing friends */}
-                                {userID === getUserAsObject().id &&
+                                {profileID === Profile.user.profileID &&
                                     <Chip className={requestStatusStyle} color="primary" icon={requestStatusIcon} label={requestStatus} onClick={handleRequest}/>
                                 }
 
@@ -267,6 +288,39 @@ function Profile() {
 
                         {/* line inserted to separate the header from the posts on the profile page */}
                         <hr className={"headerSeparator"}/>
+
+                        <Box className={"profilePosts"}>
+                            <ImageList variant="masonry" cols={3} gap={5}>
+                                {posts.map((item) => (
+                                    <ImageListItem  key={item.content}>
+                                        <img
+                                            src={contentHandler(item.content)}
+                                            srcSet={contentHandler(item.content)}
+                                            alt={item.title}
+                                            loading="lazy"
+                                            draggable={false}
+                                        />
+                                        <ImageListItemBar
+                                            position="top"
+                                            sx={{
+                                                background:
+                                                    "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%," +
+                                                    "rgba(0,0,0,0.35) 50%, rgba(0,0,0,0) 100%)",
+                                            }}
+                                            actionIcon={
+                                                <IconButton
+                                                    sx={{ color: "white" }}
+                                                >
+                                                    <EmojiEmotionsIcon />
+                                                </IconButton>
+                                            }
+                                            actionPosition="left"
+                                            title={item.title}
+                                        />
+                                    </ImageListItem>
+                                ))}
+                            </ImageList>
+                        </Box>
 
                     </div>
 

@@ -20,11 +20,15 @@ type commentProps = {
 
 const tempComment: user = {
     id: "",
+    admin: false,
     username: "",
     email: "",
     name: "",
     surname: "",
-    password: ""
+    password: "",
+    friends: undefined,
+    following: undefined,
+    profileID: ""
 }
 const fetchUser = getUserAsObject();
 const at = getAccessToken();
@@ -89,14 +93,14 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                <LetterAvatar firstName={User.name} surname={User.surname}/>
+                                <LetterAvatar firstName={c.author.name} surname={c.author.surname}/>
 
                             </Grid>
 
                             {/* displays the username */}
                             <Grid item xs>
                                 <span style={{ fontSize: 13, fontWeight: 'bold' }}>
-                                    {User.name}{" "}{User.surname}
+                                    {c.author.name}{" "}{c.author.surname}
                                 </span>
                             </Grid>
                         </Grid>

@@ -6,12 +6,15 @@ const tempPost : post = {
     id: "",
     author: {
         id: "",
+        admin: false,
         username: "",
         email: "",
         name: "",
         surname: "",
         password: "",
-        following: undefined
+        following: undefined,
+        friends: undefined,
+        profileID: "",
     },
     title: "",
     content: "",

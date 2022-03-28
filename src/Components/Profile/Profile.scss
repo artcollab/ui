@@ -97,6 +97,13 @@
   transform: translate(-50%, -50%);
 }
 
+.profilePosts {
+  margin-top: -1em;
+  width: 40em;
+  height: 34em;
+  overflow-y: scroll;
+}
+
 /* mobile styles for the profile component at 800px width */
 @media (max-width: 800px) {
 
@@ -121,5 +128,11 @@
   .userName {
     font-size: 4em;
   }
+
+  .profilePosts {
+    width: 27.9em !important;
+    height: 26em !important;
+  }
+
 }
 

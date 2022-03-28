@@ -19,7 +19,7 @@ ReactDOM.render(
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
           <Route path="/canvas" element={<Canvas/>}/>
-          <Route path="/profile/:userID" element={<Profile/>}/>
+          <Route path="/profile/:profileID" element={<Profile/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />
         </Routes>

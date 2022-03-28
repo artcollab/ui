@@ -112,7 +112,7 @@ export default function Header() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={() => {handleMenuClose(); navigate("/profile/" + User.id)} }>Profile</MenuItem>
+            <MenuItem onClick={() => {handleMenuClose(); navigate("/profile/" + User.profileID)} }>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={() => { logOut(); navigate("/home") }}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>

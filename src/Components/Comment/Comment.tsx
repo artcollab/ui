@@ -5,7 +5,6 @@ import { comment } from "../../Types/Comment";
 import { Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField } from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {ColorName} from "../../Util/NameColourGenerator";
-import LetterAvatar from "../LetterAvatar/LetterAvatar"
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import { user } from "../../Types/User";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './Profile.scss';
-import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem, ImageListItemBar} from "@mui/material";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
 import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
 import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
@@ -10,7 +10,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { post } from "../../Types/Post";
 
 const at = getAccessToken();

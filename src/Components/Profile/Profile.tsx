@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './Profile.scss';
-import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem} from "@mui/material";
+import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem, ImageListItemBar} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
 import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
 import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { post } from "../../Types/Post";
 
 const at = getAccessToken();
@@ -271,7 +272,7 @@ function Profile() {
                                     <UserBio bioText={bioText} bioLimit={40}/>
 
                                     {/* edit button to access the bio editor, only appears on the users own profile */}
-                                    {profileID === Profile.user.profileID &&
+                                    {myUser.profileID === Profile.user.profileID &&
                                         <IconButton onClick={() => setOpen(true)} size={"small"}>
                                             <EditIcon/>
                                         </IconButton>
@@ -282,12 +283,8 @@ function Profile() {
                                 {/* spacing stuff out */}
                                 <br/>
 
-
-                                {/* for final version, using inverse of this for testing purposes currently*/}
-                                {/*{userID != getUserAsObject().id &&*/}
-
                                 {/* request chip button, handles sending friend requests as well as TODO: removing friends */}
-                                {profileID === Profile.user.profileID &&
+                                {myUser.profileID != Profile.user.profileID &&
                                     <Chip className={requestStatusStyle} color="primary" icon={requestStatusIcon} label={requestStatus} onClick={handleRequest}/>
                                 }
 

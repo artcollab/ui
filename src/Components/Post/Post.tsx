@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment'
 import {post} from "../../Types/Post";
@@ -9,26 +9,31 @@ import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from "react-router-dom";
+import { generateRoomID } from "../../Util/generateRoomID";
+import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
+import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 
 /* postProps type defined */
 type postProps = {
 
     /* Post element for when DB is available */
-    Post : post
-
+    Post: post
 }
 
 /* type definitions for caption variables, need to avoid errors */
 type caption = {
 
     /* caption text string */
-    captionText : string;
+    captionText: string;
 
     /* character limit to restrict the amount of text that is displayed at once */
-    characterLimit : number;
+    characterLimit: number;
 }
 
-function Post(props : postProps) {
+const user = getUserAsObject();
+const at = getAccessToken();
+
+function Post(props: postProps) {
 
     const navigate = useNavigate();
 
@@ -41,10 +46,11 @@ function Post(props : postProps) {
     const svg = post.content;
     const blob = new Blob([svg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
+
     const image = document.createElement('img'); image.addEventListener('load', () => {URL.revokeObjectURL(url)}, { once: true }); image.src = url;
 
     /* PostCaption constant definition, this will be used for handling the caption text */
-    const PostCaption : React.FC<caption> = ({captionText, characterLimit}) => {
+    const PostCaption: React.FC<caption> = ({ captionText, characterLimit }) => {
 
         /* if this is called then an alert will be displayed showing the full caption */
         const showText = () => alert(captionText);
@@ -64,27 +70,32 @@ function Post(props : postProps) {
     }
 
     /* React hook for handling the amount of likes on the post */
-    const [likes, setLikes] = useState(777)
+    const [likes, setLikes] = useState(post.likes ? post.likes.length : 0)
 
     /* React hook for handling the state of the like on the post (whether user has liked or not) */
-    const [liked, setLiked] = useState(false)
+    const [liked, setLiked] = useState(post.likes ? post.likes.includes(user.username) : false)
 
     /* React hook for handling the style of the like button, currently set to the style of noLike within the CSS file */
-    const [likeStyle, setStyle] = useState("noLike");
+    const [likeStyle, setStyle] = useState(liked ? "like" : "noLike");
 
     /* event handling for liking the post (clicking like button) */
     function toggleLike() {
 
-        /* sets the value of the likes depending on status of the like button, if the post
-        * has already been liked then the number is reduced to stop from posts being liked
-        * multiple times, otherwise then the like amount is incremented */
-        setLikes(likes + (liked ? -1 : 1))
+        const body = {
+            user: user,
+            post_id: post.id
+        }
 
-        /* sets the status of liked to true (initially false) as the post has now been liked by the user */
-        setLiked(!liked)
+        sendHTTPRequest("POST", "/posts/like", JSON.stringify(body), JSON.parse(at!))
+            .then((responseData) => {
+                const likes = (JSON.parse(responseData as unknown as string) as post).likes;
 
-        /* applies a style to the like button depending on its status */
-        setStyle(likeStyle === "like" ? "noLike" : "like")
+                setLiked(likes ? likes.includes(user.username) : false);
+                setLikes(likes ? likes.length : 0);
+                setStyle(likeStyle === "noLike" ? "like" : "noLike");
+            })
+            .catch((err) => console.log(err));
+
     }
 
     /* setting focus prop of comment field */
@@ -94,18 +105,18 @@ function Post(props : postProps) {
     const [open, setOpen] = useState(false);
 
     /* comment component initialised */
-    const commentSection = <Comment commentsList={post.comments} post_id={post.id} focused={focused} setFocused={(value: boolean) => setFocused(value)}/>
+    const commentSection = <Comment commentsList={post.comments} post_id={post.id} focused={focused} setFocused={(value: boolean) => setFocused(value)} />
 
     return (
 
         /* container which holds all components relevant to this Post component */
-        <Container sx={{marginTop: "5rem"}}>
+        <Container sx={{ marginTop: "5rem" }}>
 
             {/* Paper component for a post container */}
             <Paper className={`${postSize}Container`} data-testid="container-test">
 
                 {/* Temporary image component, this will be pulled from backend when available  */}
-                <img draggable={"false"} src={image.src} alt={"Error..."}/>
+                <img draggable={"false"} src={image.src} alt={"Error..."} />
 
                 {/* Modal popup menu for the comment section component */}
 
@@ -139,7 +150,7 @@ function Post(props : postProps) {
                             <p className={"postAuthor"}>{post.author.name} {post.author.surname}</p>
 
                             {/* line underneath the authors username to separate it from caption text */}
-                            <hr/>
+                            <hr />
 
                             {/* handles the post caption in the desktop view */}
                             <div className={'postCaptionDesktop'}>
@@ -173,31 +184,28 @@ function Post(props : postProps) {
                         <Tooltip followCursor TransitionComponent={Zoom} title={likes}>
 
                             {/* button for the like component */}
-                            <IconButton onClick={() => {toggleLike()}} className={likeStyle}>
+                            <IconButton onClick={() => { toggleLike() }} className={likeStyle}>
 
                                 {/* uses a smiley face showing where desktop users can like the post */}
-                                <EmojiEmotionsIcon sx={{fontSize:'1.875rem'}}/>
+                                <EmojiEmotionsIcon sx={{ fontSize: '1.875rem' }} />
 
                             </IconButton>
 
                         </Tooltip>
 
                         {/* button for the comment component, should focus on CommentField when clicked (works somewhat)  */}
-                        <IconButton onClick={() => setFocused(!focused)} sx={{margin: "auto"}}>
+                        <IconButton onClick={() => setFocused(!focused)} sx={{ margin: "auto" }}>
 
-                        {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
-                            <ChatBubbleIcon className={'staticButtons'}/>
+                            {/* uses a simple chat bubble icon depicting where desktop users can access comments */}
+                            <ChatBubbleIcon className={'staticButtons'} />
 
                         </IconButton>
 
                         {/* button for the edit component, not implemented yet */}
-                        <IconButton>
-
+                        <IconButton onClick={() => navigate("/canvas", { state: { room: generateRoomID(), size: post.size, image: svg } })}>
                             {/* uses a pencil icon depicting where desktop users can access the edit feature */}
-                            <CreateIcon className={'staticButtons'}/>
-
+                            <CreateIcon className={'staticButtons'} />
                         </IconButton>
-
                     </Grid>
                 </div>
 
@@ -205,43 +213,41 @@ function Post(props : postProps) {
 
             {/* divider for handling desktop post interaction e.g. likes */}
             <div className={"mobilePostInteraction"}>
-
                 {/* Grid container used here to easily align these components horizontally */}
                 <Grid direction="row" alignItems="center" container wrap="nowrap">
+                    {/* button for the like component */}
+                    <IconButton className={likeStyle} onClick={() => { toggleLike() }}>
+
+                        {/* uses a smiley face showing where mobile users can like the post */}
+                        <EmojiEmotionsIcon sx={{ fontSize: '3rem' }} />
+                        
+                    </IconButton>
 
                     <Grid marginLeft="auto" marginRight="auto" item>
 
-                        {/* button for the like component */}
-                        <IconButton className={likeStyle} onClick={() => {toggleLike()}}>
-
-                            {/* uses a smiley face showing where mobile users can like the post */}
-                            <EmojiEmotionsIcon sx={{fontSize:'3rem'}}/>
-
-                        </IconButton>
-
                         {/* button component which can be pressed to display the comment section in a Modal */}
-                        <IconButton sx={{marginLeft: '2em'}} onClick={() => setOpen(true)}>
+                        <IconButton sx={{ marginLeft: '2em' }} onClick={() => setOpen(true)}>
 
                             {/* uses a simple chat bubble icon depicting where mobile users can access comments */}
-                            <ChatBubbleIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
+                            <ChatBubbleIcon sx={{ fontSize: '3rem', color: "#42342c" }} />
 
                         </IconButton>
 
                         {/* button for the edit component */}
-                        <IconButton sx={{marginLeft: '2em'}}>
+                        <IconButton sx={{ marginLeft: '2em' }}>
 
                             {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
-                            <CreateIcon sx={{fontSize: '3rem', color: "#42342c"}}/>
+                            <CreateIcon sx={{ fontSize: '3rem', color: "#42342c" }} />
 
                         </IconButton>
 
                         {/* like counter for when in mobile view, tooltip wont work since no cursor on mobile */}
-                        <div style={{marginLeft: '1.15em'}}>{likes}</div>
+                        <div style={{ marginLeft: '1.15em' }}>{likes}</div>
 
-                    </Grid>
-                </Grid>
-            </div>
-        </Container>
+                    </Grid >
+                </Grid >
+            </div >
+        </Container >
     )
 }
 

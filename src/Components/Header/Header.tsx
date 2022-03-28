@@ -41,7 +41,7 @@ function toggleTheme() {
     localStorage.setItem('theme', targetTheme);
 }
 
-////// Search Bar styles sourced from MUI component library///// 
+////// Search Bar styles sourced from MUI component library/////
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -70,9 +70,10 @@ export default function Header() {
     const [searchValue, setSearchValue] = useState("");
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
-    function fetchSearch(value : string): void {
-        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
-        .catch((err) => console.log(err));
+    function fetchSearch(value: string): void {
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) =>
+            setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>))
+            .catch((err) => console.log(err));
     }
 
     const [anchorCanvas, setAnchorCanvas] = useState<null | HTMLElement>(null);

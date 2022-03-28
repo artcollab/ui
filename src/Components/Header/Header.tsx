@@ -75,14 +75,6 @@ export default function Header() {
         .catch((err) => console.log(err));
     }
 
-    const [searchValue, setSearchValue] = useState("");
-    const [searchResults, setSearchResults] = useState<Array<user>>([]);
-
-    function fetchSearch(value: string): void {
-        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>))
-            .catch((err) => console.log(err));
-    }
-
     const [anchorCanvas, setAnchorCanvas] = useState<null | HTMLElement>(null);
     const handleCanvasClose = () => {
         setAnchorCanvas(null);

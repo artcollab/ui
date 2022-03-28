@@ -12,7 +12,6 @@ import {
 import smoothscroll from 'smoothscroll-polyfill';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CreateIcon from '@mui/icons-material/Create';
 import { post } from "../../Types/Post";
 import { useNavigate } from "react-router-dom";
@@ -74,19 +73,8 @@ function Feed() {
         /* button has been clicked so popover can be shown */
         setPopover(true);
 
-        /* generates 6 random alphabetical characters [a-Z] as a string */
-        while (roomID.length < 6) {
-            roomID += alphabet[Math.floor(Math.random() * alphabet.length)]
-        }
     }
 
-    /* when the user clicks anywhere else on the screen outside of the popover this will be
-    * called and will close the popover */
-    function handlePopoverClose() {
-
-        /* user has clicked somewhere else on-screen so popover can be hidden */
-        setPopover(false);
-    }
 
     /* when the user clicks anywhere else on the screen outside of the popover this will be
     * called and will close the popover */

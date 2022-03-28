@@ -2,19 +2,15 @@ import React, {useEffect, useState} from "react";
 import './Profile.scss';
 import {Avatar, Grid, Box, Modal, IconButton, TextField, InputAdornment, CircularProgress, Chip, ImageList, ImageListItem, ImageListItemBar} from "@mui/material";
 import {ColorName} from "../../Util/NameColourGenerator";
-import {getAccessToken, getUserAsObject} from "../../Util/handleResponse";
+import {getAccessToken} from "../../Util/handleResponse";
 import {sendHTTPRequest} from "../../Actions/SendHTTPRequest";
-import {user} from "../../Types/User";
 import {profile} from "../../Types/Profile";
 import {useParams, useNavigate} from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import CreateIcon from '@mui/icons-material/Create';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { post } from "../../Types/Post";
 
 const at = getAccessToken();

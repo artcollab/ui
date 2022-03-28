@@ -4,10 +4,11 @@ import './Comment.scss'
 import { comment } from "../../Types/Comment";
 import { Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField } from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { ColorName } from "../../Util/NameColourGenerator";
+import {ColorName} from "../../Util/NameColourGenerator";
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import { user } from "../../Types/User";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
+import { useNavigate } from "react-router-dom";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
@@ -19,11 +20,15 @@ type commentProps = {
 
 const tempComment: user = {
     id: "",
+    admin: false,
     username: "",
     email: "",
     name: "",
     surname: "",
-    password: ""
+    password: "",
+    friends: undefined,
+    following: undefined,
+    profileID: ""
 }
 const fetchUser = getUserAsObject();
 const at = getAccessToken();
@@ -32,6 +37,8 @@ const User = fetchUser ? fetchUser : tempComment;
 
 /* main Comment function, constructs the Comment component */
 function Comment({ commentsList, focused = false, setFocused, post_id }: commentProps) {
+
+    const navigate = useNavigate();
 
     /* character limit within the TextField */
     const charLimit = 100
@@ -53,6 +60,7 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
         }
 
         sendHTTPRequest("POST", "/posts/comment", JSON.stringify(userComment), JSON.parse(at!)).then(() => {
+
             /* creates a comment array containing the comments within the commentList */
             const commentArr: Array<comment> = [...commentList];
 
@@ -86,9 +94,9 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                             {/* user Avatar icon */}
                             <Grid item>
 
-                                {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{ bgcolor: ColorName(User.name) }}>
-                                    {User.name.split(' ')[0][0]}
+                                {/* displays the avatar of the comment author */}
+                                {<Avatar onClick={() => navigate("/profile/" + c.author.profileID)} sx={{cursor: "pointer", fontSize: 20, width: 30, height: 30, bgcolor: ColorName(`${c.author.name} ${c.author.surname}`) }}>
+                                    {c.author.name.charAt(0)}{c.author.surname.charAt(0)}
                                 </Avatar>}
 
                             </Grid>
@@ -96,7 +104,7 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                             {/* displays the username */}
                             <Grid item xs>
                                 <span style={{ fontSize: 13, fontWeight: 'bold' }}>
-                                    {User.name}
+                                    {c.author.name}{" "}{c.author.surname}
                                 </span>
                             </Grid>
                         </Grid>
@@ -158,8 +166,8 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../avatarTest.ico"} sx={{ width: 24, height: 24, bgcolor: ColorName(User.name) }}>
-                                {User.name.split(' ')[0][0]}
+                            {<Avatar sx={{ fontSize: 15, width: 24, height: 24, bgcolor: ColorName(`${User.name} ${User.surname}`) }}>
+                                {User.name.charAt(0)}{User.surname.charAt(0)}
                             </Avatar>}
                         </InputAdornment>
                     ),

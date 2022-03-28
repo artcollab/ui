@@ -33,6 +33,7 @@ function Feed() {
 
     /* for react routing to other pages */
     const navigate = useNavigate();
+  
     if(at === `{"test":true}` || !User) navigate("/login");
 
     let [posts, setPosts] = useState<Array<post>>([]);
@@ -72,8 +73,8 @@ function Feed() {
         /* button has been clicked so popover can be shown */
         setPopover(true);
 
-
     }
+
 
     /* when the user clicks anywhere else on the screen outside of the popover this will be
     * called and will close the popover */

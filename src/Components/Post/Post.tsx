@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import './Post.scss';
 import Comment from '../Comment/Comment'
-import { post } from "../../Types/Post";
-import { Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom } from "@mui/material";
+import {post} from "../../Types/Post";
+import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
+import {ColorName} from "../../Util/NameColourGenerator";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -17,7 +18,6 @@ type postProps = {
 
     /* Post element for when DB is available */
     Post: post
-
 }
 
 /* type definitions for caption variables, need to avoid errors */
@@ -46,7 +46,8 @@ function Post(props: postProps) {
     const svg = post.content;
     const blob = new Blob([svg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
-    const image = document.createElement('img'); image.addEventListener('load', () => { URL.revokeObjectURL(url) }, { once: true }); image.src = url;
+
+    const image = document.createElement('img'); image.addEventListener('load', () => {URL.revokeObjectURL(url)}, { once: true }); image.src = url;
 
     /* PostCaption constant definition, this will be used for handling the caption text */
     const PostCaption: React.FC<caption> = ({ captionText, characterLimit }) => {
@@ -137,7 +138,9 @@ function Post(props: postProps) {
                         <Grid item>
 
                             {/* displays the avatar of the post author */}
-                            <Avatar src={"../cat.jpg"} sx={{ width: 56, height: 56 }} />
+                            {<Avatar onClick={() => navigate("/profile/" + post.author.profileID)} sx={{cursor: "pointer", fontSize: 30, width: 56, height: 56, bgcolor: ColorName(`${post.author.name} ${post.author.surname}`) }}>
+                                {post.author.name.charAt(0)}{post.author.surname.charAt(0)}
+                            </Avatar>}
 
                         </Grid>
 
@@ -154,7 +157,7 @@ function Post(props: postProps) {
 
                                 {/* in the desktop view there has to be a limit on the amount of characters due to the limited size
                                  of the post container, this character limit is 15 characters as of now */}
-                                <PostCaption captionText={post.title} characterLimit={15} />
+                                <PostCaption captionText = {post.title} characterLimit = {15}/>
 
                             </div>
 
@@ -162,7 +165,7 @@ function Post(props: postProps) {
                             <div className={'postCaptionMobile'}>
 
                                 {/* more text can be displayed in mobile view but it has a character limit of 50 */}
-                                <PostCaption captionText={post.title} characterLimit={50} />
+                                <PostCaption captionText = {post.title} characterLimit = {50}/>
 
                             </div>
 

@@ -23,6 +23,7 @@ import LetterAvatar from '../LetterAvatar/LetterAvatar';
 import { v1 } from 'uuid';
 import { CanvasRequest } from '../../Types/CanvasRequest';
 
+
 const at = getAccessToken();
 const User = getUserAsObject();
 
@@ -66,13 +67,12 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
-
     const [searchValue, setSearchValue] = useState("");
     const [searchResults, setSearchResults] = useState<Array<user>>([]);
 
-    function fetchSearch(value: string): void {
-        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(JSON.parse(responseData as unknown as string) as Array<user>))
-            .catch((err) => console.log(err));
+    function fetchSearch(value : string): void {
+        sendHTTPRequest("GET", `/users/search/${value}`, undefined, JSON.parse(at)).then((responseData) => setSearchResults(responseData as unknown as Array<user>))
+        .catch((err) => console.log(err));
     }
 
     const [anchorCanvas, setAnchorCanvas] = useState<null | HTMLElement>(null);
@@ -242,7 +242,7 @@ export default function Header() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={() => {handleMenuClose(); navigate("/profile/" + User.profileID)} }>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={() => { logOut(); navigate("/home") }}>Log Out</MenuItem>
             <MenuItem>Toggle Theme <Switch onClick={toggleTheme} /></MenuItem>

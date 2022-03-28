@@ -20,9 +20,9 @@ ReactDOM.render(
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/home" element={<Home/>}/>
+          <Route path="/profile/:profileID" element={<Profile/>}/>
           <Route path="/feed" element={<Feed />}/>
           <Route path="/canvas" element={<Canvas/>}/>
-          <Route path="/profile/:userID" element={<Profile/>}/>
           <Route path="/search" element={<Search/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<Error/>} />

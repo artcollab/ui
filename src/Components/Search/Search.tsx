@@ -35,8 +35,8 @@ function Search() {
                 <Card variant="outlined" sx={{ width: "30%", marginTop: "10rem", marginLeft: "auto", marginRight: "auto" }}>
                     <Typography variant='subtitle1' sx={{ p: 1 }}>Search Results</Typography>
                     {results.length === 0 ? (
-                        <Typography sx={{ p: 1 }}> No users found</Typography>
-                    ) :
+                            <Typography sx={{ p: 1 }}> No users found</Typography>
+                        ) :
                         <List >
                             <Divider />
                             {results.map((user) => {
@@ -45,14 +45,14 @@ function Search() {
                                         <ListItem sx={{ color: "grey" }} alignItems='flex-start'>
                                             <Grid container>
                                                 <Grid item xs={3} sx={{ margin: "auto" }}>
-                                                    <Link href={`/profile/${user.id}`}>
+                                                    <Link href={`/profile/${user.profileID}`}>
                                                         <ListItemAvatar sx={{ margin: "auto" }}>
                                                             <LetterAvatar firstName={user.name} surname={user.surname} />
                                                         </ListItemAvatar>
                                                     </Link>
                                                 </Grid>
                                                 <Grid item xs={9} sx={{ margin: "auto" }}>
-                                                    <Link href={`/profile/${user.id}`}>
+                                                    <Link href={`/profile/${user.profileID}`}>
                                                         <ListItemText>
                                                             {user.name} {user.surname}
                                                         </ListItemText>

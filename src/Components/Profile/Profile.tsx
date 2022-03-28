@@ -219,7 +219,9 @@ function Profile() {
                             <Grid item>
 
                                 {/* displays the user's Avatar */}
-                                <Avatar src={"/avatarTest.ico"} className={"userAvatar"} sx={{bgcolor: ColorName(User.name)}}/>
+                                <Avatar className={"userAvatar"} sx={{ bgcolor: ColorName(`${User.name} ${User.surname}`)}}>
+                                    <div style={{fontSize: 100}}>{User.name.charAt(0)}{User.surname.charAt(0)}</div>
+                                </Avatar>
 
                             </Grid>
 

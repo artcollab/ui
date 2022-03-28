@@ -4,7 +4,8 @@ import './Comment.scss'
 import { comment } from "../../Types/Comment";
 import { Avatar, Box, Grid, IconButton, InputAdornment, Paper, TextField } from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { ColorName } from "../../Util/NameColourGenerator";
+import {ColorName} from "../../Util/NameColourGenerator";
+import LetterAvatar from "../LetterAvatar/LetterAvatar"
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import { user } from "../../Types/User";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
@@ -87,16 +88,14 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                             <Grid item>
 
                                 {/* generates the users avatar icon for use within the TextField */}
-                                {<Avatar src={"../avatarTest.ico"} sx={{ bgcolor: ColorName(User.name) }}>
-                                    {User.name.split(' ')[0][0]}
-                                </Avatar>}
+                                <LetterAvatar firstName={User.name} surname={User.surname}/>
 
                             </Grid>
 
                             {/* displays the username */}
                             <Grid item xs>
                                 <span style={{ fontSize: 13, fontWeight: 'bold' }}>
-                                    {User.name}
+                                    {User.name}{" "}{User.surname}
                                 </span>
                             </Grid>
                         </Grid>
@@ -158,8 +157,8 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                     * if they don't then a random one is generated for them based on username */
                     startAdornment: (
                         <InputAdornment position="start">
-                            {<Avatar src={"../avatarTest.ico"} sx={{ width: 24, height: 24, bgcolor: ColorName(User.name) }}>
-                                {User.name.split(' ')[0][0]}
+                            {<Avatar sx={{ fontSize: 15, width: 24, height: 24, bgcolor: ColorName(`${User.name} ${User.surname}`) }}>
+                                {User.name.charAt(0)}{User.surname.charAt(0)}
                             </Avatar>}
                         </InputAdornment>
                     ),

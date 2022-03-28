@@ -3,6 +3,7 @@ import './Post.scss';
 import Comment from '../Comment/Comment'
 import {post} from "../../Types/Post";
 import {Avatar, Container, Grid, IconButton, Paper, Tooltip, Zoom} from "@mui/material";
+import {ColorName} from "../../Util/NameColourGenerator";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -123,7 +124,10 @@ function Post(props : postProps) {
                         <Grid item>
 
                             {/* displays the avatar of the post author */}
-                            <Avatar src={"../cat.jpg"} sx={{width: 56, height: 56}}/>
+                            {/*<Avatar src={"../cat.jpg"} sx={{width: 56, height: 56}}/>*/}
+                            {<Avatar sx={{ fontSize: 30, width: 56, height: 56, bgcolor: ColorName(`${post.author.name} ${post.author.surname}`) }}>
+                                {post.author.name.charAt(0)}{post.author.surname.charAt(0)}
+                            </Avatar>}
 
                         </Grid>
 

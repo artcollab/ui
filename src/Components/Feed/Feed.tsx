@@ -83,23 +83,6 @@ function Feed() {
         setPopover(false);
     }
 
-    /* React hook to handle when the up arrow is shown/hidden  */
-    const [showUpArrow, setUpArrow] = useState(false);
-
-    /* checks the current position of the Y axis in the window to determine whether to show the arrow or not */
-    window.addEventListener("scroll", () => {
-
-        /* if past this threshold then the arrow is displayed onscreen */
-        if (window.scrollY >= 350) {
-            setUpArrow(true)
-        }
-
-        /* otherwise it stays hidden */
-        else {
-            setUpArrow(false)
-        }
-    })
-
     /* when called this will scroll the window to the top of the page */
     function scrollToTop() {
         /* uses smooth scrolling behaviour instead of instantly transitioning to the top */
@@ -235,13 +218,12 @@ function Feed() {
                 <GestureOutlinedIcon />
             </IconButton>
 
-            {/* when showUpArrow is true then the button can be displayed & its functionality can be utilised */}
-            {showUpArrow &&
-            (<span>
+            {/* scroll to top button */}
+            <span>
                     <IconButton size={"small"} className={'scrollButton'} data-testid="scroll-button-test"
                                 onClick={scrollToTop}><ArrowUpwardIcon /></IconButton>
-                </span>)
-            }
+            </span>
+
         </>
     )
 

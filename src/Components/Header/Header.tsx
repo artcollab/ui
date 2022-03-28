@@ -270,22 +270,9 @@ export default function Header() {
             <MenuItem>
                 <IconButton
                     size="large"
-                    edge="end"
-                    onClick={() => { }}
                     color="inherit"
                 >
-                    <Badge badgeContent={1} color="error">
-                        <Palette />
-                    </Badge>
-                </IconButton>
-                <p>Canvas Requests</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
+                    <Badge badgeContent={friendRequests.length} color="error">
                         <PeopleAlt />
                     </Badge>
                 </IconButton>

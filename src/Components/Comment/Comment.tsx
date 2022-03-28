@@ -9,6 +9,7 @@ import LetterAvatar from "../LetterAvatar/LetterAvatar"
 import { getAccessToken, getUserAsObject } from "../../Util/handleResponse";
 import { user } from "../../Types/User";
 import { sendHTTPRequest } from "../../Actions/SendHTTPRequest";
+import { useNavigate } from "react-router-dom";
 
 /* commentProps type, commentList is made into an Array of comment variables to create a functioning comment section */
 type commentProps = {
@@ -37,6 +38,8 @@ const User = fetchUser ? fetchUser : tempComment;
 
 /* main Comment function, constructs the Comment component */
 function Comment({ commentsList, focused = false, setFocused, post_id }: commentProps) {
+
+    const navigate = useNavigate();
 
     /* character limit within the TextField */
     const charLimit = 100
@@ -92,8 +95,10 @@ function Comment({ commentsList, focused = false, setFocused, post_id }: comment
                             {/* user Avatar icon */}
                             <Grid item>
 
-                                {/* generates the users avatar icon for use within the TextField */}
-                                <LetterAvatar firstName={c.author.name} surname={c.author.surname}/>
+                                {/* displays the avatar of the comment author */}
+                                {<Avatar onClick={() => navigate("/profile/" + c.author.profileID)} sx={{cursor: "pointer", fontSize: 20, width: 30, height: 30, bgcolor: ColorName(`${c.author.name} ${c.author.surname}`) }}>
+                                    {c.author.name.charAt(0)}{c.author.surname.charAt(0)}
+                                </Avatar>}
 
                             </Grid>
 

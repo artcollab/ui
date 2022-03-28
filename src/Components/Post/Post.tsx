@@ -8,6 +8,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Modal from '@mui/material/Modal';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CreateIcon from '@mui/icons-material/Create';
+import { useNavigate } from "react-router-dom";
 
 /* postProps type defined */
 type postProps = {
@@ -28,7 +29,9 @@ type caption = {
 }
 
 function Post(props : postProps) {
-    
+
+    const navigate = useNavigate();
+
     /* obtains the actual post from the backend */
     const post = props.Post;
 
@@ -124,7 +127,7 @@ function Post(props : postProps) {
                         <Grid item>
 
                             {/* displays the avatar of the post author */}
-                            {<Avatar sx={{ fontSize: 30, width: 56, height: 56, bgcolor: ColorName(`${post.author.name} ${post.author.surname}`) }}>
+                            {<Avatar onClick={() => navigate("/profile/" + post.author.profileID)} sx={{cursor: "pointer", fontSize: 30, width: 56, height: 56, bgcolor: ColorName(`${post.author.name} ${post.author.surname}`) }}>
                                 {post.author.name.charAt(0)}{post.author.surname.charAt(0)}
                             </Avatar>}
 

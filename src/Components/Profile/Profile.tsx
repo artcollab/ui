@@ -12,12 +12,11 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import CreateIcon from '@mui/icons-material/Create';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { post } from "../../Types/Post";
 
 const at = getAccessToken();
+
+const myUser = getUserAsObject();
 
 /* type definitions for the user bio */
 type bio = {
@@ -98,12 +97,22 @@ function Profile() {
         /* can only send a request if the label text is Add Friend */
         if(requestStatus === "Add Friend") {
 
-            /* changes the request status to pending as the request is processed */
+            setRequestStatusIcon(<PendingIcon/>);
             setRequestStatus("Pending");
             setRequestStatusStyle("pending");
-            setRequestStatusIcon(<PendingIcon/>);
+            
+            /* changes the request status to pending as the request is processed */
+            if (Profile) {
+                sendHTTPRequest("POST", "/users/friends/request", JSON.stringify({
+                        from: myUser.username,
+                        to: Profile.user.username,
+                    }),
+                    JSON.parse(at!)).then(() => {
+                }).catch((err) => {
+                    console.log(err)
+                });
+            }
 
-            /* TODO: Post request here into backend */
 
         }
 
@@ -113,11 +122,12 @@ function Profile() {
         if(requestStatus === "Pending") {
 
             /* changes the request status to add friend as the request has been cancelled */
-            setRequestStatus("Add Friend");
-            setRequestStatusStyle("addFriend");
-            setRequestStatusIcon(<PersonAddIcon/>);
+            setRequestStatus("Pending");
+            setRequestStatusStyle("pending");
+            setRequestStatusIcon(<PendingIcon/>);
 
             /* TODO: Post request here into backend */
+
         }
     }
 
@@ -299,23 +309,6 @@ function Profile() {
                                             alt={item.title}
                                             loading="lazy"
                                             draggable={false}
-                                        />
-                                        <ImageListItemBar
-                                            position="top"
-                                            sx={{
-                                                background:
-                                                    "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%," +
-                                                    "rgba(0,0,0,0.35) 50%, rgba(0,0,0,0) 100%)",
-                                            }}
-                                            actionIcon={
-                                                <IconButton
-                                                    sx={{ color: "white" }}
-                                                >
-                                                    <EmojiEmotionsIcon />
-                                                </IconButton>
-                                            }
-                                            actionPosition="left"
-                                            title={item.title}
                                         />
                                     </ImageListItem>
                                 ))}

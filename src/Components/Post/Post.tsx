@@ -213,17 +213,19 @@ function Post(props: postProps) {
 
             {/* divider for handling desktop post interaction e.g. likes */}
             <div className={"mobilePostInteraction"}>
+
                 {/* Grid container used here to easily align these components horizontally */}
                 <Grid direction="row" alignItems="center" container wrap="nowrap">
-                    {/* button for the like component */}
-                    <IconButton className={likeStyle} onClick={() => { toggleLike() }}>
-
-                        {/* uses a smiley face showing where mobile users can like the post */}
-                        <EmojiEmotionsIcon sx={{ fontSize: '3rem' }} />
-                        
-                    </IconButton>
 
                     <Grid marginLeft="auto" marginRight="auto" item>
+
+                        {/* button for the like component */}
+                        <IconButton className={likeStyle} onClick={() => { toggleLike() }}>
+
+                            {/* uses a smiley face showing where mobile users can like the post */}
+                            <EmojiEmotionsIcon sx={{ fontSize: '3rem' }} />
+
+                        </IconButton>
 
                         {/* button component which can be pressed to display the comment section in a Modal */}
                         <IconButton sx={{ marginLeft: '2em' }} onClick={() => setOpen(true)}>
@@ -233,16 +235,8 @@ function Post(props: postProps) {
 
                         </IconButton>
 
-                        {/* button for the edit component */}
-                        <IconButton sx={{ marginLeft: '2em' }}>
-
-                            {/* uses a pencil icon depicting where mobile users can access the edit feature (not implemented yet) */}
-                            <CreateIcon sx={{ fontSize: '3rem', color: "#42342c" }} />
-
-                        </IconButton>
-
                         {/* like counter for when in mobile view, tooltip wont work since no cursor on mobile */}
-                        <div style={{ marginLeft: '1.15em' }}>{likes}</div>
+                        <div style={{ marginLeft: '1.70em' }}>{likes}</div>
 
                     </Grid >
                 </Grid >
